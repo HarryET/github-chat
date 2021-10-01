@@ -20,7 +20,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     // @ts-ignore
     <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme}>
       <BaseStyles className={"root"}>
-        <Box bg={"bg.primary"} className={"root"}>
+        <Box bg={"bg.primary"} className={"root"} height="100%" >
           <Component {...pageProps} />
         </Box>
       </BaseStyles>
