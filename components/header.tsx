@@ -1,4 +1,4 @@
-import { Avatar, ButtonOutline, Header } from '@primer/components'
+import { Avatar, ButtonOutline, Header, Text, Box } from '@primer/components'
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { supabase } from '../pages/_app';
@@ -12,8 +12,9 @@ const CustomHeader = ({ showAvatar }: HeaderProps) => {
   const router = useRouter();
 
   const session = supabase.auth.session();
-  const userMeta = session?.user?.user_metadata;
-  
+  const user = session?.user;
+  const userMeta = user?.user_metadata;
+
   const [isAuthenticated, setIsAuthenticated] = useState(session != null)
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png")
 
@@ -25,7 +26,7 @@ const CustomHeader = ({ showAvatar }: HeaderProps) => {
   });
 
   useEffect(() => {
-    if(isAuthenticated) {
+    if (isAuthenticated) {
       setAvatarUrl(userMeta?.avatar_url);
     }
   }, [isAuthenticated, userMeta?.avatar_url])
@@ -40,7 +41,10 @@ const CustomHeader = ({ showAvatar }: HeaderProps) => {
       <Header.Item full>
       </Header.Item>
       {showAvatar && <Header.Item mr={0}>
-        <Avatar src={avatarUrl!} size={32} square alt={userMeta?.username} />
+        <Box display="flex" flexDirection="row" alignItems="center">
+          <Avatar src={avatarUrl!} size={32} square alt={userMeta?.user_name} />
+          <Text fontWeight="bold" paddingLeft={2}>{userMeta?.user_name}</Text>
+        </Box>
       </Header.Item>}
       {showAvatar && !isAuthenticated && <ButtonOutline variant="small" onClick={() => router.push("/login")} >Login</ButtonOutline>}
     </Header>
