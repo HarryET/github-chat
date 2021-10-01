@@ -5,12 +5,57 @@ import { supabase } from './_app';
 import { useRouter } from 'next/dist/client/router';
 import Message from "../components/message";
 import Header from "../components/header";
+import { useEffect, useState } from 'react';
 
 const Home: NextPage = () => {
   const router = useRouter();
 
   const session = supabase.auth.session()
   const userMeta = session?.user?.user_metadata;
+
+  const [chats, setChats] = useState([] as {
+    id: string;
+    github_repo_id: string;
+    // created_at: Date;
+    // owner_id: string;
+    repo_owner: string;
+    repo_name: string;
+    // repo_description: string;
+    // repo_data_last_update: Date;
+  }[]);
+
+  useEffect(() => {
+    (async () => {
+      if (userMeta != null) {
+        const { data, error } = await supabase
+          .from("members")
+          .select(`
+            id,
+            chat_id (
+              id,
+              github_repo_id,
+              repo_owner,
+              repo_name
+            )
+          `)
+          .eq("user_id", session?.user?.id)
+
+        if (data == null) {
+          // TODO handle no data!
+          return;
+        }
+
+        if (error) {
+          // TODO handle error!
+          return;
+        }
+
+        setChats(data.map((member) => member.chat_id));
+      } else {
+        // TODO handle no auth!
+      }
+    })()
+  }, [chats, session?.user?.id, userMeta])
 
   return (
     <Box>
@@ -31,18 +76,13 @@ const Home: NextPage = () => {
             </ButtonPrimary>
           </Box>
           <SideNav bordered maxWidth={360} aria-label="Main">
-            <SideNav.Link href="/chat/HarryET/Repo1">
-              <Text>HarryET/Repo1</Text>
-            </SideNav.Link>
-            <SideNav.Link href="/chat/HarryET/Repo2">
-              <Text>HarryET/Repo2</Text>
-            </SideNav.Link>
-            <SideNav.Link href="/chat/HarryET/Repo3">
-              <Text>HarryET/Repo3</Text>
-            </SideNav.Link>
-            <SideNav.Link href="/chat/HarryET/Repo4">
-              <Text>HarryET/Repo4</Text>
-            </SideNav.Link>
+            {chats.length > 0 && chats.map((chat) => {
+              return (
+                <SideNav.Link key={chat.id} href={`/chats/${chat.id}`}>
+                  <Text>{chat.repo_owner}/{chat.repo_name}</Text>
+                </SideNav.Link>
+              );
+            })}
           </SideNav>
         </Box>
         <Box width="75%" height="100%" >

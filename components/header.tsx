@@ -40,7 +40,7 @@ const CustomHeader = ({ showAvatar }: HeaderProps) => {
       </Header.Item>
       <Header.Item full>
       </Header.Item>
-      {showAvatar && <Header.Item mr={0}>
+      {showAvatar && isAuthenticated && <Header.Item mr={0}>
         <Box display="flex" flexDirection="row" alignItems="center">
           <Avatar src={avatarUrl!} size={32} square alt={userMeta?.user_name} />
           <Text fontWeight="bold" paddingLeft={2}>{userMeta?.user_name}</Text>

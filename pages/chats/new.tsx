@@ -29,6 +29,8 @@ const NewChat: NextPage = () => {
         repo: repo
       });
 
+      console.log(repoData)
+
       if(!repoData.data.permissions?.admin) {
         // TODO handle not admin.
         console.log("Not admin!")
@@ -55,10 +57,27 @@ const NewChat: NextPage = () => {
       const {data, error} = await supabase
         .from("chats")
         .insert([
-          {github_repo_id: repoData.data.id, owner_id: session?.user?.id}
+          {
+            github_repo_id: repoData.data.id, 
+            owner_id: session?.user?.id,
+            repo_owner: repoData.data.full_name.split("/")[0],
+            repo_name: repoData.data.name,
+            repo_description: repoData.data.description
+          }
         ]);
 
       if(error || data == null) {
+        // TODO handle error
+        return;
+      }
+
+      const {data: memberData, error: memberError} = await supabase
+        .from("members")
+        .insert([
+          {chat_id: data[0].id, user_id: session?.user?.id}
+        ]);
+
+      if(memberError || memberData == null) {
         // TODO handle error
         return;
       }
@@ -85,7 +104,7 @@ const NewChat: NextPage = () => {
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <Header showAvatar={true} />
       <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100%" width="100%">
-        <Box>
+        <Box bg="bg.secondary" padding={4}>
           <h3>Create a new Chat!</h3>
           <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
             <Box display="flex" flexDirection="column" justifyContent="center" alignItems="start">
