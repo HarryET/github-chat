@@ -24,6 +24,8 @@ const Home: NextPage = () => {
         <ButtonPrimary marginTop={5} onClick={async () => {
           const { error } = await supabase.auth.signIn({
             provider: "github",
+          }, {
+            scopes: "read:org,read:user,user:email"
           });
 
           if(error) {

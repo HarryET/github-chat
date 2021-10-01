@@ -1,5 +1,6 @@
 import type { NextPage } from 'next'
-import { Box, SideNav, Text } from '@primer/components'
+import { Box, SideNav, Text, ButtonPrimary } from '@primer/components'
+import { PlusIcon } from '@primer/octicons-react';
 import { supabase } from './_app';
 import { useRouter } from 'next/dist/client/router';
 import Message from "../components/message";
@@ -16,17 +17,30 @@ const Home: NextPage = () => {
       <Header showAvatar={true} />
       <Box bg="bg.primary" display="flex" flexDirection="row" alignItems="start" justifyContent="center" height="100%">
         <Box width="25%" height="100%" padding={4}>
+          <Box width="100%" display="flex" flexDirection="row" alignItems="center" justifyContent="space-between" marginBottom={3} style={{
+            maxWidth: "360px"
+          }}>
+            <Text fontWeight="bold">Your Chats:</Text>
+            <ButtonPrimary variant="small" onClick={() => router.push("/chats/new")}>
+              <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center">
+                <PlusIcon size={18} />
+                <Box paddingLeft={2}>
+                  <Text>New</Text>
+                </Box>
+              </Box>
+            </ButtonPrimary>
+          </Box>
           <SideNav bordered maxWidth={360} aria-label="Main">
-            <SideNav.Link href="/repo/HarryET/Repo1">
+            <SideNav.Link href="/chat/HarryET/Repo1">
               <Text>HarryET/Repo1</Text>
             </SideNav.Link>
-            <SideNav.Link href="/repo/HarryET/Repo2">
+            <SideNav.Link href="/chat/HarryET/Repo2">
               <Text>HarryET/Repo2</Text>
             </SideNav.Link>
-            <SideNav.Link href="/repo/HarryET/Repo3">
+            <SideNav.Link href="/chat/HarryET/Repo3">
               <Text>HarryET/Repo3</Text>
             </SideNav.Link>
-            <SideNav.Link href="/repo/HarryET/Repo4">
+            <SideNav.Link href="/chat/HarryET/Repo4">
               <Text>HarryET/Repo4</Text>
             </SideNav.Link>
           </SideNav>
