@@ -2,8 +2,6 @@ import type { NextPage } from 'next'
 import { useRouter } from 'next/router'
 import { Box, Text, ButtonDanger, ButtonPrimary, BranchName } from '@primer/components'
 import { supabase } from '../_app';
-import { useState } from 'react';
-import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import Header from "../../components/header";
 
 const JoinInvite: NextPage = () => {

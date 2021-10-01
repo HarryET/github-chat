@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app'
 import { ThemeProvider, BaseStyles, Box } from '@primer/components'
 import {createClient} from "@supabase/supabase-js";
+import {Octokit } from "@octokit/rest";
 import "../styles/reset.css";
 
 export const supabase = createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.NEXT_PUBLIC_SUPABASE_KEY!);
