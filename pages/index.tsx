@@ -3,7 +3,7 @@ import { Header, ButtonOutline, Avatar, Box, SideNav, Text } from '@primer/compo
 import { supabase } from './_app';
 import { useState } from 'react';
 import { useRouter } from 'next/dist/client/router';
-import { AuthChangeEvent, Session } from '@supabase/supabase-js';
+import type { AuthChangeEvent, Session } from '@supabase/supabase-js';
 import Message from "../components/message";
 
 const Home: NextPage = () => {

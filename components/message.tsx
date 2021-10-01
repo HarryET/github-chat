@@ -1,4 +1,4 @@
-import { Header, ButtonOutline, Avatar, Box, SideNav, Text } from '@primer/components'
+import { Avatar, Box, Text } from '@primer/components'
 
 type MessageProps = {
   avatar: string,

@@ -10,8 +10,10 @@ const Home: NextPage = () => {
   const session = supabase.auth.session();
   const isAuthenticated = session != null
 
-  if (isAuthenticated) {
-    router.push("/");
+  if(typeof window !== "undefined") {
+    if (isAuthenticated) {
+      router.push("/");
+    }
   }
 
   return (
