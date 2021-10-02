@@ -6,6 +6,14 @@
 
 <hr/>
 
+### Get started
+
+#### Run
+
+```
+yarn dev
+```
+
 ### Credits:
 
 - [HarryET](https://github.com/HarryET)
