@@ -8,3 +8,16 @@ export type Chat = {
   // repo_description: string;
   // repo_data_last_update: Date;
 };
+
+export type MessageType = {
+  id: string;
+  author: {
+    id: string;
+    username?: string;
+    nickname?: string;
+    avatar_url: string;
+  };
+  content: string;
+  edited_at?: Date;
+  created_at: Date;
+};

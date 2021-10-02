@@ -6,12 +6,16 @@ import {
   ButtonPrimary,
   BranchName,
   SideNav,
+  Spinner,
+  Button,
 } from "@primer/components";
-import { PlusIcon } from "@primer/octicons-react";
+import { PlusIcon, StopIcon, SyncIcon } from "@primer/octicons-react";
 import { supabase } from "../_app";
 import Header from "../../components/header";
 import Message from "../../components/message";
 import { useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { MessageType } from "../../types";
 
 const ViewChat: NextPage = () => {
   const router = useRouter();
@@ -28,6 +32,15 @@ const ViewChat: NextPage = () => {
     }
   }
 
+  /**
+   * TODO Probably would be a good idea the side list of chats to a separate component,
+   * which picks the chat id from the url and takes care itself of fetching and rendering the data.
+   *
+   * This component can be then used in both index.tsx and [chat].tsx.
+   *
+   * The list of chats data fetching using react-query is already defined in index.tsx.
+   * Pending to add a UI for errors.
+   */
   const [chats, setChats] = useState(
     [] as {
       id: string;
@@ -38,21 +51,6 @@ const ViewChat: NextPage = () => {
       repo_name: string;
       // repo_description: string;
       // repo_data_last_update: Date;
-    }[]
-  );
-
-  const [messages, setMessages] = useState(
-    [] as {
-      id: string;
-      author: {
-        id: string;
-        username: string;
-        nickname?: string;
-        avatar_url: string;
-      };
-      content: string;
-      edited_at?: Date;
-      created_at: Date;
     }[]
   );
 
@@ -91,66 +89,56 @@ const ViewChat: NextPage = () => {
     })();
   }, [session?.user?.id, userMeta]);
 
-  useEffect(() => {
-    (async () => {
-      if (userMeta != null && id != null) {
-        const { data, error } = await supabase
-          .from("messages")
-          // TODO Fix major bugs
-          .select(
-            `
-            id,
-            chat_id,
-            content,
-            created_at,
-            edited_at,
-            member_id (
-              id,
-              nickname,
-            ),
-            member_id:user_id (
-              raw_user_meta_data
-            )
-          `
-          )
-          .eq("chat_id", id);
+  const {
+    data: messages,
+    error: messagesError,
+    isLoading: isMessagesLoading,
+    refetch: refetchMessages,
+  } = useQuery<MessageType[]>("messages", async () => {
+    const { data, error } = await supabase
+      .from("messages")
+      .select(
+        `
+      id,
+      chat_id,
+      content,
+      created_at,
+      edited_at,
+      author: member_id(
+        id,
+        nickname
+      )
+    `
+      )
+      .eq("chat_id", id);
 
-        if (data == null) {
-          // TODO handle no data!
-          return;
-        }
+    /**
+     * TODO
+     * I think users table is not readable from the client app.
+     * In order to fetch the Github user info and join it to each message, we probably need to create
+     * a row in a new table "profiles" whenever a new user signs in, and copy there the raw user meta data.
+     *
+     * This article explains exactly this case:
+     * https://dev.to/sruhleder/creating-user-profiles-on-sign-up-in-supabase-5037
+     */
+    // author: user_id(
+    //   raw_user_meta_data
+    // )
 
-        if (error) {
-          // TODO handle error!
-          return;
-        }
+    if (error) {
+      throw error;
+    }
 
-        setMessages(
-          data.map((message) => {
-            return {
-              id: message.id,
-              author: {
-                id: message.member_id.id,
-                username: "Octocat",
-                nickname: message.member_id.nickname,
-                avatar_url: "https://github.com/octocat.png",
-              },
-              content: message.content,
-              edited_at: message.edited_at,
-              created_at: message.created_at,
-            };
-          })
-        );
-
-        console.log(messages);
-      } else {
-        // TODO handle no auth!
-      }
-    })();
-  }, [id, session?.user?.id, userMeta]);
+    return data || [];
+  });
 
   return (
-    <Box>
+    <Box
+      border="1px dashed pink"
+      height="100%"
+      display="flex"
+      flexDirection="column"
+    >
       <Header showAvatar={true} />
       <Box
         bg="bg.primary"
@@ -158,7 +146,7 @@ const ViewChat: NextPage = () => {
         flexDirection="row"
         alignItems="start"
         justifyContent="center"
-        height="100%"
+        flexGrow={1}
       >
         <Box width="25%" height="100%" padding={4}>
           <Box
@@ -207,13 +195,42 @@ const ViewChat: NextPage = () => {
               })}
           </SideNav>
         </Box>
-        <Box width="75%" height="100%">
-          {messages.length > 0 &&
+        <Box width="75%" height="100%" padding={3}>
+          {(isMessagesLoading || !!messagesError) && (
+            <Box
+              height="100%"
+              width="100%"
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+              alignItems="center"
+            >
+              {isMessagesLoading && !messages && (
+                <>
+                  <Spinner margin={2} size="medium" />
+                  <Text>Loading messages...</Text>
+                </>
+              )}
+              {!!messagesError && !isMessagesLoading && (
+                <>
+                  <StopIcon size="medium" />
+                  <Text mt={2}>
+                    Something went wrong trying to load messages.
+                  </Text>
+                  <Button mt={3} onClick={() => refetchMessages()}>
+                    <SyncIcon size="small" />
+                    <Text ml={2}>Retry</Text>
+                  </Button>
+                </>
+              )}
+            </Box>
+          )}
+          {messages &&
             messages.map((message) => (
               <Message
                 key={message.id}
-                avatar={message.author.avatar_url}
-                username={message.author.username}
+                avatar="https://github.com/octocat.png"
+                username={message.author.nickname || ""}
                 content={message.content}
               />
             ))}
