@@ -162,6 +162,7 @@ const NewChat: NextPage = () => {
                   aria-label="Owner"
                   {...register("owner", { required: true })}
                   sx={{
+                    // TODO Use colors from GH Primer system
                     ...(errors.owner && { borderColor: "red" }),
                   }}
                 />

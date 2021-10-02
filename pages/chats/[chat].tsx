@@ -133,12 +133,7 @@ const ViewChat: NextPage = () => {
   });
 
   return (
-    <Box
-      border="1px dashed pink"
-      height="100%"
-      display="flex"
-      flexDirection="column"
-    >
+    <Box height="100%" display="flex" flexDirection="column">
       <Header showAvatar={true} />
       <Box
         bg="bg.primary"
