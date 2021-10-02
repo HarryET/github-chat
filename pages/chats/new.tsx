@@ -17,6 +17,12 @@ import { SetStateAction, useEffect, useState } from "react";
 import { Octokit } from "@octokit/rest";
 import { useMutation } from "react-query";
 import { Chat } from "../../types";
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  owner: string;
+  repo: string;
+};
 
 const NewChat: NextPage = () => {
   const router = useRouter();
@@ -25,16 +31,20 @@ const NewChat: NextPage = () => {
   const session = supabase.auth.session();
   const isAuthenticated = session != null;
 
-  const userMeta = session?.user?.user_metadata;
-
-  const [owner, setOwner] = useState("");
-  const [repo, setRepo] = useState("");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      if (!isAuthenticated) {
+        router.push(`/login?redirect=/chat/new`);
+        return;
+      }
+    }
+  }, [isAuthenticated, router]);
 
   const {
     mutate: createChat,
     isLoading,
     error: createChatError,
-  } = useMutation(async () => {
+  } = useMutation(async ({ owner, repo }: FormValues) => {
     const octokit = new Octokit({
       auth: session?.provider_token!,
     });
@@ -102,14 +112,13 @@ const NewChat: NextPage = () => {
     router.push(`/chats/${chat[0].id}`);
   });
 
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (!isAuthenticated) {
-        router.push(`/login?redirect=/chat/new`);
-        return;
-      }
-    }
-  }, [isAuthenticated, router]);
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const onSubmit = (values: FormValues) => createChat(values);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" width="100%">
@@ -122,92 +131,94 @@ const NewChat: NextPage = () => {
         height="100%"
         width="100%"
       >
-        <Box
-          bg="bg.secondary"
-          padding={6}
-          display="flex"
-          flexDirection="column"
-          alignItems="flex-start"
-          width="100%"
-          maxWidth="520px"
-        >
-          <Text as="h3" margin={0}>
-            Create a new Chat!
-          </Text>
+        <form onSubmit={handleSubmit(onSubmit)}>
           <Box
+            bg="bg.secondary"
+            padding={6}
             display="flex"
-            flexDirection="row"
-            justifyContent="center"
-            alignItems="center"
-            marginTop={4}
+            flexDirection="column"
+            alignItems="flex-start"
+            width="100%"
+            maxWidth="520px"
           >
+            <Text as="h3" margin={0}>
+              Create a new Chat!
+            </Text>
             <Box
               display="flex"
-              flexDirection="column"
+              flexDirection="row"
               justifyContent="center"
-              alignItems="start"
+              alignItems="center"
+              marginTop={4}
             >
-              <Box mb={2}>
-                <Text>Owner</Text>
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="start"
+              >
+                <Box mb={2}>
+                  <Text>Owner</Text>
+                </Box>
+                <TextInput
+                  aria-label="Owner"
+                  {...register("owner", { required: true })}
+                  sx={{
+                    ...(errors.owner && { borderColor: "red" }),
+                  }}
+                />
               </Box>
-              <TextInput
-                aria-label="Owner"
-                name="owner"
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setOwner(e.target.value)
-                }
-              />
-            </Box>
-            <Box marginX={4}>
-              <Text fontWeight="bold" fontSize={3}>
-                /
-              </Text>
-            </Box>
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="start"
-            >
-              <Box mb={2}>
-                <Text>Repository</Text>
+              <Box marginX={4}>
+                <Text fontWeight="bold" fontSize={3}>
+                  /
+                </Text>
               </Box>
-              <TextInput
-                aria-label="Repo"
-                name="repo"
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setRepo(e.target.value)
-                }
-              />
+              <Box
+                display="flex"
+                flexDirection="column"
+                justifyContent="center"
+                alignItems="start"
+              >
+                <Box mb={2}>
+                  <Text>Repository</Text>
+                </Box>
+                <TextInput
+                  aria-label="Repo"
+                  {...register("repo", { required: true })}
+                  sx={{
+                    ...(errors.repo && { borderColor: "red" }),
+                  }}
+                />
+              </Box>
             </Box>
-          </Box>
-          {createChatError && (
-            <Flash marginTop={3} sx={{ width: "100%" }} variant="danger">
-              {(createChatError as Error).message}
-            </Flash>
-          )}
-          <ButtonPrimary
-            marginTop={4}
-            disabled={isLoading}
-            onClick={() => createChat()}
-            variant="large"
-            minWidth={164}
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-            }}
-          >
-            {isLoading ? (
-              <>
-                <Spinner size="small" sx={{ marginRight: 2 }} />
-                Creating
-              </>
-            ) : (
-              <>Create Chat</>
+            {createChatError && (
+              <Flash marginTop={3} sx={{ width: "100%" }} variant="danger">
+                {(createChatError as Error).message}
+              </Flash>
             )}
-          </ButtonPrimary>
-        </Box>
+            <ButtonPrimary
+              marginTop={4}
+              disabled={isLoading}
+              variant="large"
+              minWidth={164}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              type="submit"
+            >
+              {isLoading ? (
+                <>
+                  <Spinner size="small" sx={{ marginRight: 2 }} />
+                  Creating
+                </>
+              ) : (
+                <>Create Chat</>
+              )}
+            </ButtonPrimary>
+          </Box>
+        </form>
       </Box>
     </Box>
   );
