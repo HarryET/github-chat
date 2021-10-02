@@ -50,8 +50,8 @@ const NewChat: NextPage = () => {
     });
 
     const repoData = await octokit.rest.repos.get({
-      owner: owner,
-      repo: repo,
+      owner: owner.trim(),
+      repo: repo.trim(),
     });
 
     if (!repoData.data.permissions?.admin) {
@@ -64,8 +64,6 @@ const NewChat: NextPage = () => {
       .from<Chat>("chats")
       .select()
       .eq("github_repo_id", repoData.data.id.toString());
-
-    console.log(existingChatError);
 
     if (existingChatError) {
       throw new Error(
@@ -148,14 +146,14 @@ const NewChat: NextPage = () => {
               display="flex"
               flexDirection="row"
               justifyContent="center"
-              alignItems="center"
+              alignItems="flex-start"
               marginTop={4}
             >
               <Box
                 display="flex"
                 flexDirection="column"
                 justifyContent="center"
-                alignItems="start"
+                width="50%"
               >
                 <Box mb={2}>
                   <Text>Owner</Text>
@@ -167,8 +165,17 @@ const NewChat: NextPage = () => {
                     ...(errors.owner && { borderColor: "red" }),
                   }}
                 />
+                {errors.owner && (
+                  <Text fontSize={0} marginTop={2}>
+                    {errors.owner.message}
+                  </Text>
+                )}
               </Box>
-              <Box marginX={4}>
+              <Box marginX={4} display="flex" flexDirection="column">
+                <Text marginBottom={2} sx={{ visibility: "hidden" }}>
+                  Hidden text to achieve same height so the / is styled
+                  correctly.
+                </Text>
                 <Text fontWeight="bold" fontSize={3}>
                   /
                 </Text>
@@ -178,6 +185,7 @@ const NewChat: NextPage = () => {
                 flexDirection="column"
                 justifyContent="center"
                 alignItems="start"
+                width="50%"
               >
                 <Box mb={2}>
                   <Text>Repository</Text>
@@ -189,6 +197,11 @@ const NewChat: NextPage = () => {
                     ...(errors.repo && { borderColor: "red" }),
                   }}
                 />
+                {errors.repo && (
+                  <Text fontSize={0} marginTop={2}>
+                    {errors.repo.message}
+                  </Text>
+                )}
               </Box>
             </Box>
             {createChatError && (
