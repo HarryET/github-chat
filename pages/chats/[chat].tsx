@@ -94,10 +94,11 @@ const ViewChat: NextPage = () => {
             member_id (
               id,
               nickname,
+              user_id (
+                username,
+                avatar_url
+              )
             ),
-            member_id:user_id (
-              raw_user_meta_data
-            )
           `)
           .eq("chat_id", id)
 
@@ -116,17 +117,15 @@ const ViewChat: NextPage = () => {
             id: message.id,
             author: {
               id: message.member_id.id,
-              username: "Octocat",
+              username: message.member_id.user_id.username,
               nickname: message.member_id.nickname,
-              avatar_url: "https://github.com/octocat.png",
+              avatar_url: message.member_id.user_id.avatar_url,
             },
             content: message.content,
             edited_at: message.edited_at,
             created_at: message.created_at,
           };
         }));
-
-        console.log(messages);
       } else {
         // TODO handle no auth!
       }
