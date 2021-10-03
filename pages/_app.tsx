@@ -13,17 +13,15 @@ export const supabase = createClient(
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
-  let theme: string | null = "night";
+  let theme: "day" | "night" | "auto" = "night";
 
   if (typeof window !== "undefined") {
-    theme = localStorage.getItem("theme");
-    if (
-      theme == null ||
-      theme == undefined ||
-      !["day", "night"].includes(theme)
-    ) {
+    let tempTheme = localStorage.getItem("theme");
+    if(tempTheme == null || tempTheme == undefined || !["day", "night"].includes(tempTheme)) {
       theme = "night";
       localStorage.setItem("theme", theme);
+    } else {
+      theme = tempTheme as "day" | "night" | "auto";
     }
   }
 
