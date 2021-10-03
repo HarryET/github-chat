@@ -145,16 +145,10 @@ const NewChat: NextPage = () => {
             <Box
               display="flex"
               flexDirection="row"
-              justifyContent="center"
               alignItems="flex-start"
               marginTop={4}
             >
-              <Box
-                display="flex"
-                flexDirection="column"
-                justifyContent="center"
-                width="50%"
-              >
+              <Box display="flex" flexDirection="column" flexGrow={1}>
                 <Box mb={2}>
                   <Text>Owner</Text>
                 </Box>
@@ -174,8 +168,7 @@ const NewChat: NextPage = () => {
               </Box>
               <Box marginX={4} display="flex" flexDirection="column">
                 <Text marginBottom={2} sx={{ visibility: "hidden" }}>
-                  Hidden text to achieve same height so the / is styled
-                  correctly.
+                  A
                 </Text>
                 <Text fontWeight="bold" fontSize={3}>
                   /
@@ -184,9 +177,8 @@ const NewChat: NextPage = () => {
               <Box
                 display="flex"
                 flexDirection="column"
-                justifyContent="center"
                 alignItems="start"
-                width="50%"
+                flexGrow={1}
               >
                 <Box mb={2}>
                   <Text>Repository</Text>
