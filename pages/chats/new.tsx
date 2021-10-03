@@ -1,95 +1,35 @@
-import type { NextPage } from 'next'
-import { useRouter } from 'next/router'
-import { Box, Text, ButtonDanger, ButtonPrimary, Avatar, TextInput, Dropdown } from '@primer/components'
-import { supabase } from '../_app';
+import type { NextPage } from "next";
+import { useRouter } from "next/router";
+import {
+  Box,
+  Text,
+  ButtonDanger,
+  ButtonPrimary,
+  Avatar,
+  TextInput,
+  Dropdown,
+  Flash,
+  Spinner,
+} from "@primer/components";
+import { supabase } from "../_app";
 import Header from "../../components/header";
-import { SetStateAction, useEffect, useState } from 'react';
-import { Octokit } from '@octokit/rest';
+import { SetStateAction, useEffect, useState } from "react";
+import { Octokit } from "@octokit/rest";
+import { useMutation } from "react-query";
+import { Chat } from "../../types";
+import { useForm } from "react-hook-form";
+
+type FormValues = {
+  owner: string;
+  repo: string;
+};
 
 const NewChat: NextPage = () => {
   const router = useRouter();
-  const { code } = router.query
+  const { code } = router.query;
 
   const session = supabase.auth.session();
   const isAuthenticated = session != null;
-
-  const userMeta = session?.user?.user_metadata;
-
-  const [owner, setOwner] = useState("");
-  const [repo, setRepo] = useState("");
-
-  const createNewChat = async () => {
-    const octokit = new Octokit({
-      auth: session?.provider_token!
-    })
-
-    try {
-      const repoData = await octokit.rest.repos.get({
-        owner: owner,
-        repo: repo
-      });
-
-      console.log(repoData)
-
-      if(!repoData.data.permissions?.admin) {
-        // TODO handle not admin.
-        console.log("Not admin!")
-        return;
-      }
-
-      const { data: existingChat, error: existingChatError } = await supabase
-        .from("chats")
-        .select()
-        .eq("github_repo_id", repoData.data.id);
-
-      if(existingChatError) {
-        // TODO handle error
-        console.log("Exists error!")
-        return;
-      }
-
-      if((existingChat ?? []).length > 0) {
-        // TODO handle already exists
-        console.log("Already exists")
-        return;
-      }
-
-      const {data, error} = await supabase
-        .from("chats")
-        .insert([
-          {
-            github_repo_id: repoData.data.id, 
-            owner_id: session?.user?.id,
-            repo_owner: repoData.data.full_name.split("/")[0],
-            repo_name: repoData.data.name,
-            repo_description: repoData.data.description
-          }
-        ]);
-
-      if(error || data == null) {
-        // TODO handle error
-        return;
-      }
-
-      const {data: memberData, error: memberError} = await supabase
-        .from("members")
-        .insert([
-          {chat_id: data[0].id, user_id: session?.user?.id}
-        ]);
-
-      if(memberError || memberData == null) {
-        // TODO handle error
-        return;
-      }
-
-      router.push(`/chats/${data[0].id}`)
-    } catch (e) {
-      // TODO handle error
-      return;
-    }
-
-    //console.log(repos.data.filter((r) => !r.fork && !r.private && !r.archived));
-  }
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -98,38 +38,202 @@ const NewChat: NextPage = () => {
         return;
       }
     }
-  }, [isAuthenticated, router])
+  }, [isAuthenticated, router]);
+
+  const {
+    mutate: createChat,
+    isLoading,
+    error: createChatError,
+  } = useMutation(async ({ owner, repo }: FormValues) => {
+    const octokit = new Octokit({
+      auth: session?.provider_token!,
+    });
+
+    const repoData = await octokit.rest.repos.get({
+      owner: owner.trim(),
+      repo: repo.trim(),
+    });
+
+    if (!repoData.data.permissions?.admin) {
+      throw new Error(
+        "You should have admin rights in the repository to be able to create a chat"
+      );
+    }
+
+    const { data: existingChats, error: existingChatError } = await supabase
+      .from<Chat>("chats")
+      .select()
+      .eq("github_repo_id", repoData.data.id.toString());
+
+    if (existingChatError) {
+      throw new Error(
+        "There's been an error accessing database. Please, try again."
+      );
+    }
+
+    if (existingChats && existingChats.length > 0) {
+      throw new Error("There is already a chat for this repository");
+    }
+
+    // These two inserts would ideally be wrapped in a transaction
+
+    const { data: chat, error: chatError } = await supabase
+      .from("chats")
+      .insert([
+        {
+          github_repo_id: repoData.data.id,
+          owner_id: session?.user?.id,
+          repo_owner: repoData.data.full_name.split("/")[0],
+          repo_name: repoData.data.name,
+          repo_description: repoData.data.description,
+        },
+      ]);
+
+    if (chatError || chat == null) {
+      if (chatError) {
+        console.error(chatError);
+      }
+      throw new Error(
+        "Failed to insert new chat in database. Please, try again." +
+          " If the error persists, please notify the creators of Github Chat."
+      );
+    }
+
+    const { data: memberData, error: memberError } = await supabase
+      .from("members")
+      .insert([{ chat_id: chat[0].id, user_id: session?.user?.id }]);
+
+    if (memberError || memberData == null) {
+      if (memberError) {
+        console.error(memberError);
+      }
+      throw new Error(
+        "Failed to insert new member in database. Please, try again." +
+          "If the error persists, please notify the creators of Github Chat."
+      );
+    }
+
+    router.push(`/chats/${chat[0].id}`);
+  });
+
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+  } = useForm<FormValues>();
+
+  const onSubmit = (values: FormValues) => createChat(values);
 
   return (
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <Header showAvatar={true} />
-      <Box display="flex" flexDirection="column" justifyContent="center" alignItems="center" height="100%" width="100%">
-        <Box bg="bg.secondary" padding={4}>
-          <h3>Create a new Chat!</h3>
-          <Box display="flex" flexDirection="row" justifyContent="center" alignItems="center">
-            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="start">
-              <Box mb={2}>
-                <Text>Owner</Text>
+      <Box
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        height="100%"
+        width="100%"
+      >
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <Box
+            bg="bg.secondary"
+            padding={6}
+            display="flex"
+            flexDirection="column"
+            alignItems="flex-start"
+            width="100%"
+            maxWidth="520px"
+          >
+            <Text as="h3" margin={0}>
+              Create a new Chat!
+            </Text>
+            <Box
+              display="flex"
+              flexDirection="row"
+              alignItems="flex-start"
+              marginTop={4}
+            >
+              <Box display="flex" flexDirection="column" flexGrow={1}>
+                <Box mb={2}>
+                  <Text>Owner</Text>
+                </Box>
+                <TextInput
+                  aria-label="Owner"
+                  {...register("owner", { required: true })}
+                  sx={{
+                    // TODO Use colors from GH Primer system
+                    ...(errors.owner && { borderColor: "red" }),
+                  }}
+                />
+                {errors.owner && (
+                  <Text fontSize={0} marginTop={2}>
+                    {errors.owner.message}
+                  </Text>
+                )}
               </Box>
-              <TextInput aria-label="Owner" name="owner" onChange={(e: { target: { value: SetStateAction<string>; }; }) => setOwner(e.target.value)} />
-            </Box>
-            <Box marginX={4}>
-              <Text fontWeight="bold" fontSize={3}>/</Text>
-            </Box>
-            <Box display="flex" flexDirection="column" justifyContent="center" alignItems="start">
-              <Box mb={2}>
-                <Text>Repository</Text>
+              <Box marginX={4} display="flex" flexDirection="column">
+                <Text marginBottom={2} sx={{ visibility: "hidden" }}>
+                  A
+                </Text>
+                <Text fontWeight="bold" fontSize={3}>
+                  /
+                </Text>
               </Box>
-              <TextInput aria-label="Repo" name="repo" onChange={(e: { target: { value: SetStateAction<string>; }; }) => setRepo(e.target.value)} />
+              <Box
+                display="flex"
+                flexDirection="column"
+                alignItems="start"
+                flexGrow={1}
+              >
+                <Box mb={2}>
+                  <Text>Repository</Text>
+                </Box>
+                <TextInput
+                  aria-label="Repo"
+                  {...register("repo", { required: true })}
+                  sx={{
+                    ...(errors.repo && { borderColor: "red" }),
+                  }}
+                />
+                {errors.repo && (
+                  <Text fontSize={0} marginTop={2}>
+                    {errors.repo.message}
+                  </Text>
+                )}
+              </Box>
             </Box>
+            {createChatError && (
+              <Flash marginTop={3} sx={{ width: "100%" }} variant="danger">
+                {(createChatError as Error).message}
+              </Flash>
+            )}
+            <ButtonPrimary
+              marginTop={4}
+              disabled={isLoading}
+              variant="large"
+              minWidth={164}
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+              type="submit"
+            >
+              {isLoading ? (
+                <>
+                  <Spinner size="small" sx={{ marginRight: 2 }} />
+                  Creating
+                </>
+              ) : (
+                <>Create Chat</>
+              )}
+            </ButtonPrimary>
           </Box>
-          <ButtonPrimary marginTop={3} onClick={createNewChat}>
-            Create Chat
-          </ButtonPrimary>
-        </Box>
+        </form>
       </Box>
     </Box>
-  )
-}
+  );
+};
 
 export default NewChat;
