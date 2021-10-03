@@ -94,43 +94,37 @@ const ViewChat: NextPage = () => {
     error: messagesError,
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
-  } = useQuery<MessageType[]>("messages", async () => {
-    const { data, error } = await supabase
-      .from("messages")
-      .select(
-        `
+  } = useQuery<MessageType[]>(
+    "messages",
+    async () => {
+      const { data, error } = await supabase
+        .from("messages")
+        .select(
+          `
       id,
       chat_id,
       content,
       created_at,
       edited_at,
       author: member_id(
-        id,
-        nickname
+        nickname,
+        user: user_id (
+          username,
+          avatar_url  
+        )        
       )
     `
-      )
-      .eq("chat_id", id);
+        )
+        .eq("chat_id", id);
 
-    /**
-     * TODO
-     * I think users table is not readable from the client app.
-     * In order to fetch the Github user info and join it to each message, we probably need to create
-     * a row in a new table "profiles" whenever a new user signs in, and copy there the raw user meta data.
-     *
-     * This article explains exactly this case:
-     * https://dev.to/sruhleder/creating-user-profiles-on-sign-up-in-supabase-5037
-     */
-    // author: user_id(
-    //   raw_user_meta_data
-    // )
+      if (error) {
+        throw error;
+      }
 
-    if (error) {
-      throw error;
-    }
-
-    return data || [];
-  });
+      return data || [];
+    },
+    { enabled: !!id }
+  );
 
   return (
     <Box height="100%" display="flex" flexDirection="column">
@@ -224,8 +218,10 @@ const ViewChat: NextPage = () => {
             messages.map((message) => (
               <Message
                 key={message.id}
-                avatar="https://github.com/octocat.png"
-                username={message.author.nickname || ""}
+                avatar={message.author.user.avatar_url}
+                username={
+                  message.author.nickname || message.author.user.username
+                }
                 content={message.content}
               />
             ))}

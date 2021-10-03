@@ -90,9 +90,12 @@ const NewChat: NextPage = () => {
       ]);
 
     if (chatError || chat == null) {
+      if (chatError) {
+        console.error(chatError);
+      }
       throw new Error(
         "Failed to insert new chat in database. Please, try again." +
-          "If the error persists, please notify the creators of Github Chat."
+          " If the error persists, please notify the creators of Github Chat."
       );
     }
 
@@ -101,6 +104,9 @@ const NewChat: NextPage = () => {
       .insert([{ chat_id: chat[0].id, user_id: session?.user?.id }]);
 
     if (memberError || memberData == null) {
+      if (memberError) {
+        console.error(memberError);
+      }
       throw new Error(
         "Failed to insert new member in database. Please, try again." +
           "If the error persists, please notify the creators of Github Chat."

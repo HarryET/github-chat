@@ -9,14 +9,19 @@ export type Chat = {
   // repo_data_last_update: Date;
 };
 
+type User = {
+  username: string;
+  avatar_url: string;
+};
+
+type Member = {
+  nickname?: string;
+  user: User;
+};
+
 export type MessageType = {
   id: string;
-  author: {
-    id: string;
-    username?: string;
-    nickname?: string;
-    avatar_url: string;
-  };
+  author: Member;
   content: string;
   edited_at?: Date;
   created_at: Date;
