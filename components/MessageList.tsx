@@ -1,7 +1,7 @@
 import { Box } from "@primer/components";
 import { useEffect, useRef } from "react";
 import { MessageType } from "../types";
-import Message from "./message";
+import { Message } from "./Message";
 
 type Props = {
   messages: MessageType[];

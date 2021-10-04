@@ -49,7 +49,7 @@ export const SideMenu = ({ selectedChatId }: Props) => {
   }
 
   return (
-    <Box height="100%" minWidth={360} width={360} flexShrink={1} padding={4}>
+    <Box height="100%" width={360} flexShrink={0} padding={4}>
       <Box
         width="100%"
         display="flex"

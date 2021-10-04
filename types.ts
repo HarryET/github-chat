@@ -16,6 +16,8 @@ type User = {
 
 export type Member = {
   id: string;
+  user_id: string;
+  chat_id: string;
   nickname?: string;
   user: User;
 };

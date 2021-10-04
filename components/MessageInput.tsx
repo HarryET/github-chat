@@ -16,7 +16,7 @@ export const MessageInput = ({ chatId, memberId }: Props) => {
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter") {
+    if (e.code === "Enter" && value.trim().length > 0) {
       submitMessage();
       setValue("");
     }
@@ -31,19 +31,25 @@ export const MessageInput = ({ chatId, memberId }: Props) => {
       },
     ]);
     if (error) {
-      console.log(error);
+      // TODO Handle in UI
+      console.error(error);
     }
   });
 
   return (
-    <Box border="2px dashed green" height={128} padding={4}>
+    <Box paddingX={3} paddingBottom={3} flexShrink={0}>
       <TextInput
         as="textarea"
         height="100%"
         width="100%"
+        border="1px solid"
+        borderColor="border.subtle"
         sx={{
-          border: "none",
           backgroundColor: "canvas.overlay",
+          ":focus-within": {
+            borderColor: "fg.subtle",
+            boxShadow: "none",
+          },
         }}
         style={{
           // This does not work if set in sx

@@ -6,13 +6,34 @@ type MessageProps = {
   username: string;
 };
 
-const Message = ({ avatar, username, content }: MessageProps) => {
+export const Message = ({ avatar, username, content }: MessageProps) => {
   return (
-    <Box display="flex" flexDirection="row" padding={2}>
-      <Avatar src={avatar} size={48} square alt={username} />
+    <Box
+      display="flex"
+      flexDirection="row"
+      paddingX={3}
+      paddingY={2}
+      sx={{
+        ":hover": {
+          bg: "canvas.subtle",
+        },
+      }}
+    >
+      <Avatar
+        src={avatar}
+        size={36}
+        square
+        alt={username}
+        sx={{ flexShrink: 0 }}
+        bg="neutral.muted"
+      />
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
-        <Text fontWeight="bold">{username}</Text>
+        <Text fontWeight="bold" fontSize={1} lineHeight={1}>
+          {username}
+        </Text>
         <Text
+          mt={2}
+          fontSize={1}
           style={{
             overflowWrap: "break-word",
             maxWidth: "100%",
@@ -24,5 +45,3 @@ const Message = ({ avatar, username, content }: MessageProps) => {
     </Box>
   );
 };
-
-export default Message;

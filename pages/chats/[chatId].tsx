@@ -64,43 +64,19 @@ const ViewChat: NextPage = () => {
 
       return data || [];
     },
-    { enabled: !!chatId && isAuthenticated, staleTime: Infinity }
+    { enabled: !!chatId && isAuthenticated }
   );
-
-  // TODO Fetch all members of this channel - subscribe also
 
   useEffect(() => {
     supabase
       .from("messages")
-      .on("*", (payload) => {
-        console.log("UPDATED");
-        queryClient.setQueryData<MessageType[] | undefined>(
-          ["messages"],
-          (previousMessages) => {
-            const { id, chat_id, content, member_id, created_at } = payload.new;
-            return previousMessages !== undefined
-              ? [
-                  ...previousMessages,
-                  {
-                    id,
-                    author: {
-                      id: "",
-                      nickname: "Foo",
-                      user: {
-                        username: "Foo",
-                        avatar_url: "",
-                      },
-                    },
-                    content,
-                    created_at,
-                  },
-                ]
-              : undefined;
-          }
-        );
+      .on("*", () => {
+        // TODO Possible optimization: instead of refetch, execute the messages query with created_at > event.timestamp
+        // and append the results to the already fetched messages
+        refetchMessages();
       })
       .subscribe();
-  }, [queryClient]);
+  }, [refetchMessages]);
 
   const {
     data: member,
@@ -110,7 +86,7 @@ const ViewChat: NextPage = () => {
     "member",
     async () => {
       const { data, error } = await supabase
-        .from("members")
+        .from<Member>("members")
         .select("id, nickname")
         .eq("chat_id", chatId)
         .eq("user_id", user?.id)
@@ -127,8 +103,6 @@ const ViewChat: NextPage = () => {
     return null;
   }
 
-  console.log("MESSAGES", messages);
-
   return (
     <Root>
       <Box
@@ -140,13 +114,7 @@ const ViewChat: NextPage = () => {
         overflowY="hidden"
       >
         <SideMenu selectedChatId={chatId} />
-        <Box
-          display="flex"
-          flexDirection="column"
-          flexGrow={1}
-          height="100%"
-          border="1px dashed red"
-        >
+        <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
           {(isMessagesLoading ||
             !!messagesError ||
             (messages && messages.length === 0)) && (
@@ -157,7 +125,6 @@ const ViewChat: NextPage = () => {
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
-              // border="2px dashed pink"
             >
               <Box
                 display="flex"
