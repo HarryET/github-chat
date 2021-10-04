@@ -12,18 +12,13 @@ import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
 import { supabase } from "./_app";
 import Header from "../components/header";
 import { useMutation } from "react-query";
+import { MainActionBox } from "../components/MainActionBox";
 
 const Home: NextPage = () => {
   const router = useRouter();
 
   const session = supabase.auth.session();
   const isAuthenticated = session !== null;
-
-  if (typeof window !== "undefined") {
-    if (isAuthenticated) {
-      router.push("/");
-    }
-  }
 
   const {
     mutate: handleSignIn,
@@ -43,6 +38,13 @@ const Home: NextPage = () => {
     router.push("/");
   });
 
+  if (typeof window !== "undefined") {
+    if (isAuthenticated) {
+      router.push("/");
+      return null;
+    }
+  }
+
   return (
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <Header showAvatar={false} />
@@ -54,29 +56,19 @@ const Home: NextPage = () => {
         alignItems="center"
         width="100%"
       >
-        <Box
-          display="flex"
-          flexDirection="column"
-          alignItems="center"
-          padding={8}
-          borderWidth={1}
-          borderStyle="solid"
-          borderColor="border.default"
-          borderRadius={16}
-        >
+        <MainActionBox>
           <StyledOcticon icon={MarkGithubIcon} size="large" />
-          <Text as="h2" mt={4} mb={0}>
+          <Text as="h1" mt={4} mb={0} lineHeight={1}>
             Github Chat
           </Text>
-          {/* <MarkGithubIcon size="large" sx={{ marginBottom: 8 }} /> */}
           {error && (
-            <Flash variant="danger" mt={4} sx={{ width: "100%" }}>
+            <Flash variant="danger" mt={5} sx={{ width: "100%" }}>
               <StyledOcticon icon={XIcon} />
               {(error as Error)?.message || "Failed to login"}
             </Flash>
           )}
           <ButtonPrimary
-            marginTop={4}
+            mt={6}
             disabled={isLoading}
             variant="large"
             width={256}
@@ -96,7 +88,7 @@ const Home: NextPage = () => {
               </Box>
             </Box>
           </ButtonPrimary>
-        </Box>
+        </MainActionBox>
       </Box>
     </Box>
   );
