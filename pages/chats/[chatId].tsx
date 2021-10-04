@@ -7,24 +7,20 @@ import {
   CommentDiscussionIcon,
 } from "@primer/octicons-react";
 import { supabase } from "../_app";
-import { useQuery, useQueryClient } from "react-query";
-import { Member, MessageType } from "../../types";
+import Message from "../../components/message";
+import { useQuery } from "react-query";
+import { MessageType } from "../../types";
 import { SideMenu } from "../../components/SideMenu";
 import { Root } from "../../components/Root";
-import { MessageInput } from "../../components/MessageInput";
-import { MessageList } from "../../components/MessageList";
-import { useEffect } from "react";
 
 const ViewChat: NextPage = () => {
-  const queryClient = useQueryClient();
-
   const router = useRouter();
   const chatId =
     typeof router.query.chatId === "string" ? router.query.chatId : undefined;
 
-  const user = supabase.auth.user();
+  const session = supabase.auth.session();
 
-  const isAuthenticated = user !== null;
+  const isAuthenticated = session !== null;
   if (typeof window !== "undefined" && !isAuthenticated) {
     router.push(`/login?redirect=/chats/${chatId}`);
   }
@@ -35,7 +31,7 @@ const ViewChat: NextPage = () => {
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
   } = useQuery<MessageType[]>(
-    ["messages"],
+    "messages",
     async () => {
       const { data, error } = await supabase
         .from("messages")
@@ -47,7 +43,6 @@ const ViewChat: NextPage = () => {
       created_at,
       edited_at,
       author: member_id(
-        id,
         nickname,
         user: user_id (
           username,
@@ -67,41 +62,6 @@ const ViewChat: NextPage = () => {
     { enabled: !!chatId && isAuthenticated }
   );
 
-  useEffect(() => {
-    supabase
-      .from("messages")
-      .on("*", () => {
-        // TODO
-        // Should filter only messages belonging to this chat
-        //
-        // Possible optimization: instead of refetch, execute the messages query with created_at > event.timestamp
-        // and append the results to the already fetched messages
-        refetchMessages();
-      })
-      .subscribe();
-  }, [refetchMessages]);
-
-  const {
-    data: member,
-    error: memberError,
-    isLoading: isMemberLoading,
-  } = useQuery(
-    "member",
-    async () => {
-      const { data, error } = await supabase
-        .from<Member>("members")
-        .select("id, nickname")
-        .eq("chat_id", chatId)
-        .eq("user_id", user?.id)
-        .single();
-      if (error) {
-        throw error;
-      }
-      return data as Member;
-    },
-    { enabled: !!chatId && isAuthenticated }
-  );
-
   if (!isAuthenticated) {
     return null;
   }
@@ -114,10 +74,9 @@ const ViewChat: NextPage = () => {
         flexDirection="row"
         flexGrow={1}
         width="100%"
-        overflowY="hidden"
       >
         <SideMenu selectedChatId={chatId} />
-        <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
+        <Box flexGrow={1} height="100%" padding={3}>
           {(isMessagesLoading ||
             !!messagesError ||
             (messages && messages.length === 0)) && (
@@ -168,10 +127,17 @@ const ViewChat: NextPage = () => {
               </Box>
             </Box>
           )}
-          {messages && <MessageList messages={messages} />}
-          {!!chatId && member && (
-            <MessageInput chatId={chatId} memberId={member.id} />
-          )}
+          {messages &&
+            messages.map((message) => (
+              <Message
+                key={message.id}
+                avatar={message.author.user.avatar_url}
+                username={
+                  message.author.nickname || message.author.user.username
+                }
+                content={message.content}
+              />
+            ))}
         </Box>
       </Box>
     </Root>
