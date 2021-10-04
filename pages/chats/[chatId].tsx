@@ -7,7 +7,7 @@ import {
   CommentDiscussionIcon,
 } from "@primer/octicons-react";
 import { supabase } from "../_app";
-import Message from "../../components/message";
+import Message from "../../components/Message";
 import { useQuery } from "react-query";
 import { MessageType } from "../../types";
 import { SideMenu } from "../../components/SideMenu";
