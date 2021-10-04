@@ -1,4 +1,7 @@
-html, body, #__next, .root {
-    width: 100%;
-    height: 100%;
+html,
+body,
+#__next,
+.root {
+  width: 100%;
+  height: 100%;
 }

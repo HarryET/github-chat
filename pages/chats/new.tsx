@@ -3,24 +3,20 @@ import { useRouter } from "next/router";
 import {
   Box,
   Text,
-  ButtonDanger,
   ButtonPrimary,
-  Avatar,
   TextInput,
-  Dropdown,
   Flash,
   Spinner,
   StyledOcticon,
 } from "@primer/components";
 import { supabase } from "../_app";
-import Header from "../../components/header";
-import { SetStateAction, useEffect, useState } from "react";
 import { Octokit } from "@octokit/rest";
 import { useMutation } from "react-query";
 import { Chat } from "../../types";
 import { useForm } from "react-hook-form";
 import { XIcon } from "@primer/octicons-react";
 import { MainActionBox } from "../../components/MainActionBox";
+import { Root } from "../../components/Root";
 
 type FormValues = {
   owner: string;
@@ -29,7 +25,6 @@ type FormValues = {
 
 const NewChat: NextPage = () => {
   const router = useRouter();
-  const { code } = router.query;
 
   const session = supabase.auth.session();
   const isAuthenticated = session !== null;
@@ -126,8 +121,7 @@ const NewChat: NextPage = () => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" width="100%">
-      <Header showAvatar={true} />
+    <Root>
       <Box
         display="flex"
         flexDirection="column"
@@ -229,7 +223,7 @@ const NewChat: NextPage = () => {
           </MainActionBox>
         </form>
       </Box>
-    </Box>
+    </Root>
   );
 };
 
