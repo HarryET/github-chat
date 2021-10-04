@@ -7,20 +7,24 @@ import {
   CommentDiscussionIcon,
 } from "@primer/octicons-react";
 import { supabase } from "../_app";
-import Message from "../../components/message";
-import { useQuery } from "react-query";
-import { MessageType } from "../../types";
+import { useQuery, useQueryClient } from "react-query";
+import { Member, MessageType } from "../../types";
 import { SideMenu } from "../../components/SideMenu";
 import { Root } from "../../components/Root";
+import { MessageInput } from "../../components/MessageInput";
+import { MessageList } from "../../components/MessageList";
+import { useEffect } from "react";
 
 const ViewChat: NextPage = () => {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const chatId =
     typeof router.query.chatId === "string" ? router.query.chatId : undefined;
 
-  const session = supabase.auth.session();
+  const user = supabase.auth.user();
 
-  const isAuthenticated = session !== null;
+  const isAuthenticated = user !== null;
   if (typeof window !== "undefined" && !isAuthenticated) {
     router.push(`/login?redirect=/chats/${chatId}`);
   }
@@ -31,7 +35,7 @@ const ViewChat: NextPage = () => {
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
   } = useQuery<MessageType[]>(
-    "messages",
+    ["messages"],
     async () => {
       const { data, error } = await supabase
         .from("messages")
@@ -43,6 +47,7 @@ const ViewChat: NextPage = () => {
       created_at,
       edited_at,
       author: member_id(
+        id,
         nickname,
         user: user_id (
           username,
@@ -59,12 +64,70 @@ const ViewChat: NextPage = () => {
 
       return data || [];
     },
+    { enabled: !!chatId && isAuthenticated, staleTime: Infinity }
+  );
+
+  // TODO Fetch all members of this channel - subscribe also
+
+  useEffect(() => {
+    supabase
+      .from("messages")
+      .on("*", (payload) => {
+        console.log("UPDATED");
+        queryClient.setQueryData<MessageType[] | undefined>(
+          ["messages"],
+          (previousMessages) => {
+            const { id, chat_id, content, member_id, created_at } = payload.new;
+            return previousMessages !== undefined
+              ? [
+                  ...previousMessages,
+                  {
+                    id,
+                    author: {
+                      id: "",
+                      nickname: "Foo",
+                      user: {
+                        username: "Foo",
+                        avatar_url: "",
+                      },
+                    },
+                    content,
+                    created_at,
+                  },
+                ]
+              : undefined;
+          }
+        );
+      })
+      .subscribe();
+  }, [queryClient]);
+
+  const {
+    data: member,
+    error: memberError,
+    isLoading: isMemberLoading,
+  } = useQuery(
+    "member",
+    async () => {
+      const { data, error } = await supabase
+        .from("members")
+        .select("id, nickname")
+        .eq("chat_id", chatId)
+        .eq("user_id", user?.id)
+        .single();
+      if (error) {
+        throw error;
+      }
+      return data as Member;
+    },
     { enabled: !!chatId && isAuthenticated }
   );
 
   if (!isAuthenticated) {
     return null;
   }
+
+  console.log("MESSAGES", messages);
 
   return (
     <Root>
@@ -74,9 +137,16 @@ const ViewChat: NextPage = () => {
         flexDirection="row"
         flexGrow={1}
         width="100%"
+        overflowY="hidden"
       >
         <SideMenu selectedChatId={chatId} />
-        <Box flexGrow={1} height="100%" padding={3}>
+        <Box
+          display="flex"
+          flexDirection="column"
+          flexGrow={1}
+          height="100%"
+          border="1px dashed red"
+        >
           {(isMessagesLoading ||
             !!messagesError ||
             (messages && messages.length === 0)) && (
@@ -87,6 +157,7 @@ const ViewChat: NextPage = () => {
               flexDirection="column"
               justifyContent="center"
               alignItems="center"
+              // border="2px dashed pink"
             >
               <Box
                 display="flex"
@@ -127,17 +198,10 @@ const ViewChat: NextPage = () => {
               </Box>
             </Box>
           )}
-          {messages &&
-            messages.map((message) => (
-              <Message
-                key={message.id}
-                avatar={message.author.user.avatar_url}
-                username={
-                  message.author.nickname || message.author.user.username
-                }
-                content={message.content}
-              />
-            ))}
+          {messages && <MessageList messages={messages} />}
+          {!!chatId && member && (
+            <MessageInput chatId={chatId} memberId={member.id} />
+          )}
         </Box>
       </Box>
     </Root>

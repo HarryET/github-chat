@@ -14,7 +14,8 @@ type User = {
   avatar_url: string;
 };
 
-type Member = {
+export type Member = {
+  id: string;
   nickname?: string;
   user: User;
 };
