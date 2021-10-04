@@ -124,8 +124,6 @@ const NewChat: NextPage = () => {
     return null;
   }
 
-  console.log(errors);
-
   return (
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <Header showAvatar={true} />
