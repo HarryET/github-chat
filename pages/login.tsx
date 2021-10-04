@@ -6,6 +6,7 @@ import {
   Flash,
   Spinner,
   StyledOcticon,
+  Text,
 } from "@primer/components";
 import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
 import { supabase } from "./_app";
@@ -53,34 +54,49 @@ const Home: NextPage = () => {
         alignItems="center"
         width="100%"
       >
-        <MarkGithubIcon size="large" />
-        {error && (
-          <Flash variant="danger">
-            <StyledOcticon icon={XIcon} />
-            {(error as Error)?.message || "Failed to login"}
-          </Flash>
-        )}
-        <ButtonPrimary
-          marginTop={5}
-          disabled={isLoading}
-          variant="large"
-          width={256}
-          onClick={() => handleSignIn()}
+        <Box
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          padding={8}
+          borderWidth={1}
+          borderStyle="solid"
+          borderColor="border.default"
+          borderRadius={16}
         >
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="center"
-            alignItems="center"
-            height="100%"
-            width="100%"
+          <StyledOcticon icon={MarkGithubIcon} size="large" />
+          <Text as="h2" mt={4} mb={0}>
+            Github Chat
+          </Text>
+          {/* <MarkGithubIcon size="large" sx={{ marginBottom: 8 }} /> */}
+          {error && (
+            <Flash variant="danger" mt={4} sx={{ width: "100%" }}>
+              <StyledOcticon icon={XIcon} />
+              {(error as Error)?.message || "Failed to login"}
+            </Flash>
+          )}
+          <ButtonPrimary
+            marginTop={4}
+            disabled={isLoading}
+            variant="large"
+            width={256}
+            onClick={() => handleSignIn()}
           >
-            {isLoading && <Spinner size="small" />}
-            <Box marginLeft={2}>
-              <span>Login with GitHub</span>
+            <Box
+              display="flex"
+              flexDirection="row"
+              justifyContent="center"
+              alignItems="center"
+              height="100%"
+              width="100%"
+            >
+              {isLoading && <Spinner size="small" />}
+              <Box marginLeft={2}>
+                <span>Login with GitHub</span>
+              </Box>
             </Box>
-          </Box>
-        </ButtonPrimary>
+          </ButtonPrimary>
+        </Box>
       </Box>
     </Box>
   );
