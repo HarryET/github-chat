@@ -20,6 +20,7 @@ import { useMutation } from "react-query";
 import { Chat } from "../../types";
 import { useForm } from "react-hook-form";
 import { XIcon } from "@primer/octicons-react";
+import { MainActionBox } from "../../components/MainActionBox";
 
 type FormValues = {
   owner: string;
@@ -136,17 +137,9 @@ const NewChat: NextPage = () => {
         width="100%"
       >
         <form onSubmit={handleSubmit(onSubmit)}>
-          <Box
-            bg="bg.secondary"
-            padding={6}
-            display="flex"
-            flexDirection="column"
-            alignItems="flex-start"
-            width="100%"
-            maxWidth="520px"
-          >
-            <Text as="h3" margin={0}>
-              Create a new Chat!
+          <MainActionBox maxWidth={520}>
+            <Text as="h1" margin={0}>
+              Create a new Chat
             </Text>
             <Box
               display="flex"
@@ -206,14 +199,17 @@ const NewChat: NextPage = () => {
             {createChatError && (
               <Flash marginTop={3} sx={{ width: "100%" }} variant="danger">
                 <StyledOcticon icon={XIcon} />
-                {(createChatError as Error)?.message || "Failed to create chat"}
+                <Text fontSize={1}>
+                  {(createChatError as Error)?.message ||
+                    "Failed to create chat"}
+                </Text>
               </Flash>
             )}
             <ButtonPrimary
               marginTop={4}
               disabled={isLoading}
               variant="large"
-              minWidth={164}
+              width="100%"
               sx={{
                 display: "flex",
                 justifyContent: "center",
@@ -230,7 +226,7 @@ const NewChat: NextPage = () => {
                 <>Create Chat</>
               )}
             </ButtonPrimary>
-          </Box>
+          </MainActionBox>
         </form>
       </Box>
     </Box>

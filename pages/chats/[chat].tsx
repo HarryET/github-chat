@@ -136,7 +136,7 @@ const ViewChat: NextPage = () => {
     <Box height="100%" display="flex" flexDirection="column">
       <Header showAvatar={true} />
       <Box
-        bg="bg.primary"
+        bg="canvas.default"
         display="flex"
         flexDirection="row"
         alignItems="start"

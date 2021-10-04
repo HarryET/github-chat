@@ -55,7 +55,7 @@ const Home: NextPage = () => {
     <Box>
       <Header showAvatar={true} />
       <Box
-        bg="bg.primary"
+        bg="canvas.default"
         display="flex"
         flexDirection="row"
         alignItems="start"

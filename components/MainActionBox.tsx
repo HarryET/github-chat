@@ -1,7 +1,10 @@
 import React from "react";
-import { Box } from "@primer/components";
+import { Box, BoxProps } from "@primer/components";
 
-export const MainActionBox: React.FC = ({ children }) => (
+export const MainActionBox: React.FC<BoxProps> = ({
+  children,
+  ...boxProps
+}) => (
   <Box
     display="flex"
     flexDirection="column"
@@ -14,6 +17,7 @@ export const MainActionBox: React.FC = ({ children }) => (
     bg="canvas.subtle"
     width="100%"
     maxWidth={400}
+    {...boxProps}
   >
     {children}
   </Box>
