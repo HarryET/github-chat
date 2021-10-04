@@ -17,7 +17,11 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   if (typeof window !== "undefined") {
     let tempTheme = localStorage.getItem("theme");
-    if(tempTheme == null || tempTheme == undefined || !["day", "night"].includes(tempTheme)) {
+    if (
+      tempTheme == null ||
+      tempTheme == undefined ||
+      !["day", "night"].includes(tempTheme)
+    ) {
       theme = "night";
       localStorage.setItem("theme", theme);
     } else {
@@ -30,7 +34,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme}>
         <BaseStyles className={"root"}>
-          <Box bg={"bg.primary"} className={"root"} height="100%">
+          <Box bg="canvas.default" className="root" height="100%">
             <Component {...pageProps} />
           </Box>
         </BaseStyles>

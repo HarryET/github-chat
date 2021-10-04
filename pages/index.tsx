@@ -7,13 +7,16 @@ import Message from "../components/message";
 import Header from "../components/header";
 import { useQuery } from "react-query";
 import { Chat } from "../types";
+import { useEffect } from "react";
 
 const Home: NextPage = () => {
   const router = useRouter();
 
-  // Need to refetch the chats based on this?
   const session = supabase.auth.session();
-  const userMeta = session?.user?.user_metadata;
+  const isAuthenticated = session !== null;
+  if (typeof window !== "undefined" && !isAuthenticated) {
+    router.push(`/login?redirect=/`);
+  }
 
   const {
     data: chats,
@@ -41,14 +44,18 @@ const Home: NextPage = () => {
       }
       return data?.map((entry) => entry.chat) || [];
     },
-    { enabled: true }
+    { enabled: isAuthenticated }
   );
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <Box>
       <Header showAvatar={true} />
       <Box
-        bg="bg.primary"
+        bg="canvas.default"
         display="flex"
         flexDirection="row"
         alignItems="start"
