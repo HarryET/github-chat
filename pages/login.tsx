@@ -10,7 +10,6 @@ import {
 } from "@primer/components";
 import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
 import { supabase } from "./_app";
-import { CustomHeader } from "../components/CustomHeader";
 import { useMutation } from "react-query";
 import { MainActionBox } from "../components/MainActionBox";
 import { Root } from "../components/Root";
