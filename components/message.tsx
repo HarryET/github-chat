@@ -15,7 +15,7 @@ const Message = ({ avatar, username, content }: MessageProps) => {
         <Text
           style={{
             overflowWrap: "break-word",
-            // maxWidth: "100%",
+            maxWidth: "100%",
           }}
         >
           {content}
