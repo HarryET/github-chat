@@ -71,7 +71,10 @@ const ViewChat: NextPage = () => {
     supabase
       .from("messages")
       .on("*", () => {
-        // TODO Possible optimization: instead of refetch, execute the messages query with created_at > event.timestamp
+        // TODO
+        // Should filter only messages belonging to this chat
+        //
+        // Possible optimization: instead of refetch, execute the messages query with created_at > event.timestamp
         // and append the results to the already fetched messages
         refetchMessages();
       })
