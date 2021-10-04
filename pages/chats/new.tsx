@@ -10,6 +10,7 @@ import {
   Dropdown,
   Flash,
   Spinner,
+  StyledOcticon,
 } from "@primer/components";
 import { supabase } from "../_app";
 import Header from "../../components/header";
@@ -18,6 +19,7 @@ import { Octokit } from "@octokit/rest";
 import { useMutation } from "react-query";
 import { Chat } from "../../types";
 import { useForm } from "react-hook-form";
+import { XIcon } from "@primer/octicons-react";
 
 type FormValues = {
   owner: string;
@@ -29,16 +31,10 @@ const NewChat: NextPage = () => {
   const { code } = router.query;
 
   const session = supabase.auth.session();
-  const isAuthenticated = session != null;
-
-  useEffect(() => {
-    if (typeof window !== "undefined") {
-      if (!isAuthenticated) {
-        router.push(`/login?redirect=/chat/new`);
-        return;
-      }
-    }
-  }, [isAuthenticated, router]);
+  const isAuthenticated = session !== null;
+  if (typeof window !== "undefined" && !isAuthenticated) {
+    router.push(`/login?redirect=/chats/new`);
+  }
 
   const {
     mutate: createChat,
@@ -124,6 +120,12 @@ const NewChat: NextPage = () => {
 
   const onSubmit = (values: FormValues) => createChat(values);
 
+  if (!isAuthenticated) {
+    return null;
+  }
+
+  console.log(errors);
+
   return (
     <Box display="flex" flexDirection="column" height="100%" width="100%">
       <Header showAvatar={true} />
@@ -166,7 +168,7 @@ const NewChat: NextPage = () => {
                     ...(errors.owner && { borderColor: "red" }),
                   }}
                 />
-                {errors.owner && (
+                {errors.owner?.message && (
                   <Text fontSize={0} marginTop={2}>
                     {errors.owner.message}
                   </Text>
@@ -196,7 +198,7 @@ const NewChat: NextPage = () => {
                     ...(errors.repo && { borderColor: "red" }),
                   }}
                 />
-                {errors.repo && (
+                {errors.repo?.message && (
                   <Text fontSize={0} marginTop={2}>
                     {errors.repo.message}
                   </Text>
@@ -205,7 +207,8 @@ const NewChat: NextPage = () => {
             </Box>
             {createChatError && (
               <Flash marginTop={3} sx={{ width: "100%" }} variant="danger">
-                {(createChatError as Error).message}
+                <StyledOcticon icon={XIcon} />
+                {(createChatError as Error)?.message || "Failed to create chat"}
               </Flash>
             )}
             <ButtonPrimary
