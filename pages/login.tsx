@@ -10,9 +10,10 @@ import {
 } from "@primer/components";
 import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
 import { supabase } from "./_app";
-import Header from "../components/header";
+import { CustomHeader } from "../components/CustomHeader";
 import { useMutation } from "react-query";
 import { MainActionBox } from "../components/MainActionBox";
+import { Root } from "../components/Root";
 
 const Home: NextPage = () => {
   const router = useRouter();
@@ -46,8 +47,7 @@ const Home: NextPage = () => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" width="100%">
-      <Header showAvatar={false} />
+    <Root>
       <Box
         display="flex"
         flexGrow={1}
@@ -90,7 +90,7 @@ const Home: NextPage = () => {
           </ButtonPrimary>
         </MainActionBox>
       </Box>
-    </Box>
+    </Root>
   );
 };
 

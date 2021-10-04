@@ -3,15 +3,13 @@ import { useRouter } from "next/router";
 import {
   Box,
   Text,
-  ButtonDanger,
   ButtonPrimary,
   BranchName,
-  ButtonInvisible,
   ButtonOutline,
 } from "@primer/components";
 import { supabase } from "../_app";
-import Header from "../../components/header";
 import { MainActionBox } from "../../components/MainActionBox";
+import { Root } from "../../components/Root";
 
 const JoinInvite: NextPage = () => {
   const router = useRouter();
@@ -26,8 +24,7 @@ const JoinInvite: NextPage = () => {
   }
 
   return (
-    <Box display="flex" flexDirection="column" height="100%" width="100%">
-      <Header showAvatar={true} />
+    <Root>
       <Box
         display="flex"
         flexDirection="column"
@@ -61,7 +58,7 @@ const JoinInvite: NextPage = () => {
           </ButtonOutline>
         </MainActionBox>
       </Box>
-    </Box>
+    </Root>
   );
 };
 

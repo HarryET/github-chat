@@ -8,7 +8,7 @@ type HeaderProps = {
   showAvatar: boolean;
 };
 
-const CustomHeader = ({ showAvatar }: HeaderProps) => {
+export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   const router = useRouter();
 
   const session = supabase.auth.session();
@@ -76,5 +76,3 @@ const CustomHeader = ({ showAvatar }: HeaderProps) => {
     </Header>
   );
 };
-
-export default CustomHeader;
