@@ -12,7 +12,11 @@ export const MessageInput = ({ chatId, memberId }: Props) => {
   const [value, setValue] = useState("");
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
-    setValue(e.currentTarget.value);
+    const newValue = e.currentTarget.value;
+    // Not supporting multiline messages for now
+    if (newValue[newValue.length - 1] !== "\n") {
+      setValue(e.currentTarget.value);
+    }
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
