@@ -24,8 +24,9 @@ export type Member = {
 
 export type MessageType = {
   id: string;
+  chat_id: string;
   author: Member;
   content: string;
-  edited_at?: Date;
-  created_at: Date;
+  edited_at?: string;
+  created_at: string;
 };

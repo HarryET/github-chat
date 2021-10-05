@@ -14,6 +14,23 @@ import { Root } from "../../components/Root";
 import { MessageInput } from "../../components/MessageInput";
 import { MessageList } from "../../components/MessageList";
 import { useEffect } from "react";
+import * as R from "ramda";
+
+const messageQuery = `
+  id,
+  chat_id,
+  content,
+  created_at,
+  edited_at,
+  author: member_id(
+    id,
+    nickname,
+    user: user_id (
+      username,
+      avatar_url  
+    )        
+  )
+`;
 
 const ViewChat: NextPage = () => {
   const queryClient = useQueryClient();
@@ -34,28 +51,12 @@ const ViewChat: NextPage = () => {
     error: messagesError,
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
-  } = useQuery<MessageType[]>(
+  } = useQuery(
     ["messages", chatId],
     async () => {
       const { data, error } = await supabase
-        .from("messages")
-        .select(
-          `
-      id,
-      chat_id,
-      content,
-      created_at,
-      edited_at,
-      author: member_id(
-        id,
-        nickname,
-        user: user_id (
-          username,
-          avatar_url  
-        )        
-      )
-    `
-        )
+        .from<MessageType>("messages")
+        .select(messageQuery)
         .eq("chat_id", chatId);
 
       if (error) {
@@ -64,22 +65,42 @@ const ViewChat: NextPage = () => {
 
       return data || [];
     },
-    { enabled: !!chatId && isAuthenticated }
+    { enabled: !!chatId && isAuthenticated, staleTime: Infinity }
   );
 
   useEffect(() => {
     supabase
-      .from("messages")
-      .on("*", () => {
-        // TODO
-        // Should filter only messages belonging to this chat
-        //
-        // Possible optimization: instead of refetch, execute the messages query with created_at > event.timestamp
-        // and append the results to the already fetched messages
-        refetchMessages();
+      .from<{ id: string; chat_id: string }>("messages")
+      .on("*", async (payload) => {
+        const { new: messageRow } = payload;
+        if (messageRow.chat_id === chatId) {
+          // Fetch full message and insert it to messages collection
+          const { data: message, error } = await supabase
+            .from<MessageType>("messages")
+            .select(messageQuery)
+            .eq("id", messageRow.id)
+            .single();
+
+          if (error || !message) {
+            // TODO
+            return;
+          }
+
+          queryClient.setQueryData<MessageType[]>(
+            ["messages", chatId],
+            // Sort messages and remove duplicates in case we got an event twice
+            (previousMessages) =>
+              R.uniqBy(
+                (message) => message.id,
+                [...(previousMessages || []), message].sort((a, b) =>
+                  a.created_at.localeCompare(b.created_at)
+                )
+              )
+          );
+        }
       })
       .subscribe();
-  }, [refetchMessages]);
+  }, [chatId, queryClient]);
 
   const {
     data: member,
