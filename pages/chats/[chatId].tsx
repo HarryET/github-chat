@@ -35,7 +35,7 @@ const ViewChat: NextPage = () => {
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
   } = useQuery<MessageType[]>(
-    ["messages"],
+    ["messages", chatId],
     async () => {
       const { data, error } = await supabase
         .from("messages")
