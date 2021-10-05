@@ -2,6 +2,8 @@
 
 ## Ideas
 
+### By Hugo
+
 How to make the app attractive to visitors and make them want to join?
 
 - When a visitor navigates for the first time, we should show a "Discover" page with a list of existing chats.
