@@ -14,15 +14,19 @@ type User = {
   avatar_url: string;
 };
 
-type Member = {
+export type Member = {
+  id: string;
+  user_id: string;
+  chat_id: string;
   nickname?: string;
   user: User;
 };
 
 export type MessageType = {
   id: string;
+  chat_id: string;
   author: Member;
   content: string;
-  edited_at?: Date;
-  created_at: Date;
+  edited_at?: string;
+  created_at: string;
 };

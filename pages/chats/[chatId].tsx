@@ -7,20 +7,41 @@ import {
   CommentDiscussionIcon,
 } from "@primer/octicons-react";
 import { supabase } from "../_app";
-import Message from "../../components/message";
-import { useQuery } from "react-query";
-import { MessageType } from "../../types";
+import { useQuery, useQueryClient } from "react-query";
+import { Member, MessageType } from "../../types";
 import { SideMenu } from "../../components/SideMenu";
 import { Root } from "../../components/Root";
+import { MessageInput } from "../../components/MessageInput";
+import { MessageList } from "../../components/MessageList";
+import { useEffect } from "react";
+import * as R from "ramda";
+
+const messageQuery = `
+  id,
+  chat_id,
+  content,
+  created_at,
+  edited_at,
+  author: member_id(
+    id,
+    nickname,
+    user: user_id (
+      username,
+      avatar_url  
+    )        
+  )
+`;
 
 const ViewChat: NextPage = () => {
+  const queryClient = useQueryClient();
+
   const router = useRouter();
   const chatId =
     typeof router.query.chatId === "string" ? router.query.chatId : undefined;
 
-  const session = supabase.auth.session();
+  const user = supabase.auth.user();
 
-  const isAuthenticated = session !== null;
+  const isAuthenticated = user !== null;
   if (typeof window !== "undefined" && !isAuthenticated) {
     router.push(`/login?redirect=/chats/${chatId}`);
   }
@@ -30,27 +51,12 @@ const ViewChat: NextPage = () => {
     error: messagesError,
     isLoading: isMessagesLoading,
     refetch: refetchMessages,
-  } = useQuery<MessageType[]>(
-    "messages",
+  } = useQuery(
+    ["messages", chatId],
     async () => {
       const { data, error } = await supabase
-        .from("messages")
-        .select(
-          `
-      id,
-      chat_id,
-      content,
-      created_at,
-      edited_at,
-      author: member_id(
-        nickname,
-        user: user_id (
-          username,
-          avatar_url  
-        )        
-      )
-    `
-        )
+        .from<MessageType>("messages")
+        .select(messageQuery)
         .eq("chat_id", chatId);
 
       if (error) {
@@ -58,6 +64,61 @@ const ViewChat: NextPage = () => {
       }
 
       return data || [];
+    },
+    { enabled: !!chatId && isAuthenticated, staleTime: Infinity }
+  );
+
+  useEffect(() => {
+    supabase
+      .from<{ id: string; chat_id: string }>("messages")
+      .on("*", async (payload) => {
+        const { new: messageRow } = payload;
+        if (messageRow.chat_id === chatId) {
+          // Fetch full message and insert it to messages collection
+          const { data: message, error } = await supabase
+            .from<MessageType>("messages")
+            .select(messageQuery)
+            .eq("id", messageRow.id)
+            .single();
+
+          if (error || !message) {
+            // TODO
+            return;
+          }
+
+          queryClient.setQueryData<MessageType[]>(
+            ["messages", chatId],
+            // Sort messages and remove duplicates in case we got an event twice
+            (previousMessages) =>
+              R.uniqBy(
+                (message) => message.id,
+                [...(previousMessages || []), message].sort((a, b) =>
+                  a.created_at.localeCompare(b.created_at)
+                )
+              )
+          );
+        }
+      })
+      .subscribe();
+  }, [chatId, queryClient]);
+
+  const {
+    data: member,
+    error: memberError,
+    isLoading: isMemberLoading,
+  } = useQuery(
+    "member",
+    async () => {
+      const { data, error } = await supabase
+        .from<Member>("members")
+        .select("id, nickname")
+        .eq("chat_id", chatId)
+        .eq("user_id", user?.id)
+        .single();
+      if (error) {
+        throw error;
+      }
+      return data as Member;
     },
     { enabled: !!chatId && isAuthenticated }
   );
@@ -74,9 +135,10 @@ const ViewChat: NextPage = () => {
         flexDirection="row"
         flexGrow={1}
         width="100%"
+        overflowY="hidden"
       >
         <SideMenu selectedChatId={chatId} />
-        <Box flexGrow={1} height="100%" padding={3}>
+        <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
           {(isMessagesLoading ||
             !!messagesError ||
             (messages && messages.length === 0)) && (
@@ -127,17 +189,10 @@ const ViewChat: NextPage = () => {
               </Box>
             </Box>
           )}
-          {messages &&
-            messages.map((message) => (
-              <Message
-                key={message.id}
-                avatar={message.author.user.avatar_url}
-                username={
-                  message.author.nickname || message.author.user.username
-                }
-                content={message.content}
-              />
-            ))}
+          {messages && <MessageList messages={messages} />}
+          {!!chatId && member && (
+            <MessageInput chatId={chatId} memberId={member.id} />
+          )}
         </Box>
       </Box>
     </Root>

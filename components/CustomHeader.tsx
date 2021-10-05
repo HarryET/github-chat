@@ -1,5 +1,6 @@
 import { Avatar, ButtonOutline, Header, Text, Box } from "@primer/components";
 import { useRouter } from "next/router";
+import Link from "next/link";
 import { useEffect, useState } from "react";
 import { supabase } from "../pages/_app";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
@@ -43,9 +44,11 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   return (
     <Header>
       <Header.Item>
-        <Header.Link href="/" fontSize={2}>
-          <span>GitHub Chat</span>
-        </Header.Link>
+        <Link href="/" passHref>
+          <Header.Link fontSize={2}>
+            <span>GitHub Chat</span>
+          </Header.Link>
+        </Link>
       </Header.Item>
       <Header.Item full></Header.Item>
       {isAuthenticated && (

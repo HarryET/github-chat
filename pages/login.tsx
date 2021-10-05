@@ -14,7 +14,7 @@ import { useMutation } from "react-query";
 import { MainActionBox } from "../components/MainActionBox";
 import { Root } from "../components/Root";
 
-const Home: NextPage = () => {
+const Login: NextPage = () => {
   const router = useRouter();
 
   const session = supabase.auth.session();
@@ -93,4 +93,4 @@ const Home: NextPage = () => {
   );
 };
 
-export default Home;
+export default Login;

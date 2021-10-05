@@ -4,6 +4,7 @@ import { useRouter } from "next/dist/client/router";
 import { useQuery } from "react-query";
 import { Chat } from "../types";
 import { supabase } from "../pages/_app";
+import Link from "next/link";
 
 type Props = {
   selectedChatId?: string;
@@ -49,7 +50,7 @@ export const SideMenu = ({ selectedChatId }: Props) => {
   }
 
   return (
-    <Box height="100%" minWidth={360} width={360} flexShrink={1} padding={4}>
+    <Box height="100%" width={360} flexShrink={0} padding={4}>
       <Box
         width="100%"
         display="flex"
@@ -84,15 +85,13 @@ export const SideMenu = ({ selectedChatId }: Props) => {
       {chats && chats.length > 0 && (
         <SideNav bordered maxWidth={360} aria-label="Main">
           {chats.map((chat) => (
-            <SideNav.Link
-              key={chat.id}
-              href={`/chats/${chat.id}`}
-              selected={chat.id === selectedChatId}
-            >
-              <Text>
-                {chat.repo_owner}/{chat.repo_name}
-              </Text>
-            </SideNav.Link>
+            <Link key={chat.id} href={`/chats/${chat.id}`} passHref>
+              <SideNav.Link selected={chat.id === selectedChatId}>
+                <Text>
+                  {chat.repo_owner}/{chat.repo_name}
+                </Text>
+              </SideNav.Link>
+            </Link>
           ))}
         </SideNav>
       )}
