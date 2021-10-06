@@ -15,6 +15,8 @@
     "@primer/components": "^30.0.0",
     "@primer/octicons-react": "^16.0.0",
     "@supabase/supabase-js": "^1.24.0",
+    "@tiptap/react": "^2.0.0-beta.78",
+    "@tiptap/starter-kit": "^2.0.0-beta.117",
     "@types/ramda": "^0.27.45",
     "next": "11.1.2",
     "ramda": "^0.27.1",
@@ -22,6 +24,7 @@
     "react-dom": "^17.0.2",
     "react-hook-form": "^7.17.0",
     "react-query": "^3.24.5",
+    "sass": "^1.42.1",
     "styled-components": "^5.3.1"
   },
   "devDependencies": {
