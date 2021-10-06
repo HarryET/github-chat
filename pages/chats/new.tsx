@@ -9,7 +9,6 @@ import {
   Spinner,
   StyledOcticon,
 } from "@primer/components";
-import { supabase } from "../_app";
 import { Octokit } from "@octokit/rest";
 import { useMutation } from "react-query";
 import { Chat } from "../../types";
@@ -17,6 +16,7 @@ import { useForm } from "react-hook-form";
 import { XIcon } from "@primer/octicons-react";
 import { MainActionBox } from "../../components/MainActionBox";
 import { Root } from "../../components/Root";
+import { supabase } from "service/supabase";
 
 type FormValues = {
   owner: string;

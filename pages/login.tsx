@@ -9,10 +9,10 @@ import {
   Text,
 } from "@primer/components";
 import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
-import { supabase } from "./_app";
 import { useMutation } from "react-query";
-import { MainActionBox } from "../components/MainActionBox";
-import { Root } from "../components/Root";
+import { MainActionBox } from "components/MainActionBox";
+import { Root } from "components/Root";
+import { supabase } from "service/supabase";
 
 const Login: NextPage = () => {
   const router = useRouter();

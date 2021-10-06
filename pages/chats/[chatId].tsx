@@ -6,15 +6,15 @@ import {
   SyncIcon,
   CommentDiscussionIcon,
 } from "@primer/octicons-react";
-import { supabase } from "../_app";
 import { useQuery, useQueryClient } from "react-query";
-import { Member, MessageType } from "../../types";
-import { SideMenu } from "../../components/SideMenu";
-import { Root } from "../../components/Root";
-import { MessageInput } from "../../components/MessageInput";
-import { MessageList } from "../../components/MessageList";
+import { Member, MessageType } from "types";
+import { SideMenu } from "components/SideMenu";
+import { Root } from "components/Root";
+import { MessageInput } from "components/MessageInput";
+import { MessageList } from "components/MessageList";
 import { useEffect } from "react";
 import * as R from "ramda";
+import { supabase } from "service/supabase";
 
 const messageQuery = `
   id,
