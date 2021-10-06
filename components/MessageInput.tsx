@@ -1,7 +1,7 @@
 import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { Box, TextInput } from "@primer/components";
 import { useMutation } from "react-query";
-import { supabase } from "../pages/_app";
+import { supabase } from "service/supabase";
 
 type Props = {
   chatId: string;

@@ -1,4 +1,4 @@
-import { supabase } from "./pages/_app";
+import { supabase } from "service/supabase";
 import { Member } from "./types";
 
 const fetchMembers = async (chatId: string) => {
