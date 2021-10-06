@@ -42,7 +42,9 @@ const ViewChat: NextPage = () => {
   const user = supabase.auth.user();
 
   const isAuthenticated = user !== null;
-  if (typeof window !== "undefined" && !isAuthenticated) {
+
+  // Check also for chatId because on first render router.query params are undefined
+  if (typeof window !== "undefined" && !isAuthenticated && chatId) {
     router.push(`/login?redirect=/chats/${chatId}`);
   }
 

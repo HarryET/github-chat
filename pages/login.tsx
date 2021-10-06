@@ -17,6 +17,9 @@ import { supabase } from "service/supabase";
 const Login: NextPage = () => {
   const router = useRouter();
 
+  const redirectPath =
+    typeof router.query.redirect === "string" ? router.query.redirect : "/";
+
   const session = supabase.auth.session();
   const isAuthenticated = session !== null;
 
@@ -24,10 +27,14 @@ const Login: NextPage = () => {
     mutate: handleSignIn,
     isLoading,
     error,
-  } = useMutation(async () => {
+  } = useMutation(async (redirectPath: string) => {
     const { error } = await supabase.auth.signIn(
       { provider: "github" },
-      { scopes: "read:org,read:user,user:email" }
+      {
+        // TODO Redirecting to specific path is not working for some reason
+        redirectTo: `${window.location.origin}${redirectPath}`,
+        scopes: "read:org,read:user,user:email",
+      }
     );
 
     if (error) {
@@ -71,7 +78,7 @@ const Login: NextPage = () => {
             disabled={isLoading}
             variant="large"
             width={256}
-            onClick={() => handleSignIn()}
+            onClick={() => handleSignIn(redirectPath)}
           >
             <Box
               display="flex"
