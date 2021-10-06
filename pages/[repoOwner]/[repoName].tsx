@@ -7,8 +7,6 @@ import { getChatByOwnerAndName, supabase } from "service/supabase";
 import { Chat } from "types";
 
 export default function CreateOrRedirectToChat() {
-  const router = useRouter();
-
   return null;
 }
 
