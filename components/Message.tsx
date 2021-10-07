@@ -1,4 +1,6 @@
 import { Avatar, Box, Text } from "@primer/components";
+// @ts-ignore
+import Twemoji from 'react-twemoji';
 
 type MessageProps = {
   avatar: string;
@@ -39,7 +41,9 @@ export const Message = ({ avatar, username, content }: MessageProps) => {
             maxWidth: "100%",
           }}
         >
-          {content}
+          <Twemoji options={{ className: 'emoji' }}>
+            {content}
+          </Twemoji>
         </Text>
       </Box>
     </Box>
