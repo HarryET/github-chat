@@ -8,7 +8,7 @@ import {
 } from "@primer/octicons-react";
 import { supabase } from "../_app";
 import { useQuery, useQueryClient } from "react-query";
-import { Member, MessageType } from "../../types";
+import { MessageType } from "../../types";
 import { SideMenu } from "../../components/SideMenu";
 import { Root } from "../../components/Root";
 import { MessageInput } from "../../components/MessageInput";
@@ -22,13 +22,10 @@ const messageQuery = `
   content,
   created_at,
   edited_at,
-  author: member_id(
+  user: user_id(
     id,
-    nickname,
-    user: user_id (
-      username,
-      avatar_url  
-    )        
+    username,
+    avatar_url    
   )
 `;
 
@@ -104,27 +101,6 @@ const ViewChat: NextPage = () => {
       .subscribe();
   }, [chatId, queryClient]);
 
-  const {
-    data: member,
-    error: memberError,
-    isLoading: isMemberLoading,
-  } = useQuery(
-    "member",
-    async () => {
-      const { data, error } = await supabase
-        .from<Member>("members")
-        .select("id, nickname")
-        .eq("chat_id", chatId)
-        .eq("user_id", user?.id)
-        .single();
-      if (error) {
-        throw error;
-      }
-      return data as Member;
-    },
-    { enabled: !!chatId && isAuthenticated }
-  );
-
   if (!isAuthenticated) {
     return null;
   }
@@ -192,9 +168,7 @@ const ViewChat: NextPage = () => {
             </Box>
           )}
           {messages && <MessageList messages={messages} />}
-          {!!chatId && member && (
-            <MessageInput chatId={chatId} memberId={member.id} />
-          )}
+          {!!chatId && <MessageInput chatId={chatId} user={user} />}
         </Box>
       </Box>
     </Root>

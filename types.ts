@@ -10,6 +10,7 @@ export type Chat = {
 };
 
 type User = {
+  id: string;
   username: string;
   avatar_url: string;
 };
@@ -25,8 +26,8 @@ export type Member = {
 export type MessageType = {
   id: string;
   chat_id: string;
-  author: Member;
   content: string;
   edited_at?: string;
   created_at: string;
+  user: User;
 };
