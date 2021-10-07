@@ -2,13 +2,14 @@ import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { Box, TextInput } from "@primer/components";
 import { useMutation } from "react-query";
 import { supabase } from "../pages/_app";
+import { User } from "@supabase/gotrue-js";
 
 type Props = {
   chatId: string;
-  memberId: string;
+  user: User;
 };
 
-export const MessageInput = ({ chatId, memberId }: Props) => {
+export const MessageInput = ({ chatId, user }: Props) => {
   const [value, setValue] = useState("");
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
@@ -30,7 +31,7 @@ export const MessageInput = ({ chatId, memberId }: Props) => {
     const { error } = await supabase.from("messages").insert([
       {
         chat_id: chatId,
-        member_id: memberId,
+        user_id: user.id,
         content: value,
       },
     ]);
