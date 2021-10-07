@@ -2,8 +2,8 @@ import { Avatar, ButtonOutline, Header, Text, Box } from "@primer/components";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { supabase } from "../pages/_app";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import { supabase } from "service/supabase";
 
 type HeaderProps = {
   showAvatar: boolean;

@@ -3,8 +3,8 @@ import { PlusIcon } from "@primer/octicons-react";
 import { useRouter } from "next/dist/client/router";
 import { useQuery } from "react-query";
 import { Chat } from "../types";
-import { supabase } from "../pages/_app";
 import Link from "next/link";
+import { supabase } from "service/supabase";
 
 type Props = {
   selectedChatId?: string;

@@ -1,10 +1,10 @@
 import type { NextPage } from "next";
 import { Box } from "@primer/components";
-import { supabase } from "./_app";
 import { useRouter } from "next/dist/client/router";
 import { Message } from "../components/Message";
 import { SideMenu } from "../components/SideMenu";
 import { Root } from "../components/Root";
+import { supabase } from "service/supabase";
 
 const Home: NextPage = () => {
   const router = useRouter();
