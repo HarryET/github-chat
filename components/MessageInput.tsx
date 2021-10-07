@@ -26,7 +26,7 @@ export const MessageInput = ({ chatId, memberId }: Props) => {
     }
   };
 
-  const { mutate: submitMessage, error } = useMutation(async () => {
+  const { mutate: submitMessage } = useMutation(async () => {
     const { error } = await supabase.from("messages").insert([
       {
         chat_id: chatId,

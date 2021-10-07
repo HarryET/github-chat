@@ -19,14 +19,12 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(session !== null);
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png");
 
-  supabase.auth.onAuthStateChange(
-    (event: AuthChangeEvent, session: Session | null) => {
-      if (event == "SIGNED_IN" || event == "USER_UPDATED") {
-        setAvatarUrl(session?.user?.user_metadata.avatar_url);
-        setIsAuthenticated(true);
-      }
+  supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+    if (event == "SIGNED_IN" || event == "USER_UPDATED") {
+      setAvatarUrl(session?.user?.user_metadata.avatar_url);
+      setIsAuthenticated(true);
     }
-  );
+  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -60,7 +58,8 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
         <Header.Item mr={0}>
           <Box display="flex" flexDirection="row" alignItems="center">
             <Avatar
-              src={avatarUrl!}
+              //TODO: Fallback avatar src
+              src={avatarUrl || ""}
               size={32}
               square
               alt={userMeta?.user_name}

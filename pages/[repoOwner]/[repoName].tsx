@@ -1,17 +1,13 @@
 import { Octokit } from "@octokit/rest";
-import { Root } from "components/Root";
-import type { GetServerSideProps, NextPage, NextPageContext } from "next";
-import { useRouter } from "next/router";
-import React from "react";
-import { getChatByOwnerAndName, supabase } from "service/supabase";
-import { Chat } from "types";
+import type { GetServerSidePropsContext } from "next";
+import { createChat, getChatByRepoOwnerAndName, getChats, updateChat } from "service/supabase";
 
 export default function CreateOrRedirectToChat() {
   return null;
 }
 
 /**
- * This page only serves to redirect users to /chats/:id, if chat exists.
+ * This "page" only serves to redirect users to /chats/:id, if chat exists.
  * Otherwise, chat will be created and user will be redirected to chat if succesful.
  *
  * Possible scenarios:
@@ -22,7 +18,14 @@ export default function CreateOrRedirectToChat() {
  *      and if successful, redirect user to newly created chat.
  *
  */
-export const getServerSideProps: GetServerSideProps<{}, { repoOwner: string; repoName: string }> = async (context) => {
+export const getServerSideProps = async (
+  context: GetServerSidePropsContext<{ repoOwner: string; repoName: string }>
+): Promise<{
+  redirect: {
+    destination: string;
+    permanent: boolean;
+  };
+}> => {
   const { repoOwner, repoName } = context.params || {};
   if (!repoOwner || !repoName)
     return {
@@ -32,7 +35,7 @@ export const getServerSideProps: GetServerSideProps<{}, { repoOwner: string; rep
       },
     };
 
-  const { data: chatFoundByName } = await getChatByOwnerAndName(repoOwner, repoName, { selectFields: "id" });
+  const { data: chatFoundByName } = await getChatByRepoOwnerAndName(repoOwner, repoName, { selectFields: ["id"] });
 
   let chatId = chatFoundByName?.[0]?.id;
 
@@ -53,32 +56,29 @@ export const getServerSideProps: GetServerSideProps<{}, { repoOwner: string; rep
     repo: repoName.trim(),
   });
 
-  const { data: existingChats, error: existingChatError } = await supabase
-    .from<Chat>("chats")
-    .select("id")
-    .eq("github_repo_id", repoData.id.toString());
+  const { data: existingChats } = await getChats({
+    selectFields: ["id"],
+    matchParams: { github_repo_id: repoData.id.toString() },
+  });
 
   if (existingChats && existingChats.length > 0 && repoData.owner.login && repoData.name) {
     //Repo exists by id, Name of repo must have changed, update it
     console.log("repo exists by uid");
 
-    const { data: updatedChat } = await supabase
-      .from<Chat>("chats")
-      .update({ repo_name: repoData.name, repo_owner: repoData.owner.login })
-      .eq("github_repo_id", repoData.id.toString());
+    const { data: updatedChat } = await updateChat(
+      { repo_name: repoData.name, repo_owner: repoData.owner.login },
+      { matchParams: { github_repo_id: repoData.id.toString() } }
+    );
 
     chatId = updatedChat?.[0]?.id;
   } else {
     //If repo doesn't exists in our db, create it
-    const { data: chat, error: chatError } = await supabase.from<Chat>("chats").insert([
-      {
-        github_repo_id: repoData.id.toString(),
-        repo_owner: repoData.full_name.split("/")[0],
-        repo_name: repoData.name,
-        repo_description: repoData.description,
-      },
-    ]);
-    console.log("we created it,", chat, chatError);
+    const { data: chat } = await createChat({
+      github_repo_id: repoData.id.toString(),
+      repo_owner: repoData.full_name.split("/")[0],
+      repo_name: repoData.name,
+      repo_description: repoData.description,
+    });
 
     chatId = chat?.[0]?.id;
   }
@@ -92,7 +92,6 @@ export const getServerSideProps: GetServerSideProps<{}, { repoOwner: string; rep
       },
     };
   }
-  console.log("no chatid", repoData.name);
 
   //If we don't have a chat id, something went wrong, redirect to home
   return {

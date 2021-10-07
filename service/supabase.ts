@@ -19,20 +19,56 @@ export const supabase: TypedSupabaseClient = createClient(
   IS_SERVER ? SUPABASE_SERVICE_KEY : NEXT_PUBLIC_SUPABASE_KEY
 );
 
-interface SupabaseGenericParams {
-  selectFields?: string;
-  matchParams?: {};
+interface SupabaseGenericParams<T> {
+  selectFields?: (keyof T)[];
+  matchParams?: { [k in keyof Partial<T>]: string };
 }
 
-export const getChats = async (options: SupabaseGenericParams = {}) =>
+export const getChats = async (options: SupabaseGenericParams<Chat> = {}) =>
   await supabase
     .from<Chat>("chats")
-    .select(options.selectFields || "*")
+    .select(options.selectFields?.join(",") || "*")
     .match(options.matchParams || {});
 
-export const getChatByOwnerAndName = async (owner: string, name: string, options: SupabaseGenericParams = {}) =>
+export const getChatByRepoOwnerAndName = async (
+  owner: string,
+  name: string,
+  options: SupabaseGenericParams<Chat> = {}
+) =>
   await supabase
     .from<Chat>("chats")
-    .select(options.selectFields || "*")
+    .select(options.selectFields?.join(",") || "*")
     .ilike("repo_owner", owner)
     .ilike("repo_name", name);
+
+export const createChat = async ({
+  github_repo_id,
+  repo_owner,
+  repo_name,
+  repo_description,
+}: Pick<Chat, "github_repo_id" | "repo_owner" | "repo_name" | "repo_description">) =>
+  await supabase.from<Chat>("chats").insert([
+    {
+      github_repo_id,
+      repo_owner,
+      repo_name,
+      repo_description,
+    },
+  ]);
+
+export const updateChat = async (
+  { github_repo_id, repo_owner, repo_description, repo_name }: Partial<Chat>,
+  options: SupabaseGenericParams<Chat>
+) =>
+  await supabase
+    .from<Chat>("chats")
+    .insert([
+      {
+        github_repo_id,
+        repo_owner,
+        repo_name,
+        repo_description,
+      },
+    ])
+    .select(options.selectFields?.join(",") || "*")
+    .match(options.matchParams || {});

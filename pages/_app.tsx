@@ -1,7 +1,5 @@
 import type { AppProps } from "next/app";
 import { ThemeProvider, BaseStyles, Box } from "@primer/components";
-import { createClient } from "@supabase/supabase-js";
-import { Octokit } from "@octokit/rest";
 import "styles/reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 
@@ -11,12 +9,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   let theme: "day" | "night" | "auto" = "night";
 
   if (typeof window !== "undefined") {
-    let tempTheme = localStorage.getItem("theme");
-    if (
-      tempTheme == null ||
-      tempTheme == undefined ||
-      !["day", "night"].includes(tempTheme)
-    ) {
+    const tempTheme = localStorage.getItem("theme");
+    if (tempTheme == null || tempTheme == undefined || !["day", "night"].includes(tempTheme)) {
       theme = "night";
       localStorage.setItem("theme", theme);
     } else {
@@ -25,7 +19,6 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    // @ts-ignore
     <QueryClientProvider client={queryClient}>
       <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme}>
         <BaseStyles className={"root"}>
