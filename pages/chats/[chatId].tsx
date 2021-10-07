@@ -1,11 +1,7 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
 import { Box, Text, Spinner, Button } from "@primer/components";
-import {
-  StopIcon,
-  SyncIcon,
-  CommentDiscussionIcon,
-} from "@primer/octicons-react";
+import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { useQuery, useQueryClient } from "react-query";
 import { Member, MessageType } from "types";
 import { SideMenu } from "components/SideMenu";
@@ -22,13 +18,10 @@ const messageQuery = `
   content,
   created_at,
   edited_at,
-  author: member_id(
+  user: user_id(
     id,
-    nickname,
-    user: user_id (
-      username,
-      avatar_url  
-    )        
+    username,
+    avatar_url    
   )
 `;
 
@@ -36,8 +29,7 @@ const ViewChat: NextPage = () => {
   const queryClient = useQueryClient();
 
   const router = useRouter();
-  const chatId =
-    typeof router.query.chatId === "string" ? router.query.chatId : undefined;
+  const chatId = typeof router.query.chatId === "string" ? router.query.chatId : undefined;
 
   const user = supabase.auth.user();
 
@@ -56,10 +48,7 @@ const ViewChat: NextPage = () => {
   } = useQuery(
     ["messages", chatId],
     async () => {
-      const { data, error } = await supabase
-        .from<MessageType>("messages")
-        .select(messageQuery)
-        .eq("chat_id", chatId);
+      const { data, error } = await supabase.from<MessageType>("messages").select(messageQuery).eq("chat_id", chatId);
 
       if (error) {
         throw error;
@@ -94,9 +83,7 @@ const ViewChat: NextPage = () => {
             (previousMessages) =>
               R.uniqBy(
                 (message) => message.id,
-                [...(previousMessages || []), message].sort((a, b) =>
-                  a.created_at.localeCompare(b.created_at)
-                )
+                [...(previousMessages || []), message].sort((a, b) => a.created_at.localeCompare(b.created_at))
               )
           );
         }
@@ -104,46 +91,16 @@ const ViewChat: NextPage = () => {
       .subscribe();
   }, [chatId, queryClient]);
 
-  const {
-    data: member,
-    error: memberError,
-    isLoading: isMemberLoading,
-  } = useQuery(
-    "member",
-    async () => {
-      const { data, error } = await supabase
-        .from<Member>("members")
-        .select("id, nickname")
-        .eq("chat_id", chatId)
-        .eq("user_id", user?.id)
-        .single();
-      if (error) {
-        throw error;
-      }
-      return data as Member;
-    },
-    { enabled: !!chatId && isAuthenticated }
-  );
-
   if (!isAuthenticated) {
     return null;
   }
 
   return (
     <Root>
-      <Box
-        bg="canvas.default"
-        display="flex"
-        flexDirection="row"
-        flexGrow={1}
-        width="100%"
-        overflowY="hidden"
-      >
+      <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" overflowY="hidden">
         <SideMenu selectedChatId={chatId} />
         <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
-          {(isMessagesLoading ||
-            !!messagesError ||
-            (messages && messages.length === 0)) && (
+          {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box
               height="100%"
               width="100%"
@@ -152,12 +109,7 @@ const ViewChat: NextPage = () => {
               justifyContent="center"
               alignItems="center"
             >
-              <Box
-                display="flex"
-                flexDirection="column"
-                alignItems="center"
-                maxWidth={400}
-              >
+              <Box display="flex" flexDirection="column" alignItems="center" maxWidth={400}>
                 {/* Loading */}
                 {isMessagesLoading && !messages && (
                   <>
@@ -192,9 +144,7 @@ const ViewChat: NextPage = () => {
             </Box>
           )}
           {messages && <MessageList messages={messages} />}
-          {!!chatId && member && (
-            <MessageInput chatId={chatId} memberId={member.id} />
-          )}
+          {!!chatId && <MessageInput chatId={chatId} user={user} />}
         </Box>
       </Box>
     </Root>
