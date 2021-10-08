@@ -29,8 +29,8 @@ export const MessageList = ({ messages }: Props) => {
         messages.map((message) => (
           <Message
             key={message.id}
-            avatar={message.author.user.avatar_url}
-            username={message.author.nickname || message.author.user.username}
+            avatar={message.user.avatar_url}
+            username={message.user.username}
             content={message.content}
           />
         ))}

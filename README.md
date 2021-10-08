@@ -35,7 +35,7 @@ The primary function of the app is to have a realtime chat for github repos so w
 
 #### Database
 
-All of the data for the app has been store in the Supabase Postgresql database so it can be accessed through the SDKs with row level security enabled
+All of the data for the app has been store in the Supabase Postgresql database so it can be accessed through the SDKs with row level security enabled.
 
 ## Development
 
