@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Box, Text, Spinner, Button } from "@primer/components";
+import { Box, Text, Spinner, Button, Link } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { useQuery, useQueryClient } from "react-query";
 import { Member, MessageType } from "types";
@@ -11,6 +11,7 @@ import { MessageList } from "components/MessageList";
 import { useEffect } from "react";
 import * as R from "ramda";
 import { supabase } from "service/supabase";
+import NextLink from "next/link";
 
 const messageQuery = `
   id,
@@ -35,10 +36,10 @@ const ViewChat: NextPage = () => {
 
   const isAuthenticated = user !== null;
 
-  // Check also for chatId because on first render router.query params are undefined
-  if (typeof window !== "undefined" && !isAuthenticated && chatId) {
-    router.push(`/login?redirect=/chats/${chatId}`);
-  }
+  // // Check also for chatId because on first render router.query params are undefined
+  // if (typeof window !== "undefined" && !isAuthenticated && chatId) {
+  //   router.push(`/login?redirect=/chats/${chatId}`);
+  // }
 
   const {
     data: messages,
@@ -91,10 +92,6 @@ const ViewChat: NextPage = () => {
       .subscribe();
   }, [chatId, queryClient]);
 
-  if (!isAuthenticated) {
-    return null;
-  }
-
   return (
     <Root>
       <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" overflowY="hidden">
@@ -144,7 +141,22 @@ const ViewChat: NextPage = () => {
             </Box>
           )}
           {messages && <MessageList messages={messages} />}
-          {!!chatId && <MessageInput chatId={chatId} user={user} />}
+          {!!chatId && user && <MessageInput chatId={chatId} user={user} />}
+          {!!chatId && !user && (
+            <Box
+              paddingX={3}
+              paddingY={3}
+              width={1}
+              bg={"canvas.overlay"}
+              display="flex"
+              flexDirection="column"
+              justifyContent="center"
+            >
+              <NextLink href={`/login?redirect=/chats/${chatId}`} passHref>
+                <Link>Log in to chat</Link>
+              </NextLink>
+            </Box>
+          )}
         </Box>
       </Box>
     </Root>
