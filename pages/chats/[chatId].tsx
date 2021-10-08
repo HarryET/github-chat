@@ -3,7 +3,7 @@ import { useRouter } from "next/router";
 import { Box, Text, Spinner, Button } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { useQuery, useQueryClient } from "react-query";
-import { Member, MessageType } from "types";
+import { MessageType } from "types";
 import { SideMenu } from "components/SideMenu";
 import { Root } from "components/Root";
 import { MessageInput } from "components/MessageInput";

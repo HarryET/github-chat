@@ -1,6 +1,9 @@
-import { Avatar, Box, Text } from "@primer/components";
+import { Avatar, Box, Text, BranchName } from "@primer/components";
+import reactStringReplace from "react-string-replace";
 // @ts-ignore
 import Twemoji from 'react-twemoji';
+import { supabase } from "service/supabase";
+import type { User } from 'types'
 
 type MessageProps = {
   avatar: string;
@@ -42,7 +45,31 @@ export const Message = ({ avatar, username, content }: MessageProps) => {
           }}
         >
           <Twemoji options={{ className: 'emoji' }}>
-            {content}
+            { /*! CANNOT BE ASYNC NEEDS FIX !*/ }
+            {reactStringReplace(content, /(<@)([A-Za-z0-9\-]+)(>)/gmi, async (match, i, offset) => {
+              const userId = match.replace("<@", "").replace(">", "");
+              const { data: users } = await supabase
+                .from<User>("users")
+                .select(`id,
+                  username, 
+                  avatar_url`)
+                .eq("id", userId)
+              if ((users ?? []).length > 0) {
+                const user = users![0]!
+
+                return (
+                  <BranchName>
+                    {user.username}
+                  </BranchName>
+                )
+              } else {
+                return (
+                  <BranchName>
+                    {userId}
+                  </BranchName>
+                )
+              }
+            })}
           </Twemoji>
         </Text>
       </Box>
