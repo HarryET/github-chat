@@ -28,7 +28,7 @@ export const SideMenu = ({ selectedChatId }: Props) => {
         .select(
           `
       id,
-      chat: chat_id (
+      chat: chats!chat_id (
         id,
         github_repo_id,
         repo_owner,
@@ -63,16 +63,8 @@ export const SideMenu = ({ selectedChatId }: Props) => {
         }}
       >
         <Text fontWeight="bold">Your Chats:</Text>
-        <ButtonPrimary
-          variant="small"
-          onClick={() => router.push("/chats/new")}
-        >
-          <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="center"
-          >
+        <ButtonPrimary variant="small" onClick={() => router.push("/chats/new")}>
+          <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center">
             <PlusIcon size={18} />
             <Box paddingLeft={2}>
               <Text>New</Text>

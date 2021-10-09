@@ -45,7 +45,7 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
       <Header.Item>
         <Link href="/" passHref>
           <Header.Link>
-            <Image src="/icon.svg" height={30} width={30} />
+            <Image src="/icon.svg" height={30} width={30} alt="GithHub Chat logo" />
             <Text ml={2} fontSize={3} fontWeight={400}>
               GitHub Chat
             </Text>

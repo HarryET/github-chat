@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
 import { Box } from "@primer/components";
-import { Message } from "../components/Message";
 import { SideMenu } from "../components/SideMenu";
 import { Root } from "../components/Root";
 import { supabase } from "service/supabase";

@@ -31,3 +31,15 @@ export type MessageType = {
   created_at: string;
   user: User;
 };
+
+export type ActiveChat = {
+  id: string;
+  repo_owner: string;
+  repo_name: string;
+  content: string;
+  user_id: string;
+  username: string;
+  avatar_url: string;
+};
+
+export type SupabaseTables = "chats" | "members" | "messages" | "users" | "active_chats";

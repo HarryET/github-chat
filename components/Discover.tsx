@@ -1,7 +1,10 @@
-import { Box, Button, ButtonPrimary, Heading, Label, Text, TextInput } from "@primer/components";
-import router, { useRouter } from "next/router";
-import React, { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
-import { Message } from "./Message";
+import { Box, ButtonPrimary, Heading, Text, TextInput } from "@primer/components";
+import { useRouter } from "next/router";
+import React, { ChangeEvent, FormEvent, FormEventHandler, useEffect, useState } from "react";
+import { useQuery } from "react-query";
+import { getActiveChats } from "service/supabase";
+import { ActiveChat } from "types";
+import { DiscoverMessage } from "./DiscoverMessage";
 
 export default function Discover() {
   const router = useRouter();
@@ -9,6 +12,29 @@ export default function Discover() {
   const handleTryNowRepoChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTryNowRepo(e.target.value);
   };
+  const [latestMessages, setLatestMessages] = useState<ActiveChat[]>([]);
+  const { data: activeChatData } = useQuery("active_chats", async () => await getActiveChats().throwOnError());
+
+  useEffect(() => {
+    const chatsWithMessages: ActiveChat[] = activeChatData?.body || [];
+
+    let messagesToAdd = chatsWithMessages.length;
+
+    const intervalId = setInterval(() => {
+      setLatestMessages(chatsWithMessages.slice(0, chatsWithMessages.length - messagesToAdd + 1));
+      console.log("added messages!");
+
+      messagesToAdd--;
+      if (!messagesToAdd) {
+        clearInterval(intervalId);
+      }
+    }, 1500);
+    return () => {
+      clearInterval(intervalId);
+    };
+  }, [activeChatData?.body]);
+
+  console.log("msgs", latestMessages);
 
   const handleFormSubmit: FormEventHandler = (e: FormEvent) => {
     e.preventDefault();
@@ -31,8 +57,8 @@ export default function Discover() {
 
   return (
     <Box flexGrow={1} display="flex" flexDirection="column" justifyContent="center" alignItems="center" padding={4}>
-      <Box display="flex" flexWrap="wrap" alignItems="center" maxWidth={1280}>
-        <Box display="flex" flexDirection="column" width={["100%", "100%", "50%"]}>
+      <Box display="flex" flexWrap="wrap" alignItems="center" maxWidth={1280} width="100%">
+        <Box display="flex" flexDirection="column" width={["100%", null, "50%"]}>
           <Heading sx={{ fontSize: [5, 7], lineHeight: 1.25 }} textAlign={["center", "left"]}>
             A chat room for every GitHub repository. <br />
             Real-time.
@@ -44,10 +70,9 @@ export default function Discover() {
             <form onSubmit={handleFormSubmit}>
               <Box display="flex" flexDirection={["column", "row"]} mt={4}>
                 <TextInput
-                  flexGrow={1}
                   placeholder="https://github.com/owner/name"
                   onChange={handleTryNowRepoChange}
-                  sx={{ height: "42px", minWidth: "400px" }}
+                  sx={{ height: "42px", minWidth: ["250px"], flexGrow: 1 }}
                 />
                 <ButtonPrimary type="submit" variant="large" mt={[2, 0]} ml={[0, 2]}>
                   Chat now
@@ -56,34 +81,24 @@ export default function Discover() {
             </form>
           </Box>
         </Box>
-        <Box width={["100%", "100%", "50%"]}>
-          <Box>
-            <Box padding={4}>
-              <Message
-                avatar="https://avatars.githubusercontent.com/u/29015545?v=4"
-                username="HarryET"
-                content="Hey! I'd like to contribute to this project. Is issue #22 up for grabs?"
-              />
-              <Message
-                avatar="https://avatars.githubusercontent.com/u/29015545?v=4"
-                username="kiwicopple"
-                content="Foo bar!"
-              />
-              <Message
-                avatar="https://avatars.githubusercontent.com/u/29015545?v=4"
-                username="kiwicopple"
-                content="Hello world!"
-              />
-              <Message
-                avatar="https://avatars.githubusercontent.com/u/29015545?v=4"
-                username="kiwicopple"
-                content="Hello world!"
-              />
-              <Message
-                avatar="https://avatars.githubusercontent.com/u/29015545?v=4"
-                username="kiwicopple"
-                content="Hello world!"
-              />
+        <Box width={["100%", null, "50%"]}>
+          <Box padding={4} height={"420px"}>
+            <Box>
+              <Text display="inline-block" color="fg.muted" sx={{ mb: [2] }}>
+                Recent Messages
+              </Text>
+              {latestMessages.map((msg) => {
+                return (
+                  <DiscoverMessage
+                    key={msg.id}
+                    avatar={msg.avatar_url}
+                    username={msg.username}
+                    content={msg.content}
+                    repoName={msg.repo_name}
+                    repoOwner={msg.repo_owner}
+                  />
+                );
+              })}
             </Box>
           </Box>
         </Box>
