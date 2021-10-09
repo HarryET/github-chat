@@ -71,12 +71,13 @@ export const Message = ({ author, content }: MessageProps) => {
           style={{
             overflowWrap: "break-word",
             maxWidth: "100%",
+            maxHeight: "100%"
           }}
         >
           <Twemoji options={{ className: 'emoji' }}>
-            {reactStringReplace(content, /<@([A-Za-z0-9\-]+)>/gmi, (match) => {
+            {reactStringReplace(reactStringReplace(content, "\n", () => <br />), /<@([A-Za-z0-9\-]+)>/gmi, (match) => {
               const userId = match.replace("<@", "").replace(">", "");
-              console.log(userId);
+
               const user = mentionsData[userId];
               if (user) {
                 return (<BranchName href={`https://github.com/${user.username}`}>
