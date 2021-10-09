@@ -43,3 +43,5 @@ export type ActiveChat = {
 };
 
 export type SupabaseTables = "chats" | "members" | "messages" | "users" | "active_chats";
+
+export type Mention = { username: string; id: string };

@@ -11,7 +11,7 @@ type MessageProps = {
 
 export function DiscoverMessage({ avatar, username, content, repoOwner, repoName }: MessageProps) {
   return (
-    <Link href={`/${repoOwner}/${repoName}`}>
+    <Link href={`/${repoOwner}/${repoName}`} passHref>
       <Box
         display="flex"
         flexDirection="row"

@@ -2,7 +2,7 @@ import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { Box, TextInput } from "@primer/components";
 import { useMutation } from "react-query";
 import { supabase } from "service/supabase";
-import type { User as DBUser } from "../types";
+import type { Mention, User as DBUser } from "../types";
 import { User } from "@supabase/gotrue-js";
 
 type Props = {
@@ -30,12 +30,13 @@ export const MessageInput = ({ chatId, user }: Props) => {
     }
   };
 
-  const { mutate: submitMessage, error } = useMutation(async () => {
+  // TODO Handle error
+  const { mutate: submitMessage } = useMutation(async () => {
     const rawMentionRegexMatches: string[][] = Array.from(value.matchAll(/@[A-Za-z0-9\-]+/g)).map((regexMatchArray) => [
       ...regexMatchArray,
     ]);
     const rawMentions: string[] = [];
-    for (let row of rawMentionRegexMatches) for (let e of row) rawMentions.push(e);
+    for (const row of rawMentionRegexMatches) for (const e of row) rawMentions.push(e);
 
     const mentionsRaw: ({ username: string; id: string } | null)[] = await Promise.all(
       rawMentions.map(async (mention) => {
@@ -44,14 +45,13 @@ export const MessageInput = ({ chatId, user }: Props) => {
 
         if ((userData ?? []).length > 0) {
           const user = userData![0];
-          return { username: username, id: user.id };
+          return { username: username, id: user.id } as Mention;
         }
         return null;
       })
     );
 
-    // @ts-ignore
-    const mentions: { username: string; id: string }[] = mentionsRaw.filter((mention) => mention != null);
+    const mentions = mentionsRaw.filter((mention): mention is Mention => mention != null);
 
     let mentionsValue = value;
 

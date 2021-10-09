@@ -1,9 +1,8 @@
 import { Box, ButtonPrimary, Heading, Text, TextInput } from "@primer/components";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, FormEvent, FormEventHandler, useEffect, useState } from "react";
+import React, { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
 import { useQuery } from "react-query";
 import { getActiveChats } from "service/supabase";
-import { ActiveChat } from "types";
 import { DiscoverMessage } from "./DiscoverMessage";
 
 export default function Discover() {
@@ -13,11 +12,7 @@ export default function Discover() {
     setTryNowRepo(e.target.value);
   };
   // TODO Handle loading & error
-  const {
-    data: latestMessages,
-    isLoading,
-    error,
-  } = useQuery("active_chats", async () =>
+  const { data: latestMessages } = useQuery("active_chats", async () =>
     getActiveChats()
       .throwOnError()
       .then(({ data }) => data)
