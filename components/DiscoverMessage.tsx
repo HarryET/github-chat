@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Avatar, Box, Text } from "@primer/components";
+import {Markdown} from "./Markdown";
 
 type MessageProps = {
   avatar: string;
@@ -47,7 +48,7 @@ export function DiscoverMessage({ avatar, username, content, repoOwner, repoName
               maxWidth: "100%",
             }}
           >
-            {content}
+            <Markdown content={content} />
           </Text>
         </Box>
       </Box>
