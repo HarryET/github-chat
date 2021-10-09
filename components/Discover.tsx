@@ -79,23 +79,33 @@ export default function Discover() {
           </Box>
         </Box>
         <Box flex={1} ml={[0, 0, 6]} mt={[6, 6, 0]} padding={[0, 0, 0]} width="100%">
-          <Box>
+          <Box position="relative">
             <Text display="inline-block" color="fg.muted" mb={3}>
               Recent Messages
             </Text>
-            {latestMessages &&
-              latestMessages.map((msg) => {
-                return (
-                  <DiscoverMessage
-                    key={msg.id}
-                    avatar={msg.avatar_url}
-                    username={msg.username}
-                    content={msg.content}
-                    repoName={msg.repo_name}
-                    repoOwner={msg.repo_owner}
-                  />
-                );
-              })}
+            <Box display="flex" flexDirection="column" maxHeight={["none", "none", "75vh"]} overflowY="auto" pb={8}>
+              {latestMessages &&
+                latestMessages.map((msg) => {
+                  return (
+                    <DiscoverMessage
+                      key={msg.id}
+                      avatar={msg.avatar_url}
+                      username={msg.username}
+                      content={msg.content}
+                      repoName={msg.repo_name}
+                      repoOwner={msg.repo_owner}
+                    />
+                  );
+                })}
+            </Box>
+            <Box
+              background="linear-gradient(rgba(0,0,0,0), rgba(13,17,23,0.7))"
+              display={["none", "none", "block"]}
+              position="absolute"
+              width="100%"
+              height="32px"
+              bottom={0}
+            />
           </Box>
         </Box>
       </Box>
