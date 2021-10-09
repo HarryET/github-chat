@@ -3,6 +3,8 @@ import { ThemeProvider, BaseStyles, Box, theme } from "@primer/components";
 import "styles/reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import deepmerge from "deepmerge";
+import { supabase } from "service/supabase";
+import router from "next/router";
 
 const customTheme = deepmerge(theme, {
   colorSchemes: {
@@ -20,6 +22,12 @@ const customTheme = deepmerge(theme, {
 const queryClient = new QueryClient();
 
 function MyApp({ Component, pageProps }: AppProps) {
+  supabase.auth.onAuthStateChange((event) => {
+    if (event === "SIGNED_OUT") {
+      router.push("/");
+    }
+  });
+
   let theme: "day" | "night" | "auto" = "night";
 
   if (typeof window !== "undefined") {

@@ -1,52 +1,50 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import {
-  Box,
-  ButtonPrimary,
-  Flash,
-  Spinner,
-  StyledOcticon,
-  Text,
-} from "@primer/components";
+import { Box, ButtonPrimary, Flash, Spinner, StyledOcticon, Text } from "@primer/components";
 import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
 import { useMutation } from "react-query";
 import { MainActionBox } from "components/MainActionBox";
 import { Root } from "components/Root";
 import { supabase } from "service/supabase";
+import { useState } from "react";
+import { LoginButton } from "components/LoginButton";
 
 const Login: NextPage = () => {
   const router = useRouter();
 
-  const redirectPath =
-    typeof router.query.redirect === "string" ? router.query.redirect : "/";
+  const redirectPath = typeof router.query.redirect === "string" ? router.query.redirect : "/";
 
   const session = supabase.auth.session();
   const isAuthenticated = session !== null;
 
-  const {
-    mutate: handleSignIn,
-    isLoading,
-    error,
-  } = useMutation(async (redirectPath: string) => {
-    const { error } = await supabase.auth.signIn(
-      { provider: "github" },
-      {
-        // TODO Redirecting to specific path is not working for some reason
-        redirectTo: `${window.location.origin}${redirectPath}`,
-        scopes: "read:org,read:user,user:email",
+  const [isLoading, setLoading] = useState(false);
+
+  const { mutate: handleSignIn, error } = useMutation(
+    async (redirectPath: string) => {
+      setLoading(true);
+      const { error } = await supabase.auth.signIn(
+        { provider: "github" },
+        {
+          redirectTo: `${window.location.origin}${redirectPath}`,
+          scopes: "read:org,read:user,user:email",
+        }
+      );
+
+      if (error) {
+        console.error(error);
+        throw error;
       }
-    );
-
-    if (error) {
-      console.error(error);
-      throw error;
+    },
+    {
+      onError: () => {
+        setLoading(false);
+      },
     }
-
-    router.push("/");
-  });
+  );
 
   if (typeof window !== "undefined") {
     if (isAuthenticated) {
+      alert("FOOBAR");
       router.push("/");
       return null;
     }
@@ -54,18 +52,11 @@ const Login: NextPage = () => {
 
   return (
     <Root>
-      <Box
-        display="flex"
-        flexGrow={1}
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-      >
+      <Box display="flex" flexGrow={1} flexDirection="column" justifyContent="center" alignItems="center" width="100%">
         <MainActionBox>
           <StyledOcticon icon={MarkGithubIcon} size="large" />
           <Text as="h1" mt={4} mb={0} lineHeight={1}>
-            Github Chat
+            github·chat
           </Text>
           {error && (
             <Flash variant="danger" mt={5} sx={{ width: "100%" }}>
@@ -73,27 +64,14 @@ const Login: NextPage = () => {
               {(error as Error)?.message || "Failed to login"}
             </Flash>
           )}
-          <ButtonPrimary
+          <LoginButton
             mt={6}
             disabled={isLoading}
+            isLoading={isLoading}
             variant="large"
             width={256}
             onClick={() => handleSignIn(redirectPath)}
-          >
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyContent="center"
-              alignItems="center"
-              height="100%"
-              width="100%"
-            >
-              {isLoading && <Spinner size="small" />}
-              <Box marginLeft={2}>
-                <span>Login with GitHub</span>
-              </Box>
-            </Box>
-          </ButtonPrimary>
+          />
         </MainActionBox>
       </Box>
     </Root>

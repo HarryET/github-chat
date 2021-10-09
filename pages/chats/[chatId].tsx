@@ -1,17 +1,18 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Box, Text, Spinner, Button, Link } from "@primer/components";
+import { Box, Text, Spinner, Button, Link, ButtonPrimary } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
-import { useQuery, useQueryClient } from "react-query";
+import { useMutation, useQuery, useQueryClient } from "react-query";
 import { MessageType } from "types";
 import { SideMenu } from "components/SideMenu";
 import { Root } from "components/Root";
 import { MessageInput } from "components/MessageInput";
 import { MessageList } from "components/MessageList";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import * as R from "ramda";
 import { supabase } from "service/supabase";
 import NextLink from "next/link";
+import { LoginButton } from "components/LoginButton";
 
 const messageQuery = `
   id,
@@ -34,12 +35,31 @@ const ViewChat: NextPage = () => {
 
   const user = supabase.auth.user();
 
-  const isAuthenticated = user !== null;
+  const [isLoginLoading, setLoginLoading] = useState(false);
 
-  // // Check also for chatId because on first render router.query params are undefined
-  // if (typeof window !== "undefined" && !isAuthenticated && chatId) {
-  //   router.push(`/login?redirect=/chats/${chatId}`);
-  // }
+  // TODO Handle error
+  const { mutate: handleSignIn } = useMutation(
+    async (redirectPath: string) => {
+      setLoginLoading(true);
+      const { error } = await supabase.auth.signIn(
+        { provider: "github" },
+        {
+          redirectTo: `${window.location.origin}${redirectPath}`,
+          scopes: "read:org,read:user,user:email",
+        }
+      );
+
+      if (error) {
+        console.error(error);
+        throw error;
+      }
+    },
+    {
+      onError: () => {
+        setLoginLoading(false);
+      },
+    }
+  );
 
   const {
     data: messages,
@@ -57,7 +77,7 @@ const ViewChat: NextPage = () => {
 
       return data || [];
     },
-    { enabled: !!chatId && isAuthenticated, staleTime: Infinity }
+    { enabled: !!chatId, staleTime: Infinity }
   );
 
   useEffect(() => {
@@ -143,18 +163,28 @@ const ViewChat: NextPage = () => {
           {messages && <MessageList messages={messages} />}
           {!!chatId && user && <MessageInput chatId={chatId} user={user} />}
           {!!chatId && !user && (
-            <Box
-              paddingX={3}
-              paddingY={3}
-              width={1}
-              bg={"canvas.overlay"}
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-            >
-              <NextLink href={`/login?redirect=/chats/${chatId}`} passHref>
-                <Link>Log in to chat</Link>
-              </NextLink>
+            <Box px={3} py={3} width="100%">
+              <Box
+                paddingX={3}
+                paddingY={3}
+                borderRadius={8}
+                bg={"canvas.overlay"}
+                display="flex"
+                flexDirection={["column", "row"]}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Text fontSize={2} fontWeight={400} color="fg.default">
+                  Want to participate?
+                </Text>
+                <LoginButton
+                  isLoading={isLoginLoading}
+                  onClick={() => handleSignIn(`/chats/${chatId}`)}
+                  ml={[0, 3]}
+                  mt={[3, 0]}
+                  minWidth={["100%", 0]}
+                />
+              </Box>
             </Box>
           )}
         </Box>

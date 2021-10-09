@@ -17,28 +17,18 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   const user = session?.user;
   const userMeta = user?.user_metadata;
 
-  const [isAuthenticated, setIsAuthenticated] = useState(session !== null);
+  const isAuthenticated = !!session;
+
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png");
 
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     if (event == "SIGNED_IN" || event == "USER_UPDATED") {
       setAvatarUrl(session?.user?.user_metadata.avatar_url);
-      setIsAuthenticated(true);
     }
   });
 
-  useEffect(() => {
-    if (isAuthenticated) {
-      setAvatarUrl(userMeta?.avatar_url);
-    }
-  }, [isAuthenticated, userMeta?.avatar_url]);
-
-  const handleLogout = async () => {
-    const { error } = await supabase.auth.signOut();
-    if (!error) {
-      router.push(`/`);
-    }
-  };
+  // TODO Handle error
+  const handleLogout = () => supabase.auth.signOut();
 
   return (
     <Header>
@@ -46,8 +36,8 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
         <Link href="/" passHref>
           <Header.Link>
             <Image src="/icon.svg" height={30} width={30} alt="GithHub Chat logo" />
-            <Text ml={2} fontSize={3} fontWeight={400}>
-              GitHub Chat
+            <Text ml={2} fontSize={3} fontWeight={600} letterSpacing={0.5}>
+              github·chat
             </Text>
           </Header.Link>
         </Link>

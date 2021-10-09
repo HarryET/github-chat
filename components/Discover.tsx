@@ -18,8 +18,6 @@ export default function Discover() {
       .then(({ data }) => data)
   );
 
-  console.log("msgs", latestMessages);
-
   const handleFormSubmit: FormEventHandler = (e: FormEvent) => {
     e.preventDefault();
 
