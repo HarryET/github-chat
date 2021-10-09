@@ -44,9 +44,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <meta property="twitter:description" content="A chat room for every GitHub repository" />
         <meta property="twitter:image" content="https://github-chat.com/meta-image.png" />
       </Head>
-      <BaseStyles>
+      <BaseStyles className={"root"}>
         <QueryClientProvider client={queryClient}>
-          <Box bg="canvas.default" className="root" height="100%" width="100%">
+          <Box bg="canvas.default" className="root" height="100%">
             <Box maxHeight="100%" height="100%" width="100%" display="flex" flexDirection="column" overflowY="hidden">
               <CustomHeader showAvatar={true} />
               <Component {...pageProps} />
