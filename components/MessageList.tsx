@@ -18,21 +18,8 @@ export const MessageList = ({ messages }: Props) => {
   }, [messages]);
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      flexGrow={1}
-      overflowY="scroll"
-      ref={ref}
-    >
-      {messages &&
-        messages.map((message) => (
-          <Message
-            key={message.id}
-            author={message.user}
-            content={message.content}
-          />
-        ))}
+    <Box display="flex" flexDirection="column" flexGrow={1} overflowY="scroll" ref={ref}>
+      {messages && messages.map((message) => <Message key={message.id} message={message} />)}
     </Box>
   );
 };
