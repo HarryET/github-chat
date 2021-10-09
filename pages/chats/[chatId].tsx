@@ -5,7 +5,6 @@ import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-reac
 import { useQuery, useQueryClient } from "react-query";
 import { MessageType } from "types";
 import { SideMenu } from "components/SideMenu";
-import { Root } from "components/Root";
 import { MessageInput } from "components/MessageInput";
 import { MessageList } from "components/MessageList";
 import { useEffect } from "react";
@@ -93,73 +92,71 @@ const ViewChat: NextPage = () => {
   }, [chatId, queryClient]);
 
   return (
-    <Root>
-      <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" overflowY="hidden">
-        <SideMenu selectedChatId={chatId} />
-        <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
-          {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
-            <Box
-              height="100%"
-              width="100%"
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Box display="flex" flexDirection="column" alignItems="center" maxWidth={400}>
-                {/* Loading */}
-                {isMessagesLoading && !messages && (
-                  <>
-                    <Spinner margin={2} size="medium" />
-                    <Text>Loading messages...</Text>
-                  </>
-                )}
-                {/* Error fetching messages */}
-                {!!messagesError && !isMessagesLoading && (
-                  <>
-                    <StopIcon size="medium" />
-                    <Text mt={2} textAlign="center">
-                      Something went wrong trying to load messages.
-                    </Text>
-                    <Button mt={3} onClick={() => refetchMessages()}>
-                      <SyncIcon size="small" />
-                      <Text ml={2}>Retry</Text>
-                    </Button>
-                  </>
-                )}
-                {/* There are no messages yet */}
-                {messages && messages.length === 0 && (
-                  <>
-                    <CommentDiscussionIcon size="medium" />
-                    <Text mt={2} textAlign="center">
-                      {"There are no messages yet."} <br />
-                      {"Be the first one to write something!"}
-                    </Text>
-                  </>
-                )}
-              </Box>
+    <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" overflowY="hidden">
+      <SideMenu selectedChatId={chatId} />
+      <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
+        {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
+          <Box
+            height="100%"
+            width="100%"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box display="flex" flexDirection="column" alignItems="center" maxWidth={400}>
+              {/* Loading */}
+              {isMessagesLoading && !messages && (
+                <>
+                  <Spinner margin={2} size="medium" />
+                  <Text>Loading messages...</Text>
+                </>
+              )}
+              {/* Error fetching messages */}
+              {!!messagesError && !isMessagesLoading && (
+                <>
+                  <StopIcon size="medium" />
+                  <Text mt={2} textAlign="center">
+                    Something went wrong trying to load messages.
+                  </Text>
+                  <Button mt={3} onClick={() => refetchMessages()}>
+                    <SyncIcon size="small" />
+                    <Text ml={2}>Retry</Text>
+                  </Button>
+                </>
+              )}
+              {/* There are no messages yet */}
+              {messages && messages.length === 0 && (
+                <>
+                  <CommentDiscussionIcon size="medium" />
+                  <Text mt={2} textAlign="center">
+                    {"There are no messages yet."} <br />
+                    {"Be the first one to write something!"}
+                  </Text>
+                </>
+              )}
             </Box>
-          )}
-          {messages && <MessageList messages={messages} />}
-          {!!chatId && user && <MessageInput chatId={chatId} user={user} />}
-          {!!chatId && !user && (
-            <Box
-              paddingX={3}
-              paddingY={3}
-              width={1}
-              bg={"canvas.overlay"}
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-            >
-              <NextLink href={`/login?redirect=/chats/${chatId}`} passHref>
-                <Link>Log in to chat</Link>
-              </NextLink>
-            </Box>
-          )}
-        </Box>
+          </Box>
+        )}
+        {messages && <MessageList messages={messages} />}
+        {!!chatId && user && <MessageInput chatId={chatId} user={user} />}
+        {!!chatId && !user && (
+          <Box
+            paddingX={3}
+            paddingY={3}
+            width={1}
+            bg={"canvas.overlay"}
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+          >
+            <NextLink href={`/login?redirect=/chats/${chatId}`} passHref>
+              <Link>Log in to chat</Link>
+            </NextLink>
+          </Box>
+        )}
       </Box>
-    </Root>
+    </Box>
   );
 };
 

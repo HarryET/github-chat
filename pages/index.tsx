@@ -3,7 +3,6 @@ import { Box, Text, Spinner, Button } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { SideMenu } from "../components/SideMenu";
 import { MentionMessageList } from "components/MentionMessageList";
-import { Root } from "../components/Root";
 import { supabase } from "service/supabase";
 import Discover from "components/Discover";
 import { useQuery } from "react-query";
@@ -13,6 +12,7 @@ const messageQuery = `
   id,
   content,
   created_at,
+  mentions,
   user: users!user_id(
     username,
     avatar_url    
@@ -29,9 +29,7 @@ const Home: NextPage = () => {
 
   if (!isAuthenticated) {
     return (
-      <Root>
-        <Discover></Discover>
-      </Root>
+      <Discover />
     );
   }
 
@@ -57,57 +55,55 @@ const Home: NextPage = () => {
   );
 
   return (
-    <Root>
-      <Box bg="canvas.default" flexGrow={1} display="flex" flexDirection="row" height="100%">
-        <SideMenu />
-        <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
-          {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
-            <Box
-              height="100%"
-              width="100%"
-              display="flex"
-              flexDirection="column"
-              justifyContent="center"
-              alignItems="center"
-            >
-              <Box display="flex" flexDirection="column" alignItems="center" maxWidth={400}>
-                {/* Loading */}
-                {isMessagesLoading && !messages && (
-                  <>
-                    <Spinner margin={2} size="medium" />
-                    <Text>Loading feed...</Text>
-                  </>
-                )}
-                {/* Error fetching messages */}
-                {!!messagesError && !isMessagesLoading && (
-                  <>
-                    <StopIcon size="medium" />
-                    <Text mt={2} textAlign="center">
-                      Something went wrong trying to load your feed.
-                    </Text>
-                    <Button mt={3} onClick={() => refetchMessages()}>
-                      <SyncIcon size="small" />
-                      <Text ml={2}>Retry</Text>
-                    </Button>
-                  </>
-                )}
-                {/* There are no messages yet */}
-                {messages && messages.length === 0 && (
-                  <>
-                    <CommentDiscussionIcon size="medium" />
-                    <Text mt={2} textAlign="center">
-                      {"There are no messages yet."} <br />
-                      {"Join a chat and start some conversations!"}
-                    </Text>
-                  </>
-                )}
-              </Box>
+    <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" overflowY="hidden">
+      <SideMenu />
+      <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
+        {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
+          <Box
+            height="100%"
+            width="100%"
+            display="flex"
+            flexDirection="column"
+            justifyContent="center"
+            alignItems="center"
+          >
+            <Box display="flex" flexDirection="column" alignItems="center" maxWidth={400}>
+              {/* Loading */}
+              {isMessagesLoading && !messages && (
+                <>
+                  <Spinner margin={2} size="medium" />
+                  <Text>Loading feed...</Text>
+                </>
+              )}
+              {/* Error fetching messages */}
+              {!!messagesError && !isMessagesLoading && (
+                <>
+                  <StopIcon size="medium" />
+                  <Text mt={2} textAlign="center">
+                    Something went wrong trying to load feed.
+                  </Text>
+                  <Button mt={3} onClick={() => refetchMessages()}>
+                    <SyncIcon size="small" />
+                    <Text ml={2}>Retry</Text>
+                  </Button>
+                </>
+              )}
+              {/* There are no messages yet */}
+              {messages && messages.length === 0 && (
+                <>
+                  <CommentDiscussionIcon size="medium" />
+                  <Text mt={2} textAlign="center">
+                    {"There are no messages yet."} <br />
+                    {"Join a chat and start some conversations!"}
+                  </Text>
+                </>
+              )}
             </Box>
-          )}
-          {messages && <MentionMessageList messages={messages} />}
-        </Box>
+          </Box>
+        )}
+        {messages && <MentionMessageList messages={messages} />}
       </Box>
-    </Root>
+    </Box>
   );
 };
 

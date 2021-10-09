@@ -11,7 +11,6 @@ import {
 import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
 import { useMutation } from "react-query";
 import { MainActionBox } from "components/MainActionBox";
-import { Root } from "components/Root";
 import { supabase } from "service/supabase";
 
 const Login: NextPage = () => {
@@ -53,50 +52,48 @@ const Login: NextPage = () => {
   }
 
   return (
-    <Root>
-      <Box
-        display="flex"
-        flexGrow={1}
-        flexDirection="column"
-        justifyContent="center"
-        alignItems="center"
-        width="100%"
-      >
-        <MainActionBox>
-          <StyledOcticon icon={MarkGithubIcon} size="large" />
-          <Text as="h1" mt={4} mb={0} lineHeight={1}>
-            Github Chat
-          </Text>
-          {error && (
-            <Flash variant="danger" mt={5} sx={{ width: "100%" }}>
-              <StyledOcticon icon={XIcon} />
-              {(error as Error)?.message || "Failed to login"}
-            </Flash>
-          )}
-          <ButtonPrimary
-            mt={6}
-            disabled={isLoading}
-            variant="large"
-            width={256}
-            onClick={() => handleSignIn(redirectPath)}
+    <Box
+      display="flex"
+      flexGrow={1}
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      width="100%"
+    >
+      <MainActionBox>
+        <StyledOcticon icon={MarkGithubIcon} size="large" />
+        <Text as="h1" mt={4} mb={0} lineHeight={1}>
+          Github Chat
+        </Text>
+        {error && (
+          <Flash variant="danger" mt={5} sx={{ width: "100%" }}>
+            <StyledOcticon icon={XIcon} />
+            {(error as Error)?.message || "Failed to login"}
+          </Flash>
+        )}
+        <ButtonPrimary
+          mt={6}
+          disabled={isLoading}
+          variant="large"
+          width={256}
+          onClick={() => handleSignIn(redirectPath)}
+        >
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="center"
+            alignItems="center"
+            height="100%"
+            width="100%"
           >
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyContent="center"
-              alignItems="center"
-              height="100%"
-              width="100%"
-            >
-              {isLoading && <Spinner size="small" />}
-              <Box marginLeft={2}>
-                <span>Login with GitHub</span>
-              </Box>
+            {isLoading && <Spinner size="small" />}
+            <Box marginLeft={2}>
+              <span>Login with GitHub</span>
             </Box>
-          </ButtonPrimary>
-        </MainActionBox>
-      </Box>
-    </Root>
+          </Box>
+        </ButtonPrimary>
+      </MainActionBox>
+    </Box>
   );
 };
 
