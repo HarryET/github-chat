@@ -1,14 +1,12 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/main/lib/SupabaseQueryBuilder";
 import { IS_SERVER, NEXT_PUBLIC_SUPABASE_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_KEY } from "env";
-import { Chat } from "types";
+import { ActiveChat, Chat, SupabaseTables } from "types";
 
 /**
  * If running client side, the supabase client will use the anon key, and RLS will be enforced.
  * If running on SSR functions or /api pages, the service key will be used, granting full access to tables
  */
-
-type SupabaseTables = "chats" | "members" | "messages" | "users";
 
 interface TypedSupabaseClient extends SupabaseClient {
   from: <T = any>(table: SupabaseTables) => SupabaseQueryBuilder<T>;
@@ -19,20 +17,57 @@ export const supabase: TypedSupabaseClient = createClient(
   IS_SERVER ? SUPABASE_SERVICE_KEY : NEXT_PUBLIC_SUPABASE_KEY
 );
 
-interface SupabaseGenericParams {
-  selectFields?: string;
-  matchParams?: {};
+interface SupabaseGenericParams<T> {
+  selectFields?: (keyof T)[] | string;
+  matchParams?: { [k in keyof Partial<T>]: string };
+  count?: number;
 }
 
-export const getChats = async (options: SupabaseGenericParams = {}) =>
-  await supabase
-    .from<Chat>("chats")
-    .select(options.selectFields || "*")
-    .match(options.matchParams || {});
+export const getChats = (options: SupabaseGenericParams<Chat> = {}) => {
+  const { selectFields, matchParams, count } = options;
 
-export const getChatByOwnerAndName = async (owner: string, name: string, options: SupabaseGenericParams = {}) =>
-  await supabase
+  const selectString = typeof selectFields === "string" ? selectFields : selectFields?.join(",") || "*";
+
+  const query = supabase
     .from<Chat>("chats")
-    .select(options.selectFields || "*")
-    .ilike("repo_owner", owner)
-    .ilike("repo_name", name);
+    .select(selectString)
+    .match(matchParams || {});
+
+  if (count) query.limit(count);
+
+  return query;
+};
+
+export const getChatByRepoOwnerAndName = (owner: string, name: string, options: SupabaseGenericParams<Chat> = {}) =>
+  getChats(options).ilike("repo_owner", owner).ilike("repo_name", name);
+
+export const getActiveChats = () => supabase.from<ActiveChat>("active_chats");
+
+export const createChat = ({
+  github_repo_id,
+  repo_owner,
+  repo_name,
+  repo_description,
+}: Pick<Chat, "github_repo_id" | "repo_owner" | "repo_name" | "repo_description">) =>
+  supabase.from<Chat>("chats").insert([
+    {
+      github_repo_id,
+      repo_owner,
+      repo_name,
+      repo_description,
+    },
+  ]);
+
+export const updateChat = (
+  { github_repo_id, repo_owner, repo_description, repo_name }: Partial<Chat>,
+  options: SupabaseGenericParams<Chat>
+) =>
+  supabase
+    .from<Chat>("chats")
+    .update({
+      github_repo_id,
+      repo_owner,
+      repo_name,
+      repo_description,
+    })
+    .match(options.matchParams || {});

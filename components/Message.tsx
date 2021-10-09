@@ -4,7 +4,7 @@ import reactStringReplace from "react-string-replace";
 import {Markdown} from "./Markdown";
 // @ts-ignore
 import { supabase } from "service/supabase";
-import type { User } from 'types'
+import type { User } from "types";
 
 type MessageProps = {
   content: string;
