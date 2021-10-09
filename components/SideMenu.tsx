@@ -63,14 +63,6 @@ export const SideMenu = ({ selectedChatId }: Props) => {
         }}
       >
         <Text fontWeight="bold">Your Chats:</Text>
-        <ButtonPrimary variant="small" onClick={() => router.push("/chats/new")}>
-          <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-            <PlusIcon size={18} />
-            <Box paddingLeft={2}>
-              <Text>New</Text>
-            </Box>
-          </Box>
-        </ButtonPrimary>
       </Box>
       {isChatsLoading && !chats && <Spinner />}
       {chatsError && <Text>Failed to load chats</Text>}
