@@ -8,6 +8,7 @@ export const Root: React.FC = ({ children }) => (
       <title>GitHub Chat | A chat room for every GitHub repository</title>
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
 
+      {/* TODO Set custom title in each page, especially for chat pages */}
       <meta name="title" content="GitHub Chat | A chat room for every GitHub repository" />
       <meta name="description" content="A chat room for every GitHub repository" />
 
