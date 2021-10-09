@@ -1,9 +1,6 @@
-import { Avatar, Box, Text, BranchName } from "@primer/components";
-import React, { useEffect, useState } from "react";
-import reactStringReplace from "react-string-replace";
+import { Avatar, Box, Text } from "@primer/components";
+import React from "react";
 import {Markdown} from "./Markdown";
-// @ts-ignore
-import { supabase } from "service/supabase";
 import type { User } from "types";
 
 type MessageProps = {

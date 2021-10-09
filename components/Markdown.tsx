@@ -19,7 +19,7 @@ export const Markdown = ({ content }: MarkdownProps) => {
 
     useEffect(() => {
         const rawRegexMatches = content.matchAll(/<@([A-Za-z0-9\-]+)>/gmi);
-        const rawMatches: string[] = []; for (let row of rawRegexMatches) for (let e of row) rawMatches.push(e);
+        const rawMatches: string[] = []; for (const row of rawRegexMatches) for (const e of row) rawMatches.push(e);
         rawMatches.forEach(async (rawId) => {
             const id = rawId.replace("<@", "").replace(">", "");
             console.log(rawId, id);
