@@ -68,7 +68,7 @@ export default function Discover() {
         >
           <Box />
           <Box width={[1]} display="flex" flexDirection="column">
-            <Heading sx={{ fontSize: [5, 7], lineHeight: 1.25 }} textAlign={["center", "left"]}>
+            <Heading sx={{ fontSize: [6, 7], lineHeight: 1.25 }} textAlign={["center", "left"]}>
               A chat room for every GitHub repository. <br />
               Real-time.
             </Heading>
@@ -106,7 +106,7 @@ export default function Discover() {
               </Box>
             </form>
           </Box>
-          <Text fontSize={1} color="fg.subtle">
+          <Text fontSize={1} color="fg.subtle" mb={2}>
             A project by{" "}
             <Link href="https://twitter.com/TheHarryET" target="_blank">
               Harry
