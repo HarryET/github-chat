@@ -1,4 +1,5 @@
 import { Avatar, Box, Text, BranchName } from "@primer/components";
+import { useEffect, useState } from "react";
 import reactStringReplace from "react-string-replace";
 // @ts-ignore
 import Twemoji from 'react-twemoji';
@@ -6,12 +7,40 @@ import { supabase } from "service/supabase";
 import type { User } from 'types'
 
 type MessageProps = {
-  avatar: string;
   content: string;
-  username: string;
+  author: User;
 };
 
-export const Message = ({ avatar, username, content }: MessageProps) => {
+export const Message = ({ author, content }: MessageProps) => {
+  // Stores a link between userid and username
+  const [mentionsData, setMentionsData] = useState<Record<string, User>>({
+    [author.id]: author
+  });
+
+  useEffect(() => {
+    const rawRegexMatches = content.matchAll(/<@([A-Za-z0-9\-]+)>/gmi);
+    const rawMatches: string[] = []; for (let row of rawRegexMatches) for (let e of row) rawMatches.push(e);
+    rawMatches.forEach(async (rawId) => {
+      const id = rawId.replace("<@", "").replace(">", "");
+      console.log(rawId, id);
+      const { data: userData } = await supabase
+        .from<User>("users")
+        .select(`id,
+        username, 
+        avatar_url`)
+        .limit(1)
+        .eq("id", id)
+
+      if ((userData ?? []).length > 0) {
+        const user: User = userData![0]!;
+        setMentionsData({
+          ...mentionsData,
+          [user.id]: user
+        });
+      }
+    })
+  }, [])
+
   return (
     <Box
       display="flex"
@@ -25,16 +54,16 @@ export const Message = ({ avatar, username, content }: MessageProps) => {
       }}
     >
       <Avatar
-        src={avatar}
+        src={author.avatar_url}
         size={36}
         square
-        alt={username}
+        alt={author.username}
         sx={{ flexShrink: 0 }}
         bg="neutral.muted"
       />
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
         <Text fontWeight="bold" fontSize={1} lineHeight={1}>
-          {username}
+          {author.username}
         </Text>
         <Text
           mt={2}
@@ -45,29 +74,18 @@ export const Message = ({ avatar, username, content }: MessageProps) => {
           }}
         >
           <Twemoji options={{ className: 'emoji' }}>
-            { /*! CANNOT BE ASYNC NEEDS FIX !*/ }
-            {reactStringReplace(content, /(<@)([A-Za-z0-9\-]+)(>)/gmi, async (match, i, offset) => {
+            {reactStringReplace(content, /<@([A-Za-z0-9\-]+)>/gmi, (match) => {
               const userId = match.replace("<@", "").replace(">", "");
-              const { data: users } = await supabase
-                .from<User>("users")
-                .select(`id,
-                  username, 
-                  avatar_url`)
-                .eq("id", userId)
-              if ((users ?? []).length > 0) {
-                const user = users![0]!
-
-                return (
-                  <BranchName>
-                    {user.username}
-                  </BranchName>
-                )
+              console.log(userId);
+              const user = mentionsData[userId];
+              if (user) {
+                return (<BranchName href={`https://github.com/${user.username}`}>
+                  @{user.username}
+                </BranchName>);
               } else {
-                return (
-                  <BranchName>
-                    {userId}
-                  </BranchName>
-                )
+                return (<BranchName>
+                  @{userId}
+                </BranchName>);
               }
             })}
           </Twemoji>
