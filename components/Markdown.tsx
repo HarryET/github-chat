@@ -1,6 +1,5 @@
 import { Text, Link, BranchName } from "@primer/components"
 import NextLink from "next/link";
-// @ts-ignore
 import Twemoji from "react-twemoji";
 import { User } from 'types';
 import React, { useState, useEffect } from 'react';
@@ -80,7 +79,7 @@ export const Markdown = ({ content }: MarkdownProps) => {
         </NextLink>)
     })
 
-    return (<Twemoji className={"emoji"}>
+    return (<Twemoji options={{className: "emoji"}}>
         {mdContent}
     </Twemoji>);
 }
