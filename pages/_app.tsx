@@ -44,7 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme} theme={customTheme}>
         <BaseStyles className={"root"}>
-          <Box bg="canvas.default" className="root" height="100%">
+          <Box bg="canvas.default" className="root" minHeight="100vh">
             <Component {...pageProps} />
           </Box>
         </BaseStyles>

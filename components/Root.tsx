@@ -3,7 +3,7 @@ import { CustomHeader } from "./CustomHeader";
 import Head from "next/head";
 
 export const Root: React.FC = ({ children }) => (
-  <Box maxHeight="100%" height="100%" width="100%" display="flex" flexDirection="column" overflowY="hidden">
+  <Box minHeight="100vh" width="100%" display="flex" flexDirection="column">
     <Head>
       <title>GitHub Chat | A chat room for every GitHub repository</title>
       <meta name="viewport" content="initial-scale=1.0, width=device-width" />
