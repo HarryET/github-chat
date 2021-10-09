@@ -2,6 +2,7 @@ import React, { FormEvent, KeyboardEvent, useState } from "react";
 import { Box, TextInput } from "@primer/components";
 import { useMutation } from "react-query";
 import { supabase } from "service/supabase";
+import type { User as DBUser } from "../types";
 import { User } from "@supabase/gotrue-js";
 
 type Props = {
@@ -14,8 +15,10 @@ export const MessageInput = ({ chatId, user }: Props) => {
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
+    const latestCharacter = newValue[newValue.length - 1];
+
     // Not supporting multiline messages for now
-    if (newValue[newValue.length - 1] !== "\n") {
+    if (latestCharacter !== "\n") {
       setValue(e.currentTarget.value);
     }
   };
@@ -27,14 +30,44 @@ export const MessageInput = ({ chatId, user }: Props) => {
     }
   };
 
-  const { mutate: submitMessage } = useMutation(async () => {
+  const { mutate: submitMessage, error } = useMutation(async () => {
+    const rawMentionRegexMatches: string[][] = Array.from(value.matchAll(/@[A-Za-z0-9\-]+/g)).map((regexMatchArray) => [
+      ...regexMatchArray,
+    ]);
+    const rawMentions: string[] = [];
+    for (let row of rawMentionRegexMatches) for (let e of row) rawMentions.push(e);
+
+    const mentionsRaw: ({ username: string; id: string } | null)[] = await Promise.all(
+      rawMentions.map(async (mention) => {
+        const username = mention.substring(1);
+        const { data: userData } = await supabase.from<DBUser>("users").select("id").eq("username", username);
+
+        if ((userData ?? []).length > 0) {
+          const user = userData![0];
+          return { username: username, id: user.id };
+        }
+        return null;
+      })
+    );
+
+    // @ts-ignore
+    const mentions: { username: string; id: string }[] = mentionsRaw.filter((mention) => mention != null);
+
+    let mentionsValue = value;
+
+    mentions.forEach((mention) => {
+      mentionsValue = mentionsValue.replace(`@${mention.username}`, `<@${mention.id}>`);
+    });
+
     const { error } = await supabase.from("messages").insert([
       {
         chat_id: chatId,
         user_id: user.id,
-        content: value,
+        content: mentionsValue,
+        mentions: mentions.map((mention) => mention.id),
       },
     ]);
+
     if (error) {
       // TODO Handle in UI
       console.error(error);

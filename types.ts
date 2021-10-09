@@ -9,7 +9,7 @@ export type Chat = {
   repo_data_last_update: Date;
 };
 
-type User = {
+export type User = {
   id: string;
   username: string;
   avatar_url: string;
