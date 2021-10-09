@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { supabase } from "service/supabase";
+import Image from "next/image";
 
 type HeaderProps = {
   showAvatar: boolean;
@@ -43,8 +44,11 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
     <Header>
       <Header.Item>
         <Link href="/" passHref>
-          <Header.Link fontSize={2}>
-            <span>GitHub Chat</span>
+          <Header.Link>
+            <Image src="/icon.svg" height={30} width={30} />
+            <Text ml={2} fontSize={3} fontWeight={400}>
+              GitHub Chat
+            </Text>
           </Header.Link>
         </Link>
       </Header.Item>
