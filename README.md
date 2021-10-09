@@ -25,10 +25,6 @@ We have used all the features of supabase! They are broken down below with a mor
 
 - Github 0Auth
 
-#### Storage
-
-As people have the ability to upload files to chats we have used Storage to store those files and then serve them to everyone elses clients when the chats are read. We didn't have to store profile pictures as Github already manages that.
-
 #### Realtime
 
 The primary function of the app is to have a realtime chat for github repos so we have used realtime to listen for new messages and then update the messages being shown in the chat & feed.
