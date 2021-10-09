@@ -1,10 +1,6 @@
-import { Avatar, Box, Text, BranchName } from "@primer/components";
-import { useEffect, useState } from "react";
-import reactStringReplace from "react-string-replace";
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
-import Twemoji from "react-twemoji";
-import { supabase } from "service/supabase";
+import { Avatar, Box, Text } from "@primer/components";
+import React from "react";
+import {Markdown} from "./Markdown";
 import type { User } from "types";
 
 type MessageProps = {
@@ -13,38 +9,6 @@ type MessageProps = {
 };
 
 export const Message = ({ author, content }: MessageProps) => {
-  // Stores a link between userid and username
-  const [mentionsData, setMentionsData] = useState<Record<string, User>>({
-    [author.id]: author,
-  });
-
-  useEffect(() => {
-    const rawRegexMatches = content.matchAll(/<@([A-Za-z0-9\-]+)>/gim);
-    const rawMatches: string[] = [];
-    for (const row of Array.from(rawRegexMatches)) for (const e of row) rawMatches.push(e);
-    rawMatches.forEach(async (rawId) => {
-      const id = rawId.replace("<@", "").replace(">", "");
-      console.log(rawId, id);
-      const { data: userData } = await supabase
-        .from<User>("users")
-        .select(
-          `id,
-        username, 
-        avatar_url`
-        )
-        .limit(1)
-        .eq("id", id);
-
-      if ((userData ?? []).length > 0) {
-        const user: User = userData![0]!;
-        setMentionsData({
-          ...mentionsData,
-          [user.id]: user,
-        });
-      }
-    });
-  }, []);
-
   return (
     <Box
       display="flex"
@@ -75,20 +39,10 @@ export const Message = ({ author, content }: MessageProps) => {
           style={{
             overflowWrap: "break-word",
             maxWidth: "100%",
+            maxHeight: "100%"
           }}
         >
-          <Twemoji options={{ className: "emoji" }}>
-            {reactStringReplace(content, /<@([A-Za-z0-9\-]+)>/gim, (match) => {
-              const userId = match.replace("<@", "").replace(">", "");
-              console.log(userId);
-              const user = mentionsData[userId];
-              if (user) {
-                return <BranchName href={`https://github.com/${user.username}`}>@{user.username}</BranchName>;
-              } else {
-                return <BranchName>@{userId}</BranchName>;
-              }
-            })}
-          </Twemoji>
+          <Markdown content={content} />
         </Text>
       </Box>
     </Box>

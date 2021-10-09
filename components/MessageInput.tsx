@@ -12,21 +12,30 @@ type Props = {
 
 export const MessageInput = ({ chatId, user }: Props) => {
   const [value, setValue] = useState("");
+  const [rows, setRows] = useState(1);
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
-    const latestCharacter = newValue[newValue.length - 1];
 
-    // Not supporting multiline messages for now
-    if (latestCharacter !== "\n") {
-      setValue(e.currentTarget.value);
+    const lines = newValue.split(/\r\n|\r|\n/).length
+    if(lines > 1) {
+      if(lines > 5) {
+        setRows(5);
+      } else {
+        setRows(lines);
+      }
+    } else {
+      setRows(1);
     }
+
+    setValue(e.currentTarget.value);
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.code === "Enter" && value.trim().length > 0) {
+    if (e.code === "Enter" && !e.shiftKey && value.trim().length > 0) {
       submitMessage();
       setValue("");
+      setRows(1);
     }
   };
 
@@ -82,6 +91,8 @@ export const MessageInput = ({ chatId, user }: Props) => {
         width="100%"
         border="1px solid"
         borderColor="border.subtle"
+        rows={rows}
+        maxRows={5}
         sx={{
           backgroundColor: "canvas.overlay",
           ":focus-within": {
