@@ -13,11 +13,11 @@ const messageQuery = `
   id,
   content,
   created_at,
-  user: user_id(
+  user: users!user_id(
     username,
     avatar_url    
   ),
-  chat: chat_id(
+  chat: chats!chat_id(
     repo_owner,
     repo_name
   )
@@ -61,7 +61,7 @@ const Home: NextPage = () => {
       <Box bg="canvas.default" flexGrow={1} display="flex" flexDirection="row" height="100%">
         <SideMenu />
         <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
-        {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
+          {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box
               height="100%"
               width="100%"
