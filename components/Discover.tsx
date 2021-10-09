@@ -1,10 +1,28 @@
 import { Box, ButtonPrimary, Heading, Link, Text, TextInput } from "@primer/components";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
+import React, { ChangeEvent, ComponentProps, FormEvent, FormEventHandler, useState } from "react";
 import { useQuery } from "react-query";
 import { getActiveChats } from "service/supabase";
 import { buttonGradient } from "styles/styles";
 import { DiscoverMessage } from "./DiscoverMessage";
+
+const PersonalLinks = (props: ComponentProps<typeof Text>) => (
+  <Text fontSize={1} color="fg.subtle" mb={2} {...props}>
+    A project by{" "}
+    <Link href="https://twitter.com/TheHarryET" target="_blank">
+      Harry
+    </Link>
+    ,{" "}
+    <Link href="https://twitter.com/_hugocardenas" target="_blank">
+      Hugo
+    </Link>{" "}
+    &{" "}
+    <Link href="https://twitter.com/PeraltaDev" target="_blank">
+      Victor
+    </Link>
+    .
+  </Text>
+);
 
 export default function Discover() {
   const router = useRouter();
@@ -45,24 +63,20 @@ export default function Discover() {
       alignItems="center"
       paddingX={[3, 4]}
       paddingY={4}
-
-      // TODO Fix on mobile so scroll works
-      // overflowY="scroll"
     >
       <Box
         display="flex"
+        minHeight="100%"
         flexDirection={["column", "column", "row"]}
         alignItems="center"
         maxWidth={1280}
         width="100%"
-        // border="1px dashed pink"
       >
         <Box
           display="flex"
-          height="100%"
-          maxHeight={["none", "none", "75vh"]}
           flexDirection="column"
           justifyContent="space-between"
+          alignItems="stretch"
           flex={1}
           mr={[0, 0, 6]}
         >
@@ -91,7 +105,7 @@ export default function Discover() {
                   height="48px"
                   type="submit"
                   variant="large"
-                  mt={[2, 2, 0]}
+                  mt={[3, 3, 0]}
                   ml={[0, 0, 2]}
                   sx={{
                     border: "none",
@@ -106,21 +120,7 @@ export default function Discover() {
               </Box>
             </form>
           </Box>
-          <Text fontSize={1} color="fg.subtle" mb={2}>
-            A project by{" "}
-            <Link href="https://twitter.com/TheHarryET" target="_blank">
-              Harry
-            </Link>
-            ,{" "}
-            <Link href="https://twitter.com/PeraltaDev" target="_blank">
-              Victor
-            </Link>{" "}
-            &{" "}
-            <Link href="https://twitter.com/_hugocardenas" target="_blank">
-              Hugo
-            </Link>
-            .
-          </Text>
+          <PersonalLinks sx={{ display: ["none", "none", "block"] }} />
         </Box>
         <Box
           display="flex"
@@ -132,7 +132,7 @@ export default function Discover() {
           position="relative"
           maxHeight={["none", "none", "75vh"]}
           width="100%"
-          overflowY="hidden"
+          overflowY={["auto", "auto", "hidden"]}
         >
           <Text display="inline-block" color="fg.muted" mb={3}>
             Recent Messages
@@ -162,6 +162,7 @@ export default function Discover() {
           />
         </Box>
       </Box>
+      <PersonalLinks mt={8} mb={4} sx={{ display: ["block", "block", "none"] }} />
     </Box>
   );
 }
