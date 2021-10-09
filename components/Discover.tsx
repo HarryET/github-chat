@@ -63,15 +63,17 @@ export default function Discover() {
             </Text>
             <form onSubmit={handleFormSubmit}>
               <Box display="flex" flexDirection={["column", "column", "row"]} mt={4}>
-                <Box display="flex" alignItems="center">
-                  <Text mr={2}>https://github.com/</Text>
+                <Box display="flex" flexDirection={["column", "row"]} alignItems={["left", "center"]}>
+                  <Text fontSize={2} mr={2} mb={[2, 0]}>
+                    https://github.com/
+                  </Text>
                   <TextInput
                     placeholder="owner/name"
                     onChange={handleTryNowRepoChange}
-                    sx={{ height: "42px", minWidth: ["250px"], flexGrow: 1 }}
+                    sx={{ fontSize: 2, height: "48px", minWidth: ["250px"], flexGrow: 1 }}
                   />
                 </Box>
-                <ButtonPrimary type="submit" variant="large" mt={[2, 2, 0]} ml={[0, 0, 2]}>
+                <ButtonPrimary height="48px" type="submit" variant="large" mt={[2, 2, 0]} ml={[0, 0, 2]}>
                   Chat now
                 </ButtonPrimary>
               </Box>
