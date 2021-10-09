@@ -11,7 +11,6 @@ Realtime Chat for GitHub Repositories | Part of the Supabase Hacktoberfest Hacka
 - HarryET - [GitHub](https://github.com/HarryET) [Twitter](https://twitter.com/TheHarryET)
 - Hugo Cárdenas - [GitHub](https://github.com/hugo-cardenas) [Twitter](https://twitter.com/_hugocardenas)
 - Victor Peralta - [GitHub](https://github.com/VictorPeralta) [Twitter](https://twitter.com/PeraltaDev)
-- Hemanthdatta5 - [GitHub](https://github.com/Hemanthdatta5)
 
 ### Instructions
 
