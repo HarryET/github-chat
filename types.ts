@@ -36,6 +36,7 @@ export type MentionedMessageType = {
   id: string;
   content: string;
   created_at: string;
+  mentions: string[];
   user: User;
   chat: Chat;
 }

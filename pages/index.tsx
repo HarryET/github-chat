@@ -43,7 +43,10 @@ const Home: NextPage = () => {
   } = useQuery(
     ["messages", user],
     async () => {
-      const { data, error } = await supabase.from<MentionedMessageType>("messages").select(messageQuery);
+      const { data, error } = await supabase
+        .from<MentionedMessageType>("messages")
+        .select(messageQuery)
+        .cs('mentions', [user?.id]);
 
       if (error) {
         throw error;
