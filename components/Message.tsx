@@ -1,48 +1,61 @@
 import { Avatar, Box, Text } from "@primer/components";
 import React from "react";
-import {Markdown} from "./Markdown";
-import type { User } from "types";
+import { Markdown } from "./Markdown";
+import type { MessageType, User } from "types";
+import * as datefns from "date-fns";
 
 type MessageProps = {
-  content: string;
-  author: User;
+  message: MessageType;
 };
 
-export const Message = ({ author, content }: MessageProps) => {
+const formatDate = (dateISOFormat: string) => {
+  const date = datefns.parseISO(dateISOFormat);
+  if (datefns.isToday(date) || datefns.isYesterday(date)) {
+    return `${datefns.isToday(date) ? "Today" : "Yesterday"} at ${datefns.format(date, "HH:mm")}`;
+  }
+  return datefns.format(date, "dd/MM/yyyy");
+};
+
+export const Message = ({ message }: MessageProps) => {
   return (
     <Box
       display="flex"
       flexDirection="row"
-      paddingX={3}
-      paddingY={2}
+      paddingX={4}
+      paddingY={3}
       sx={{
         ":hover": {
-          bg: "canvas.subtle",
+          backgroundColor: "#131820",
         },
       }}
     >
       <Avatar
-        src={author.avatar_url}
+        src={message.user.avatar_url}
         size={36}
         square
-        alt={author.username}
+        alt={message.user.username}
         sx={{ flexShrink: 0 }}
         bg="neutral.muted"
       />
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
-        <Text fontWeight="bold" fontSize={1} lineHeight={1}>
-          {author.username}
-        </Text>
+        <Box display="flex" flexDirection="row" alignItems="flex-end">
+          <Text fontWeight="bold" fontSize={1} lineHeight={1}>
+            {message.user.username}
+          </Text>
+          <Text fontSize={0} fontWeight={300} color="fg.muted" lineHeight={1} ml={2}>
+            {formatDate(message.created_at)}
+          </Text>
+        </Box>
         <Text
           mt={2}
           fontSize={1}
           style={{
             overflowWrap: "break-word",
             maxWidth: "100%",
-            maxHeight: "100%"
+            maxHeight: "100%",
           }}
         >
-          <Markdown content={content} />
+          <Markdown content={message.content} />
         </Text>
       </Box>
     </Box>
