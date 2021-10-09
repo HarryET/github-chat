@@ -1,5 +1,5 @@
-import NextLink from "next/link";
-import { Avatar, Box, Text, Link } from "@primer/components";
+import Link from "next/link";
+import { Avatar, Box, Text } from "@primer/components";
 
 type MessageProps = {
   avatar: string;
@@ -11,42 +11,46 @@ type MessageProps = {
 
 export function DiscoverMessage({ avatar, username, content, repoOwner, repoName }: MessageProps) {
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      paddingX={3}
-      paddingY={2}
-      bg="canvas.overlay"
-      borderWidth={1}
-      borderRadius={6}
-      borderColor="border.default"
-      borderStyle="solid"
-      mb={3}
-    >
-      <Avatar src={avatar} size={36} square alt={username} sx={{ flexShrink: 0 }} bg="neutral.muted" />
-      <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
-        <Text fontWeight="bold" fontSize={1} lineHeight={1}>
-          {username}{" "}
-          <Text fontWeight="200" color={"fg.muted"}>
-            in{" "}
-            <NextLink href={`${repoOwner}/${repoName}`}>
-              <Link color={"fg.muted"}>
-                {repoOwner}/{repoName}
-              </Link>
-            </NextLink>
+    <Link href={`/${repoOwner}/${repoName}`}>
+      <Box
+        display="flex"
+        flexDirection="row"
+        padding={3}
+        bg="canvas.overlay"
+        borderWidth={1}
+        borderRadius={6}
+        borderColor="border.default"
+        borderStyle="solid"
+        mb={3}
+        sx={{
+          cursor: "pointer",
+          transition: "background-color 0.2s ease",
+          ":hover": {
+            backgroundColor: "#181e25",
+            borderColor: "#394047",
+          },
+        }}
+      >
+        <Avatar src={avatar} size={36} square alt={username} sx={{ flexShrink: 0 }} bg="neutral.muted" />
+        <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
+          <Text fontWeight="bold" fontSize={1} lineHeight={1}>
+            {username}{" "}
+            <Text fontWeight="200" color={"fg.muted"} fontSize={0}>
+              in <Text color={"fg.muted"} sx={{ cursor: "pointer" }}>{`${repoOwner}/${repoName}`}</Text>
+            </Text>
           </Text>
-        </Text>
-        <Text
-          mt={2}
-          fontSize={1}
-          style={{
-            overflowWrap: "break-word",
-            maxWidth: "100%",
-          }}
-        >
-          {content}
-        </Text>
+          <Text
+            mt={2}
+            fontSize={1}
+            style={{
+              overflowWrap: "break-word",
+              maxWidth: "100%",
+            }}
+          >
+            {content}
+          </Text>
+        </Box>
       </Box>
-    </Box>
+    </Link>
   );
 }

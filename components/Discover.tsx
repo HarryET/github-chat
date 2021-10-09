@@ -12,27 +12,16 @@ export default function Discover() {
   const handleTryNowRepoChange = (e: ChangeEvent<HTMLInputElement>) => {
     setTryNowRepo(e.target.value);
   };
-  const [latestMessages, setLatestMessages] = useState<ActiveChat[]>([]);
-  const { data: activeChatData } = useQuery("active_chats", async () => await getActiveChats().throwOnError());
-
-  useEffect(() => {
-    const chatsWithMessages: ActiveChat[] = activeChatData?.body || [];
-
-    let messagesToAdd = chatsWithMessages.length;
-
-    const intervalId = setInterval(() => {
-      setLatestMessages(chatsWithMessages.slice(0, chatsWithMessages.length - messagesToAdd + 1));
-      console.log("added messages!");
-
-      messagesToAdd--;
-      if (!messagesToAdd) {
-        clearInterval(intervalId);
-      }
-    }, 1500);
-    return () => {
-      clearInterval(intervalId);
-    };
-  }, [activeChatData?.body]);
+  // TODO Handle loading & error
+  const {
+    data: latestMessages,
+    isLoading,
+    error,
+  } = useQuery("active_chats", async () =>
+    getActiveChats()
+      .throwOnError()
+      .then(({ data }) => data)
+  );
 
   console.log("msgs", latestMessages);
 
@@ -56,49 +45,63 @@ export default function Discover() {
   };
 
   return (
-    <Box flexGrow={1} display="flex" flexDirection="column" justifyContent="center" alignItems="center" padding={4}>
-      <Box display="flex" flexWrap="wrap" alignItems="center" maxWidth={1280} width="100%">
-        <Box display="flex" flexDirection="column" width={["100%", null, "50%"]}>
+    <Box
+      flexGrow={1}
+      display="flex"
+      flexDirection="column"
+      justifyContent="center"
+      alignItems="center"
+      paddingX={3}
+      paddingY={4}
+      // TODO Fix on mobile so scroll works
+      // overflowY="scroll"
+    >
+      <Box display="flex" flexDirection={["column", "column", "row"]} alignItems="center" maxWidth={1280} width="100%">
+        <Box display="flex" flexDirection="column" flex={1} mr={[0, 0, 6]}>
           <Heading sx={{ fontSize: [5, 7], lineHeight: 1.25 }} textAlign={["center", "left"]}>
             A chat room for every GitHub repository. <br />
             Real-time.
           </Heading>
           <Box width={[1]} mt={4} display="flex" flexDirection="column">
             <Text fontSize={3} fontWeight={300} color="fg.muted" textAlign={["center", "left"]}>
-              Try it now! Just paste a GitHub url or type a repository owner/name.
+              Paste a GitHub url or type a repository owner/name.
             </Text>
             <form onSubmit={handleFormSubmit}>
-              <Box display="flex" flexDirection={["column", "row"]} mt={4}>
-                <TextInput
-                  placeholder="https://github.com/owner/name"
-                  onChange={handleTryNowRepoChange}
-                  sx={{ height: "42px", minWidth: ["250px"], flexGrow: 1 }}
-                />
-                <ButtonPrimary type="submit" variant="large" mt={[2, 0]} ml={[0, 2]}>
+              <Box display="flex" flexDirection={["column", "column", "row"]} mt={4}>
+                <Box display="flex" alignItems="center">
+                  <Text mr={2}>https://github.com/</Text>
+                  <TextInput
+                    placeholder="owner/name"
+                    onChange={handleTryNowRepoChange}
+                    sx={{ height: "42px", minWidth: ["250px"], flexGrow: 1 }}
+                  />
+                </Box>
+                <ButtonPrimary type="submit" variant="large" mt={[2, 2, 0]} ml={[0, 0, 2]}>
                   Chat now
                 </ButtonPrimary>
               </Box>
             </form>
           </Box>
         </Box>
-        <Box width={["100%", null, "50%"]}>
-          <Box padding={4} height={"420px"}>
+        <Box flex={1} ml={[0, 0, 6]} width="100%">
+          <Box mt={[6, 6, 0]} padding={[0, 0, 4]} height={"420px"}>
             <Box>
-              <Text display="inline-block" color="fg.muted" sx={{ mb: [2] }}>
+              <Text display="inline-block" color="fg.muted" mb={3}>
                 Recent Messages
               </Text>
-              {latestMessages.map((msg) => {
-                return (
-                  <DiscoverMessage
-                    key={msg.id}
-                    avatar={msg.avatar_url}
-                    username={msg.username}
-                    content={msg.content}
-                    repoName={msg.repo_name}
-                    repoOwner={msg.repo_owner}
-                  />
-                );
-              })}
+              {latestMessages &&
+                latestMessages.map((msg) => {
+                  return (
+                    <DiscoverMessage
+                      key={msg.id}
+                      avatar={msg.avatar_url}
+                      username={msg.username}
+                      content={msg.content}
+                      repoName={msg.repo_name}
+                      repoOwner={msg.repo_owner}
+                    />
+                  );
+                })}
             </Box>
           </Box>
         </Box>

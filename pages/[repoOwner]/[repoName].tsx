@@ -51,10 +51,23 @@ export const getServerSideProps = async (
   // Chat not found by name, check if repo exists in github
   const octokit = new Octokit({});
 
-  const { data: repoData } = await octokit.rest.repos.get({
-    owner: repoOwner.trim(),
-    repo: repoName.trim(),
-  });
+  const repoData = await octokit.rest.repos
+    .get({
+      owner: repoOwner.trim(),
+      repo: repoName.trim(),
+    })
+    .then(({ data }) => data)
+    .catch(() => undefined);
+
+  // Repository does not exist in Github
+  if (!repoData) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   const { data: existingChats } = await getChats({
     selectFields: ["id"],
