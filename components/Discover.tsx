@@ -68,18 +68,11 @@ export default function Discover() {
         display="flex"
         minHeight="100%"
         flexDirection={["column", "column", "row"]}
-        alignItems="center"
+        alignItems="stretch"
         maxWidth={1280}
         width="100%"
       >
-        <Box
-          display="flex"
-          flexDirection="column"
-          justifyContent="space-between"
-          alignItems="stretch"
-          flex={1}
-          mr={[0, 0, 6]}
-        >
+        <Box display="flex" flexDirection="column" justifyContent="space-between" flex={1} mr={[0, 0, 6]}>
           <Box />
           <Box width={[1]} display="flex" flexDirection="column">
             <Heading sx={{ fontSize: [6, 7], lineHeight: 1.25 }} textAlign={["center", "left"]}>
