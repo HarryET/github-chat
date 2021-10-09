@@ -46,7 +46,7 @@ export default function Discover() {
       flexDirection="column"
       justifyContent="center"
       alignItems="center"
-      paddingX={3}
+      paddingX={[3, 4]}
       paddingY={4}
       // TODO Fix on mobile so scroll works
       // overflowY="scroll"
@@ -78,26 +78,24 @@ export default function Discover() {
             </form>
           </Box>
         </Box>
-        <Box flex={1} ml={[0, 0, 6]} width="100%">
-          <Box mt={[6, 6, 0]} padding={[0, 0, 4]} height={"420px"}>
-            <Box>
-              <Text display="inline-block" color="fg.muted" mb={3}>
-                Recent Messages
-              </Text>
-              {latestMessages &&
-                latestMessages.map((msg) => {
-                  return (
-                    <DiscoverMessage
-                      key={msg.id}
-                      avatar={msg.avatar_url}
-                      username={msg.username}
-                      content={msg.content}
-                      repoName={msg.repo_name}
-                      repoOwner={msg.repo_owner}
-                    />
-                  );
-                })}
-            </Box>
+        <Box flex={1} ml={[0, 0, 6]} mt={[6, 6, 0]} padding={[0, 0, 0]} width="100%">
+          <Box>
+            <Text display="inline-block" color="fg.muted" mb={3}>
+              Recent Messages
+            </Text>
+            {latestMessages &&
+              latestMessages.map((msg) => {
+                return (
+                  <DiscoverMessage
+                    key={msg.id}
+                    avatar={msg.avatar_url}
+                    username={msg.username}
+                    content={msg.content}
+                    repoName={msg.repo_name}
+                    repoOwner={msg.repo_owner}
+                  />
+                );
+              })}
           </Box>
         </Box>
       </Box>
