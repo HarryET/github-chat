@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { supabase } from "service/supabase";
+import Image from "next/image";
 
 type HeaderProps = {
   showAvatar: boolean;
@@ -19,14 +20,12 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState(session !== null);
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png");
 
-  supabase.auth.onAuthStateChange(
-    (event: AuthChangeEvent, session: Session | null) => {
-      if (event == "SIGNED_IN" || event == "USER_UPDATED") {
-        setAvatarUrl(session?.user?.user_metadata.avatar_url);
-        setIsAuthenticated(true);
-      }
+  supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+    if (event == "SIGNED_IN" || event == "USER_UPDATED") {
+      setAvatarUrl(session?.user?.user_metadata.avatar_url);
+      setIsAuthenticated(true);
     }
-  );
+  });
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -45,8 +44,11 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
     <Header>
       <Header.Item>
         <Link href="/" passHref>
-          <Header.Link fontSize={2}>
-            <span>GitHub Chat</span>
+          <Header.Link>
+            <Image src="/icon.svg" height={30} width={30} alt="GithHub Chat logo" />
+            <Text ml={2} fontSize={3} fontWeight={400}>
+              GitHub Chat
+            </Text>
           </Header.Link>
         </Link>
       </Header.Item>
@@ -60,7 +62,8 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
         <Header.Item mr={0}>
           <Box display="flex" flexDirection="row" alignItems="center">
             <Avatar
-              src={avatarUrl!}
+              //TODO: Fallback avatar src
+              src={avatarUrl || ""}
               size={32}
               square
               alt={userMeta?.user_name}

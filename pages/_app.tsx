@@ -1,9 +1,21 @@
 import type { AppProps } from "next/app";
-import { ThemeProvider, BaseStyles, Box } from "@primer/components";
-import { createClient } from "@supabase/supabase-js";
-import { Octokit } from "@octokit/rest";
+import { ThemeProvider, BaseStyles, Box, theme } from "@primer/components";
 import "styles/reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
+import deepmerge from "deepmerge";
+
+const customTheme = deepmerge(theme, {
+  colorSchemes: {
+    // Customize an existing scheme
+    dark: {
+      colors: {
+        text: {
+          primary: "#f0f6fc",
+        },
+      },
+    },
+  },
+});
 
 const queryClient = new QueryClient();
 
@@ -11,12 +23,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   let theme: "day" | "night" | "auto" = "night";
 
   if (typeof window !== "undefined") {
-    let tempTheme = localStorage.getItem("theme");
-    if (
-      tempTheme == null ||
-      tempTheme == undefined ||
-      !["day", "night"].includes(tempTheme)
-    ) {
+    const tempTheme = localStorage.getItem("theme");
+    if (tempTheme == null || tempTheme == undefined || !["day", "night"].includes(tempTheme)) {
       theme = "night";
       localStorage.setItem("theme", theme);
     } else {
@@ -25,9 +33,8 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    // @ts-ignore
     <QueryClientProvider client={queryClient}>
-      <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme}>
+      <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme} theme={customTheme}>
         <BaseStyles className={"root"}>
           <Box bg="canvas.default" className="root" height="100%">
             <Component {...pageProps} />
