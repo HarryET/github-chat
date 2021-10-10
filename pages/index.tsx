@@ -136,7 +136,7 @@ const Home: NextPage = () => {
                   <>
                     <CommentDiscussionIcon size="medium" />
                     <Text mt={2} textAlign="center">
-                      {"There are no messages yet."} <br />
+                      {"There are no messages that mention you yet."} <br />
                       {"Join a chat and start some conversations!"}
                     </Text>
                   </>
