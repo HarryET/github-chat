@@ -76,11 +76,14 @@ export const MessageInput = ({ chatId, user }: Props) => {
       mentionsValue = mentionsValue.replace(`@${mention.username}`, `<@${mention.id}>`);
     });
 
+    // Remove line breaks from the beginning & end of the message
+    const formattedContent = mentionsValue.replace(/^\n+/, "").replace(/\n+$/, "");
+
     const { error } = await supabase.from("messages").insert([
       {
         chat_id: chatId,
         user_id: user.id,
-        content: mentionsValue,
+        content: formattedContent,
         mentions: mentions.map((mention) => mention.id),
       },
     ]);
