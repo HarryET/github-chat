@@ -57,19 +57,6 @@ export const SideMenu = ({ selectedChatId }: Props) => {
 
   return (
     <Box height="100%" width={360} flexShrink={0} padding={4}>
-      <Box
-        width="100%"
-        display="flex"
-        flexDirection="row"
-        alignItems="center"
-        justifyContent="space-between"
-        marginBottom={3}
-        style={{
-          maxWidth: "360px",
-        }}
-      >
-        <Text fontWeight="bold">Your Chats:</Text>
-      </Box>
       {isChatsLoading && !chats && <Spinner />}
       {chatsError && <Text>Failed to load chats</Text>}
       {chats && chats.length > 0 && (

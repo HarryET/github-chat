@@ -140,7 +140,7 @@ const Home = ({ repositories }: Props) => {
           flexDirection="column"
           flexGrow={1}
           px={4}
-          py={3}
+          py={4}
           overflowY="auto"
         >
           {recentChat && (
@@ -150,6 +150,7 @@ const Home = ({ repositories }: Props) => {
               alignItems="center"
               justifyContent="space-between"
               padding={3}
+              mb={6}
               bg="canvas.overlay"
               borderWidth={1}
               borderRadius={6}
@@ -180,7 +181,7 @@ const Home = ({ repositories }: Props) => {
               </ButtonPrimary>
             </Box>
           )}
-          <Text fontWeight="500" mt={6} mb={3}>
+          <Text fontWeight="500" mb={3}>
             Mentions
           </Text>
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
@@ -220,10 +221,6 @@ const Home = ({ repositories }: Props) => {
             </Box>
           )}
           {messages && <MentionMessageList messages={messages} />}
-          <Box display="flex" flexDirection="column">
-            <PersonalLinks />
-            <SocialIcons />
-          </Box>
         </Box>
       </Box>
     </Root>
