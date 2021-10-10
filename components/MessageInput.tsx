@@ -40,8 +40,9 @@ export const MessageInput = ({ chatId, user }: Props) => {
     localStorage.setItem("recent_chat", chatId);
   };
 
-  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter" && !e.shiftKey && value.trim().length > 0) {
+      e.preventDefault();
       submit();
     }
   };
@@ -75,11 +76,14 @@ export const MessageInput = ({ chatId, user }: Props) => {
       mentionsValue = mentionsValue.replace(`@${mention.username}`, `<@${mention.id}>`);
     });
 
+    // Remove line breaks from the beginning & end of the message
+    const formattedContent = mentionsValue.replace(/^\n+/, "").replace(/\n+$/, "");
+
     const { error } = await supabase.from("messages").insert([
       {
         chat_id: chatId,
         user_id: user.id,
-        content: mentionsValue,
+        content: formattedContent,
         mentions: mentions.map((mention) => mention.id),
       },
     ]);
@@ -117,7 +121,7 @@ export const MessageInput = ({ chatId, user }: Props) => {
         }}
         value={value}
         onChange={handleChange}
-        onKeyUp={handleKeyUp}
+        onKeyPress={handleKeyPress}
       />
       <ButtonPrimary
         ml={2}

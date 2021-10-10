@@ -143,7 +143,7 @@ const Home: NextPage = () => {
               </ButtonPrimary>
             </Box>
           )}
-          <Text mt={6} mb={3}>
+          <Text fontWeight="500" mt={6} mb={3}>
             Mentions
           </Text>
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
