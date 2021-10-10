@@ -13,13 +13,21 @@ type HeaderProps = {
 export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   const router = useRouter();
 
-  const session = supabase.auth.session();
-  const user = session?.user;
-  const userMeta = user?.user_metadata;
-
-  const isAuthenticated = !!session;
-
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png");
+  const [username, setUsername] = useState("Octocat");
+
+  useEffect(() => {
+    const session = supabase.auth.session();
+    const user = session?.user;
+    const userMeta = user?.user_metadata;
+
+    setIsAuthenticated(!!session);
+    if(!!session) {
+      setUsername(userMeta?.user_name ?? "Octocat");
+      setAvatarUrl(userMeta?.avatar_url ?? "https://github.com/octocat.png");
+    }
+  }, [])
 
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     if (event == "SIGNED_IN" || event == "USER_UPDATED") {
@@ -56,10 +64,10 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
               src={avatarUrl || ""}
               size={32}
               square
-              alt={userMeta?.user_name}
+              alt={username}
             />
             <Text fontWeight="bold" paddingLeft={2}>
-              {userMeta?.user_name}
+              {username}
             </Text>
           </Box>
         </Header.Item>

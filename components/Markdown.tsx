@@ -14,14 +14,13 @@ export const Markdown = ({ content }: MarkdownProps) => {
     // Stores a link between userid and username
     const [mentionsData, setMentionsData] = useState<Record<string, User>>({});
 
-    let mdContent = reactStringReplace(content, "\n", () => <br />);
+    let mdContent = reactStringReplace(content, "\n", (match, i) => <br key={`line-break-${i}`} />);
 
     useEffect(() => {
         const rawRegexMatches = content.matchAll(/<@([A-Za-z0-9\-]+)>/gmi);
         const rawMatches: string[] = []; for (const row of rawRegexMatches) for (const e of row) rawMatches.push(e);
         rawMatches.forEach(async (rawId) => {
             const id = rawId.replace("<@", "").replace(">", "");
-            console.log(rawId, id);
             const { data: userData } = await supabase
                 .from<User>("users")
                 .select(`id,
@@ -41,38 +40,38 @@ export const Markdown = ({ content }: MarkdownProps) => {
     }, [])
 
     // Add mentions
-    mdContent = reactStringReplace(mdContent, /<@([A-Za-z0-9\-]+)>/gmi, (match) => {
+    mdContent = reactStringReplace(mdContent, /<@([A-Za-z0-9\-]+)>/gmi, (match, i) => {
         const userId = match.replace("<@", "").replace(">", "");
 
         const user = mentionsData[userId];
         if (user) {
-            return (<BranchName href={`https://github.com/${user.username}`}>
+            return (<BranchName key={`mention-${i}`} href={`https://github.com/${user.username}`}>
                 @{user.username}
             </BranchName>);
         } else {
-            return (<BranchName>
+            return (<BranchName key={`mention-${i}`}>
                 @{userId}
             </BranchName>);
         }
     })
 
     // Add bold content
-    mdContent = reactStringReplace(mdContent, /\*\*(.+)\*\*/gmi, (match) => {
+    mdContent = reactStringReplace(mdContent, /\*\*(.+)\*\*/gmi, (match, i) => {
         const boldContent = match.replace("**", "");
-        return (<Text fontWeight={"bold"}>{boldContent}</Text>)
+        return (<Text key={`bold-${i}`} fontWeight={"bold"}>{boldContent}</Text>)
     })
 
     // Add underlined content
-    mdContent = reactStringReplace(mdContent, /\_\_(.+)\_\_/gmi, (match) => {
+    mdContent = reactStringReplace(mdContent, /\_\_(.+)\_\_/gmi, (match, i) => {
         const boldContent = match.replace("**", "");
-        return (<Text style={{
+        return (<Text key={`ul-${i}`} style={{
             textDecoration: "underline"
         }}>{boldContent}</Text>)
     })
 
     // Add links for urls
-    mdContent = reactStringReplace(mdContent, /(https?:\/\/\S+)/gmi, (match) => {
-        return (<NextLink href={`/redirect?url=${match}&back=${window.location}`}>
+    mdContent = reactStringReplace(mdContent, /(https?:\/\/\S+)/gmi, (match, i) => {
+        return (<NextLink key={`link-${i}`} href={`/redirect?url=${match}&back=${window.location}`}>
             <Link style={{ cursor: "pointer" }}>
                 {match}
             </Link>

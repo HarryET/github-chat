@@ -89,6 +89,7 @@ export const getServerSideProps = async (
     const { data: chat } = await createChat({
       github_repo_id: repoData.id.toString(),
       repo_owner: repoData.full_name.split("/")[0],
+      repo_owner_avatar: repoData.owner.avatar_url,
       repo_name: repoData.name,
       repo_description: repoData.description,
     });

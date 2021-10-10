@@ -1,10 +1,12 @@
-import { Box, SideNav, Text, ButtonPrimary, Spinner } from "@primer/components";
+import { Box, SideNav, Text, ButtonPrimary, Spinner, Avatar } from "@primer/components";
 import { PlusIcon } from "@primer/octicons-react";
 import { useRouter } from "next/dist/client/router";
 import { useQuery } from "react-query";
 import { Chat } from "../types";
 import Link from "next/link";
 import { supabase } from "service/supabase";
+import { useEffect, useState } from "react";
+import { Session } from "@supabase/gotrue-js";
 
 type Props = {
   selectedChatId?: string;
@@ -13,8 +15,14 @@ type Props = {
 export const SideMenu = ({ selectedChatId }: Props) => {
   const router = useRouter();
 
-  const session = supabase.auth.session();
-  const isAuthenticated = session !== null;
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const reqSession = supabase.auth.session();
+    setSession(reqSession);
+    setIsAuthenticated(reqSession !== null);
+  }, [])
 
   const {
     data: chats,
@@ -32,6 +40,7 @@ export const SideMenu = ({ selectedChatId }: Props) => {
         id,
         github_repo_id,
         repo_owner,
+        repo_owner_avatar,
         repo_name
       )
     `
@@ -63,14 +72,6 @@ export const SideMenu = ({ selectedChatId }: Props) => {
         }}
       >
         <Text fontWeight="bold">Your Chats:</Text>
-        <ButtonPrimary variant="small" onClick={() => router.push("/chats/new")}>
-          <Box display="flex" flexDirection="row" alignItems="center" justifyContent="center">
-            <PlusIcon size={18} />
-            <Box paddingLeft={2}>
-              <Text>New</Text>
-            </Box>
-          </Box>
-        </ButtonPrimary>
       </Box>
       {isChatsLoading && !chats && <Spinner />}
       {chatsError && <Text>Failed to load chats</Text>}
@@ -79,9 +80,24 @@ export const SideMenu = ({ selectedChatId }: Props) => {
           {chats.map((chat) => (
             <Link key={chat.id} href={`/chats/${chat.id}`} passHref>
               <SideNav.Link selected={chat.id === selectedChatId}>
-                <Text>
-                  {chat.repo_owner}/{chat.repo_name}
-                </Text>
+                <Box display="flex" flexDirection="row" width="100%" alignItems="center">
+                  {chat.repo_owner_avatar != null && <Avatar
+                    src={chat.repo_owner_avatar || ""}
+                    size={38}
+                    square
+                    alt={chat.repo_name}
+                    mr={2} />
+                  }
+                  {chat.repo_owner_avatar == null && <Box width={38} height={38} borderColor="border.default" borderWidth={2} borderStyle="solid" bg={"canvas.inset"} display="flex" alignItems="center" justifyContent="center" mr={2}>
+                    <Text fontWeight="bold">
+                      {chat.repo_name[0].toUpperCase()}
+                    </Text>
+                  </Box>
+                  }
+                  <Text>
+                    {chat.repo_owner}/{chat.repo_name}
+                  </Text>
+                </Box>
               </SideNav.Link>
             </Link>
           ))}
