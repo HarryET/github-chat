@@ -40,8 +40,9 @@ export const MessageInput = ({ chatId, user }: Props) => {
     localStorage.setItem("recent_chat", chatId);
   };
 
-  const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyPress = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter" && !e.shiftKey && value.trim().length > 0) {
+      e.preventDefault();
       submit();
     }
   };
@@ -117,7 +118,7 @@ export const MessageInput = ({ chatId, user }: Props) => {
         }}
         value={value}
         onChange={handleChange}
-        onKeyUp={handleKeyUp}
+        onKeyPress={handleKeyPress}
       />
       <ButtonPrimary
         ml={2}
