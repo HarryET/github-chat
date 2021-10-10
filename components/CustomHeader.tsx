@@ -6,11 +6,7 @@ import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { supabase } from "service/supabase";
 import Image from "next/image";
 
-type HeaderProps = {
-  showAvatar: boolean;
-};
-
-export const CustomHeader = ({ showAvatar }: HeaderProps) => {
+export const CustomHeader = () => {
   const router = useRouter();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -23,11 +19,11 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
     const userMeta = user?.user_metadata;
 
     setIsAuthenticated(!!session);
-    if(!!session) {
+    if (!!session) {
       setUsername(userMeta?.user_name ?? "Octocat");
       setAvatarUrl(userMeta?.avatar_url ?? "https://github.com/octocat.png");
     }
-  }, [])
+  }, []);
 
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     // Authenticated
@@ -38,7 +34,7 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
     }
 
     // Not authenticated
-    if(event == "SIGNED_OUT" || event == "USER_DELETED") {
+    if (event == "SIGNED_OUT" || event == "USER_DELETED") {
       setIsAuthenticated(false);
       setUsername("Octocat");
       setAvatarUrl("https://github.com/octocat.png");
@@ -54,7 +50,7 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
         <Link href="/" passHref>
           <Header.Link>
             <Image src="/icon.svg" height={24} width={24} alt="GithHub Chat logo" />
-            <Text ml={2} fontSize={3} fontWeight={600} letterSpacing={0.5}>
+            <Text ml={2} fontSize={3} fontWeight={600} letterSpacing={0.5} display={["none", "none", "block"]}>
               github·chat
             </Text>
           </Header.Link>
@@ -62,12 +58,12 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
       </Header.Item>
       <Header.Item full></Header.Item>
       {isAuthenticated && (
-        <ButtonOutline marginRight={2} variant="small" onClick={handleLogout}>
+        <ButtonOutline marginRight={2} variant="small" height="100%" onClick={handleLogout}>
           Logout
         </ButtonOutline>
       )}
-      {showAvatar && isAuthenticated && (
-        <Header.Item mr={0}>
+      {isAuthenticated && (
+        <Header.Item mr={0} display={["none", "none", "block"]}>
           <Box display="flex" flexDirection="row" alignItems="center">
             <Avatar
               //TODO: Fallback avatar src
@@ -76,13 +72,13 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
               square
               alt={username}
             />
-            <Text fontWeight="bold" paddingLeft={2}>
+            {/* <Text fontWeight="bold" paddingLeft={2}>
               {username}
-            </Text>
+            </Text> */}
           </Box>
         </Header.Item>
       )}
-      {showAvatar && !isAuthenticated && (
+      {!isAuthenticated && (
         <ButtonOutline variant="small" onClick={() => router.push("/login")}>
           Login
         </ButtonOutline>

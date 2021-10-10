@@ -94,7 +94,7 @@ export const MessageInput = ({ chatId, user }: Props) => {
   });
 
   return (
-    <Box display="flex" flexDirection="row" paddingX={3} paddingBottom={3} flexShrink={0}>
+    <Box display="flex" flexDirection="row" paddingX={[2, 2, 3]} paddingBottom={3} flexShrink={0}>
       <TextInput
         as="textarea"
         height="100%"
@@ -126,6 +126,7 @@ export const MessageInput = ({ chatId, user }: Props) => {
         ml={2}
         display={["block", "block", "none"]}
         sx={{
+          height: "100%",
           border: "none",
           background: buttonGradient.default,
           ":hover": {

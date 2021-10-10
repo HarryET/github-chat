@@ -49,12 +49,17 @@ const ViewChat: NextPage = () => {
   useQuery(
     ["chats", chatId],
     async () => {
-      type Chat = { id: string; repo_owner: string; repo_name: string; repo_owner_avatar?: string; };
+      type Chat = { id: string; repo_owner: string; repo_name: string; repo_owner_avatar?: string };
       if (chatId) {
         const { data: chat } = await supabase.from<Chat>("chats").select().eq("id", chatId).single();
         if (chat) {
-          saveRecentChat({ id: chatId, repoOwner: chat.repo_owner, repoName: chat.repo_name, repoOwnerAvatar: chat.repo_owner_avatar });
-          setTitle(`GitHub Chat | ${chat.repo_owner}/${chat.repo_name}`)
+          saveRecentChat({
+            id: chatId,
+            repoOwner: chat.repo_owner,
+            repoName: chat.repo_name,
+            repoOwnerAvatar: chat.repo_owner_avatar,
+          });
+          setTitle(`GitHub Chat | ${chat.repo_owner}/${chat.repo_name}`);
         }
       }
     },
@@ -192,7 +197,7 @@ const ViewChat: NextPage = () => {
           {messages && <MessageList messages={messages} />}
           {!!chatId && user && <MessageInput chatId={chatId} user={user} />}
           {!!chatId && !user && (
-            <Box px={3} pb={3} width="100%">
+            <Box px={[2, 2, 3]} pb={3} width="100%">
               <Box
                 paddingX={3}
                 paddingY={3}
