@@ -25,7 +25,7 @@ export const Message = ({ message }: MessageProps) => {
       paddingY={3}
       sx={{
         ":hover": {
-          backgroundColor: "#131820",
+          backgroundColor: ["none", "none", "#131820"],
         },
       }}
     >
