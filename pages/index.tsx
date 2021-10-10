@@ -10,8 +10,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Session } from "@supabase/gotrue-js";
 import { useQuery } from "react-query";
-import { MentionedMessageType } from "types";
+import { MentionedMessageType, RecentChat } from "types";
 import { AuthChangeEvent } from "@supabase/supabase-js";
+import { getRecentChat } from "service/localStorage";
+import { buttonGradient } from "styles/styles";
 
 const messageQuery = `
   id,
@@ -31,9 +33,9 @@ const messageQuery = `
 const Home: NextPage = () => {
   const router = useRouter();
 
-  const [session, setSession] = useState<Session | null>(null)
+  const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [lastChatId, setLastChatId] = useState<string | null>(null)
+  const [recentChat, setRecentChat] = useState<RecentChat>();
 
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, newSession: Session | null) => {
     // Authenticated
@@ -42,7 +44,7 @@ const Home: NextPage = () => {
     }
 
     // Not authenticated
-    if(event == "SIGNED_OUT" || event == "USER_DELETED") {
+    if (event == "SIGNED_OUT" || event == "USER_DELETED") {
       setIsAuthenticated(false);
     }
 
@@ -54,10 +56,12 @@ const Home: NextPage = () => {
     setIsAuthenticated(tempSession !== null);
     setSession(tempSession);
     if (tempSession !== null) {
-      const tempLastChatId = localStorage.getItem("recent_chat");
-      setLastChatId(tempLastChatId);
+      const recentChat = getRecentChat();
+      if (recentChat) {
+        setRecentChat(recentChat);
+      }
     }
-  }, [])
+  }, []);
 
   const {
     data: messages,
@@ -72,7 +76,7 @@ const Home: NextPage = () => {
       const { data, error } = await supabase
         .from<MentionedMessageType>("messages")
         .select(messageQuery)
-        .cs('mentions', [user?.id]);
+        .cs("mentions", [user?.id]);
 
       if (error) {
         throw error;
@@ -93,38 +97,57 @@ const Home: NextPage = () => {
 
   return (
     <Root fixedScreenHeight={true}>
-      <Box bg="canvas.default" flexGrow={1} display="flex" flexDirection="row" height="100%">
+      <Box flexGrow={1} display="flex" flexDirection="row" overflow="hidden">
         <SideMenu />
-        <Box display="flex" flexDirection="column" flexGrow={1} height="100%" m={4}>
-          {lastChatId && <Box
-            display="flex"
-            flexDirection="row"
-            alignItems="center"
-            justifyContent="space-between"
-            padding={3}
-            bg="canvas.overlay"
-            borderWidth={1}
-            borderRadius={6}
-            borderColor="border.default"
-            borderStyle="solid"
-            mb={3}
-          >
-            <Text>
-              Return to previous chat.
-            </Text>
-            <ButtonPrimary onClick={() => {
-              router.push(`/chats/${lastChatId}`)
-            }}>Go</ButtonPrimary>
-          </Box>}
-          {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
+        <Box
+          height="100%"
+          maxHeight="100%"
+          display="flex"
+          flexDirection="column"
+          flexGrow={1}
+          px={4}
+          py={3}
+          overflowY="auto"
+        >
+          {recentChat && (
             <Box
-              height="100%"
-              width="100%"
               display="flex"
-              flexDirection="column"
-              justifyContent="center"
+              flexDirection="row"
               alignItems="center"
+              justifyContent="space-between"
+              padding={3}
+              bg="canvas.overlay"
+              borderWidth={1}
+              borderRadius={6}
+              borderColor="border.default"
+              borderStyle="solid"
             >
+              <Box display="flex">
+                <Text color="fg.muted">Last chat:</Text>
+                <Text ml={2}>{`${recentChat.repoOwner}/${recentChat.repoName}`} </Text>
+              </Box>
+              <ButtonPrimary
+                sx={{
+                  border: "none",
+                  background: buttonGradient.default,
+                  ":hover": {
+                    background: buttonGradient.hover,
+                  },
+                }}
+                variant="large"
+                onClick={() => {
+                  router.push(`/chats/${recentChat.id}`);
+                }}
+              >
+                Go to chat
+              </ButtonPrimary>
+            </Box>
+          )}
+          <Text mt={6} mb={3}>
+            Mentions
+          </Text>
+          {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
+            <Box width="100%" display="flex" flexDirection="column" justifyContent="center" alignItems="center">
               <Box display="flex" flexDirection="column" alignItems="center" maxWidth={400}>
                 {/* Loading */}
                 {isMessagesLoading && !messages && (

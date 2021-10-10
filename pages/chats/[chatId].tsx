@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import Head from 'next/head';
+import Head from "next/head";
 import { useRouter } from "next/router";
 import { Box, Text, Spinner, Button } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
@@ -15,6 +15,7 @@ import { supabase } from "service/supabase";
 
 import { LoginButton } from "components/LoginButton";
 import { User } from "@supabase/gotrue-js";
+import { saveRecentChat } from "service/localStorage";
 
 const messageQuery = `
   id,
@@ -38,14 +39,25 @@ const ViewChat: NextPage = () => {
   const [user, setUser] = useState<User | null>(null);
 
   // TODO get chat name and owner and set title.
-  const [title, setTitle] = useState("GitHub Chat | A chat room for every GitHub repository")
+  const [title, setTitle] = useState("GitHub Chat | A chat room for every GitHub repository");
 
   useEffect(() => {
     setUser(supabase.auth.user());
-    if(chatId != undefined) {
-      localStorage.setItem("recent_chat", chatId);
-    }
-  }, [])
+  }, []);
+
+  useQuery(
+    ["chats", chatId],
+    async () => {
+      type Chat = { id: string; repo_owner: string; repo_name: string };
+      if (chatId) {
+        const { data: chat } = await supabase.from<Chat>("chats").select().eq("id", chatId).single();
+        if (chat) {
+          saveRecentChat({ id: chatId, repoOwner: chat.repo_owner, repoName: chat.repo_name });
+        }
+      }
+    },
+    { enabled: !!chatId }
+  );
 
   const [isLoginLoading, setLoginLoading] = useState(false);
 

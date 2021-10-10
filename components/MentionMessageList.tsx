@@ -18,13 +18,7 @@ export const MentionMessageList = ({ messages }: Props) => {
   }, [messages]);
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      flexGrow={1}
-      overflowY="scroll"
-      ref={ref}
-    >
+    <Box display="flex" flexDirection="column" ref={ref}>
       {messages &&
         messages.map((message) => (
           <DiscoverMessage
