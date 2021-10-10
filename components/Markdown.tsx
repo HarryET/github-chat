@@ -14,71 +14,76 @@ export const Markdown = ({ content }: MarkdownProps) => {
     // Stores a link between userid and username
     const [mentionsData, setMentionsData] = useState<Record<string, User>>({});
 
-    let mdContent = reactStringReplace(content, "\n", (match, i) => <br key={`line-break-${i}`} />);
+    let lineBreakCount = 0;
+    let mdContent = reactStringReplace(content, "\n", () => <br key={`line-break-${lineBreakCount++}`} />);
 
-    useEffect(() => {
-        const rawRegexMatches = content.matchAll(/<@([A-Za-z0-9\-]+)>/gmi);
-        const rawMatches: string[] = []; for (const row of rawRegexMatches) for (const e of row) rawMatches.push(e);
-        rawMatches.forEach(async (rawId) => {
-            const id = rawId.replace("<@", "").replace(">", "");
-            const { data: userData } = await supabase
-                .from<User>("users")
-                .select(`id,
+    const fetchMentionData = async (id: string) => {
+        const { data: userData } = await supabase
+            .from<User>("users")
+            .select(`id,
             username, 
             avatar_url`)
-                .limit(1)
-                .eq("id", id)
+            .limit(1)
+            .eq("id", id)
 
-            if ((userData ?? []).length > 0) {
-                const user: User = userData![0]!;
-                setMentionsData({
-                    ...mentionsData,
-                    [user.id]: user
-                });
+        if ((userData ?? []).length > 0) {
+            const user: User | null = userData ? userData[0] : null;
+            if (user) {
+                setMentionsData(prevState => {
+                    return  {
+                        ...prevState,
+                        [user.id]: user
+                    }
+                })
             }
-        })
-    }, [])
+        }
+    }
 
     // Add mentions
-    mdContent = reactStringReplace(mdContent, /<@([A-Za-z0-9\-]+)>/gmi, (match, i) => {
+    let mentionsCount = 0;
+    mdContent = reactStringReplace(mdContent, /<@([A-Za-z0-9\-]+)>/gmi, (match) => {
         const userId = match.replace("<@", "").replace(">", "");
 
         const user = mentionsData[userId];
         if (user) {
-            return (<BranchName key={`mention-${i}`} href={`https://github.com/${user.username}`}>
+            return (<BranchName key={`mention-${mentionsCount++}`} href={`https://github.com/${user.username}`}>
                 @{user.username}
             </BranchName>);
         } else {
-            return (<BranchName key={`mention-${i}`}>
+            fetchMentionData(userId);
+            return (<BranchName key={`mention-${mentionsCount++}`}>
                 @{userId}
             </BranchName>);
         }
     })
 
     // Add bold content
-    mdContent = reactStringReplace(mdContent, /\*\*(.+)\*\*/gmi, (match, i) => {
+    let boldCount = 0;
+    mdContent = reactStringReplace(mdContent, /\*\*(.+)\*\*/gmi, (match) => {
         const boldContent = match.replace("**", "");
-        return (<Text key={`bold-${i}`} fontWeight={"bold"}>{boldContent}</Text>)
+        return (<Text key={`bold-${boldCount++}`} fontWeight={"bold"}>{boldContent}</Text>)
     })
 
     // Add underlined content
-    mdContent = reactStringReplace(mdContent, /\_\_(.+)\_\_/gmi, (match, i) => {
+    let underlinedCount = 0;
+    mdContent = reactStringReplace(mdContent, /\_\_(.+)\_\_/gmi, (match) => {
         const boldContent = match.replace("**", "");
-        return (<Text key={`ul-${i}`} style={{
+        return (<Text key={`ul-${underlinedCount++}`} style={{
             textDecoration: "underline"
         }}>{boldContent}</Text>)
     })
 
     // Add links for urls
-    mdContent = reactStringReplace(mdContent, /(https?:\/\/\S+)/gmi, (match, i) => {
-        return (<NextLink key={`link-${i}`} href={`/redirect?url=${match}&back=${window.location}`}>
+    let linkCount = 0;
+    mdContent = reactStringReplace(mdContent, /(https?:\/\/\S+)/gmi, (match) => {
+        return (<NextLink key={`link-${linkCount++}`} href={`/redirect?url=${match}&back=${window.location}`}>
             <Link style={{ cursor: "pointer" }}>
                 {match}
             </Link>
         </NextLink>)
     })
 
-    return (<Twemoji options={{className: "emoji"}}>
+    return (<Twemoji options={{ className: "emoji" }}>
         {mdContent}
     </Twemoji>);
 }
