@@ -40,7 +40,7 @@ const SocialIcons = (props: ComponentProps<typeof Box>) => {
           <FontAwesomeIcon icon={faTwitter} size={"sm"} color={"white"} />
         </Box>
       </NextLink>
-      <NextLink href={"https://discord.gg/ESC45saAGP"}>
+      <NextLink href={"/discord"}>
         <Box ml={2}>
           <FontAwesomeIcon icon={faDiscord} size={"sm"} color={"white"} />
         </Box>
