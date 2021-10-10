@@ -1,10 +1,13 @@
 import { Box, ButtonPrimary, Heading, Link, Text, TextInput } from "@primer/components";
 import { useRouter } from "next/router";
+import NextLink from "next/link";
 import React, { ChangeEvent, ComponentProps, FormEvent, FormEventHandler, useState } from "react";
 import { useQuery } from "react-query";
 import { getActiveChats } from "service/supabase";
 import { buttonGradient } from "styles/styles";
 import { DiscoverMessage } from "./DiscoverMessage";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTwitter, faGithub, faDiscord } from "@fortawesome/free-brands-svg-icons";
 
 const PersonalLinks = (props: ComponentProps<typeof Text>) => (
   <Text fontSize={1} color="fg.subtle" mb={2} {...props}>
@@ -23,6 +26,28 @@ const PersonalLinks = (props: ComponentProps<typeof Text>) => (
     .
   </Text>
 );
+
+const SocialIcons = (props: ComponentProps<typeof Box>) => {
+  return (
+    <Box display="flex" flexDirection="row" {...props}>
+      <NextLink href={"https://github.com/HarryET/github-chat"}>
+        <Box>
+          <FontAwesomeIcon icon={faGithub} size={"sm"} color={"white"} />
+        </Box>
+      </NextLink>
+      <NextLink href={"https://twitter.com/GithubChat"}>
+        <Box ml={2}>
+          <FontAwesomeIcon icon={faTwitter} size={"sm"} color={"white"} />
+        </Box>
+      </NextLink>
+      <NextLink href={"https://discord.gg/ESC45saAGP"}>
+        <Box ml={2}>
+          <FontAwesomeIcon icon={faDiscord} size={"sm"} color={"white"} />
+        </Box>
+      </NextLink>
+    </Box>
+  )
+}
 
 export default function Discover() {
   const router = useRouter();
@@ -113,7 +138,10 @@ export default function Discover() {
               </Box>
             </form>
           </Box>
-          <PersonalLinks sx={{ display: ["none", "none", "block"] }} />
+          <Box display="flex" flexDirection="column">
+            <PersonalLinks sx={{ display: ["none", "none", "block"] }} />
+            <SocialIcons mt={2} />
+          </Box>
         </Box>
         <Box
           display="flex"
