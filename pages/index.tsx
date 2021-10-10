@@ -11,6 +11,7 @@ import { useRouter } from "next/router";
 import { Session } from "@supabase/gotrue-js";
 import { useQuery } from "react-query";
 import { MentionedMessageType } from "types";
+import { AuthChangeEvent } from "@supabase/supabase-js";
 
 const messageQuery = `
   id,
@@ -33,6 +34,20 @@ const Home: NextPage = () => {
   const [session, setSession] = useState<Session | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [lastChatId, setLastChatId] = useState<string | null>(null)
+
+  supabase.auth.onAuthStateChange((event: AuthChangeEvent, newSession: Session | null) => {
+    // Authenticated
+    if (event == "SIGNED_IN" || event == "USER_UPDATED") {
+      setIsAuthenticated(true);
+    }
+
+    // Not authenticated
+    if(event == "SIGNED_OUT" || event == "USER_DELETED") {
+      setIsAuthenticated(false);
+    }
+
+    setSession(newSession);
+  });
 
   useEffect(() => {
     const tempSession = supabase.auth.session();

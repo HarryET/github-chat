@@ -30,8 +30,18 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   }, [])
 
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
+    // Authenticated
     if (event == "SIGNED_IN" || event == "USER_UPDATED") {
+      setIsAuthenticated(true);
       setAvatarUrl(session?.user?.user_metadata.avatar_url);
+      setUsername(session?.user?.user_metadata.user_name);
+    }
+
+    // Not authenticated
+    if(event == "SIGNED_OUT" || event == "USER_DELETED") {
+      setIsAuthenticated(false);
+      setUsername("Octocat");
+      setAvatarUrl("https://github.com/octocat.png");
     }
   });
 
