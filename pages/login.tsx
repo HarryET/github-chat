@@ -51,7 +51,7 @@ const Login: NextPage = () => {
   }
 
   return (
-    <Root>
+    <Root fixedScreenHeight={true}>
       <Box display="flex" flexGrow={1} flexDirection="column" justifyContent="center" alignItems="center" width="100%">
         <MainActionBox>
           <Image src="/icon.svg" height={64} width={64} alt="GithHub Chat logo" />

@@ -1,5 +1,5 @@
 import type { AppProps } from "next/app";
-import { ThemeProvider, BaseStyles, Box, theme } from "@primer/components";
+import { ThemeProvider, BaseStyles, theme } from "@primer/components";
 import "styles/reset.css";
 import { QueryClient, QueryClientProvider } from "react-query";
 import deepmerge from "deepmerge";
@@ -44,9 +44,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <QueryClientProvider client={queryClient}>
       <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme} theme={customTheme}>
         <BaseStyles className={"root"}>
-          <Box bg="canvas.default" className="root" minHeight="100vh">
-            <Component {...pageProps} />
-          </Box>
+          <Component {...pageProps} />
         </BaseStyles>
       </ThemeProvider>
     </QueryClientProvider>

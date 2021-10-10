@@ -11,14 +11,14 @@ const Home: NextPage = () => {
 
   if (!isAuthenticated) {
     return (
-      <Root>
+      <Root fixedScreenHeight={false}>
         <Discover></Discover>
       </Root>
     );
   }
 
   return (
-    <Root>
+    <Root fixedScreenHeight={true}>
       <Box bg="canvas.default" flexGrow={1} display="flex" flexDirection="row" height="100%">
         <SideMenu />
       </Box>

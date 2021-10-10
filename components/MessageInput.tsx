@@ -1,5 +1,5 @@
 import React, { FormEvent, KeyboardEvent, useState } from "react";
-import { Box, TextInput } from "@primer/components";
+import { Box, ButtonPrimary, TextInput } from "@primer/components";
 import { useMutation } from "react-query";
 import { supabase } from "service/supabase";
 import type { Mention, User as DBUser } from "../types";
@@ -17,9 +17,9 @@ export const MessageInput = ({ chatId, user }: Props) => {
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
 
-    const lines = newValue.split(/\r\n|\r|\n/).length
-    if(lines > 1) {
-      if(lines > 5) {
+    const lines = newValue.split(/\r\n|\r|\n/).length;
+    if (lines > 1) {
+      if (lines > 5) {
         setRows(5);
       } else {
         setRows(lines);
@@ -31,11 +31,15 @@ export const MessageInput = ({ chatId, user }: Props) => {
     setValue(e.currentTarget.value);
   };
 
+  const submit = () => {
+    submitMessage();
+    setValue("");
+    setRows(1);
+  };
+
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.code === "Enter" && !e.shiftKey && value.trim().length > 0) {
-      submitMessage();
-      setValue("");
-      setRows(1);
+      submit();
     }
   };
 
@@ -84,7 +88,7 @@ export const MessageInput = ({ chatId, user }: Props) => {
   });
 
   return (
-    <Box paddingX={3} paddingBottom={3} flexShrink={0}>
+    <Box display="flex" flexDirection="row" paddingX={3} paddingBottom={3} flexShrink={0}>
       <TextInput
         as="textarea"
         height="100%"
@@ -94,6 +98,8 @@ export const MessageInput = ({ chatId, user }: Props) => {
         rows={rows}
         maxRows={5}
         sx={{
+          minHeight: "48px",
+          fontSize: 2,
           backgroundColor: "canvas.overlay",
           ":focus-within": {
             borderColor: "fg.subtle",
@@ -108,6 +114,9 @@ export const MessageInput = ({ chatId, user }: Props) => {
         onChange={handleChange}
         onKeyUp={handleKeyUp}
       />
+      <ButtonPrimary ml={2} onClick={submit}>
+        {">"}
+      </ButtonPrimary>
     </Box>
   );
 };
