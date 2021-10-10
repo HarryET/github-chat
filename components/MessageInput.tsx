@@ -1,9 +1,11 @@
 import React, { FormEvent, KeyboardEvent, useState } from "react";
-import { Box, ButtonPrimary, TextInput } from "@primer/components";
+import { Box, ButtonPrimary, StyledOcticon, TextInput } from "@primer/components";
 import { useMutation } from "react-query";
 import { supabase } from "service/supabase";
 import type { Mention, User as DBUser } from "../types";
 import { User } from "@supabase/gotrue-js";
+import { buttonGradient } from "styles/styles";
+import { PaperAirplaneIcon } from "@primer/octicons-react";
 
 type Props = {
   chatId: string;
@@ -99,8 +101,11 @@ export const MessageInput = ({ chatId, user }: Props) => {
         rows={rows}
         maxRows={5}
         sx={{
+          "& > textarea": {
+            fontSize: 2,
+            lineHeight: 1.5,
+          },
           minHeight: "48px",
-          fontSize: 2,
           backgroundColor: "canvas.overlay",
           ":focus-within": {
             borderColor: "fg.subtle",
@@ -108,15 +113,25 @@ export const MessageInput = ({ chatId, user }: Props) => {
           },
         }}
         style={{
-          // This does not work if set in sx
           resize: "none",
         }}
         value={value}
         onChange={handleChange}
         onKeyUp={handleKeyUp}
       />
-      <ButtonPrimary ml={2} onClick={submit}>
-        {">"}
+      <ButtonPrimary
+        ml={2}
+        display={["block", "block", "none"]}
+        sx={{
+          border: "none",
+          background: buttonGradient.default,
+          ":hover": {
+            background: buttonGradient.hover,
+          },
+        }}
+        onClick={submit}
+      >
+        <StyledOcticon icon={PaperAirplaneIcon} />
       </ButtonPrimary>
     </Box>
   );
