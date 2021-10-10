@@ -3,11 +3,11 @@ import { useRouter } from "next/router";
 import React, { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
 import { useQuery } from "react-query";
 import { getActiveChats } from "service/supabase";
-import { buttonGradient } from "styles/styles";
+import { buttonGradient, hideScrollBar } from "styles/styles";
 import { DiscoverMessage } from "./DiscoverMessage";
 import { PersonalLinks } from "./PersonalLinks";
 import { SocialIcons } from "./SocialIcons";
-import { hideScrollbar } from "styles/styles";
+import { SystemStyleObject } from "@styled-system/css";
 
 export default function Discover() {
   const router = useRouter();
@@ -118,7 +118,7 @@ export default function Discover() {
           <Text display="inline-block" color="fg.muted" mb={3}>
             Recent Messages
           </Text>
-          <Box display="flex" flexDirection="column" overflowY="auto" sx={{ ...hideScrollbar }}>
+          <Box display="flex" flexDirection="column" overflowY="auto" sx={hideScrollBar}>
             {latestMessages &&
               latestMessages.map((msg) => {
                 return (
