@@ -5,12 +5,11 @@ import Link from "next/link";
 import { supabase } from "service/supabase";
 import { useEffect, useState } from "react";
 import { Session } from "@supabase/gotrue-js";
+import { ChatIcon } from "./ChatIcon";
 
 type Props = {
   selectedChatId?: string;
 };
-
-const iconSize = 38;
 
 export const SideMenu = ({ selectedChatId }: Props) => {
   const [session, setSession] = useState<Session | null>(null);
@@ -79,26 +78,7 @@ export const SideMenu = ({ selectedChatId }: Props) => {
             <Link key={chat.id} href={`/chats/${chat.id}`} passHref>
               <SideNav.Link selected={chat.id === selectedChatId}>
                 <Box display="flex" flexDirection="row" width="100%" alignItems="center">
-                  {chat.repo_owner_avatar != null && (
-                    <Avatar src={chat.repo_owner_avatar || ""} size={iconSize} square alt={chat.repo_name} mr={2} />
-                  )}
-                  {chat.repo_owner_avatar == null && (
-                    <Box
-                      width={iconSize}
-                      height={iconSize}
-                      borderRadius={iconSize && iconSize <= 24 ? "4px" : "6px"}
-                      borderColor="border.default"
-                      borderWidth={2}
-                      borderStyle="solid"
-                      bg={"canvas.inset"}
-                      display="flex"
-                      alignItems="center"
-                      justifyContent="center"
-                      mr={2}
-                    >
-                      <Text fontWeight="bold">{chat.repo_name[0].toUpperCase()}</Text>
-                    </Box>
-                  )}
+                  <ChatIcon icon={chat.repo_owner_avatar} name={chat.repo_name} iconSize={38} />
                   <Text>
                     {chat.repo_owner}/{chat.repo_name}
                   </Text>

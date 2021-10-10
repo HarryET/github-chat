@@ -48,11 +48,12 @@ const ViewChat: NextPage = () => {
   useQuery(
     ["chats", chatId],
     async () => {
-      type Chat = { id: string; repo_owner: string; repo_name: string };
+      type Chat = { id: string; repo_owner: string; repo_name: string; repo_owner_avatar?: string; };
       if (chatId) {
         const { data: chat } = await supabase.from<Chat>("chats").select().eq("id", chatId).single();
         if (chat) {
-          saveRecentChat({ id: chatId, repoOwner: chat.repo_owner, repoName: chat.repo_name });
+          saveRecentChat({ id: chatId, repoOwner: chat.repo_owner, repoName: chat.repo_name, repoOwnerAvatar: chat.repo_owner_avatar });
+          setTitle(`GitHub Chat | ${chat.repo_owner}/${chat.repo_name}`)
         }
       }
     },

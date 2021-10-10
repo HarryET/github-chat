@@ -10,10 +10,13 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Session } from "@supabase/gotrue-js";
 import { useQuery } from "react-query";
-import { MentionedMessageType, RecentChat } from "types";
+import { Chat, MentionedMessageType, RecentChat } from "types";
 import { AuthChangeEvent } from "@supabase/supabase-js";
 import { getRecentChat } from "service/localStorage";
 import { buttonGradient } from "styles/styles";
+import { PersonalLinks } from "components/PersonalLinks";
+import { SocialIcons } from "components/SocialIcons";
+import { ChatIcon } from "components/ChatIcon";
 
 const messageQuery = `
   id,
@@ -122,9 +125,12 @@ const Home: NextPage = () => {
               borderColor="border.default"
               borderStyle="solid"
             >
-              <Box display="flex">
+              <Box display="flex" flexDirection="row" alignItems="center">
                 <Text color="fg.muted">Last chat:</Text>
-                <Text ml={2}>{`${recentChat.repoOwner}/${recentChat.repoName}`} </Text>
+                <Box ml={2}>
+                  <ChatIcon icon={recentChat.repoOwnerAvatar} name={recentChat.repoName} iconSize={38} />
+                </Box>
+                <Text >{`${recentChat.repoOwner}/${recentChat.repoName}`} </Text>
               </Box>
               <ButtonPrimary
                 sx={{
@@ -183,6 +189,10 @@ const Home: NextPage = () => {
             </Box>
           )}
           {messages && <MentionMessageList messages={messages} />}
+          <Box display="flex" flexDirection="column">
+            <PersonalLinks />
+            <SocialIcons />
+          </Box>
         </Box>
       </Box>
     </Root>
