@@ -38,7 +38,7 @@ const ViewChat: NextPage = () => {
 
   useEffect(() => {
     setUser(supabase.auth.user());
-  })
+  }, [])
 
   const [isLoginLoading, setLoginLoading] = useState(false);
 

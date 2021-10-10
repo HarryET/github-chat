@@ -33,6 +33,15 @@ export type MessageType = {
   user: User;
 };
 
+export type MentionedMessageType = {
+  id: string;
+  content: string;
+  created_at: string;
+  mentions: string[];
+  user: User;
+  chat: Chat;
+};
+
 export type ActiveChat = {
   id: string;
   repo_owner: string;
