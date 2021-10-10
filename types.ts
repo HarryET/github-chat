@@ -10,6 +10,12 @@ export type Chat = {
   repo_data_last_update: Date;
 };
 
+export type RecentChat = {
+  id: string;
+  repoOwner: string;
+  repoName: string;
+};
+
 export type User = {
   id: string;
   username: string;

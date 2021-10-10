@@ -20,7 +20,7 @@ export const SideMenu = ({ selectedChatId }: Props) => {
     const reqSession = supabase.auth.session();
     setSession(reqSession);
     setIsAuthenticated(reqSession !== null);
-  }, [])
+  }, []);
 
   const {
     data: chats,
@@ -79,19 +79,26 @@ export const SideMenu = ({ selectedChatId }: Props) => {
             <Link key={chat.id} href={`/chats/${chat.id}`} passHref>
               <SideNav.Link selected={chat.id === selectedChatId}>
                 <Box display="flex" flexDirection="row" width="100%" alignItems="center">
-                  {chat.repo_owner_avatar != null && <Avatar
-                    src={chat.repo_owner_avatar || ""}
-                    size={iconSize}
-                    square
-                    alt={chat.repo_name}
-                    mr={2} />
-                  }
-                  {chat.repo_owner_avatar == null && <Box width={iconSize} height={iconSize} borderRadius={iconSize && iconSize <= 24 ? '4px' : '6px'} borderColor="border.default" borderWidth={2} borderStyle="solid" bg={"canvas.inset"} display="flex" alignItems="center" justifyContent="center" mr={2}>
-                    <Text fontWeight="bold">
-                      {chat.repo_name[0].toUpperCase()}
-                    </Text>
-                  </Box>
-                  }
+                  {chat.repo_owner_avatar != null && (
+                    <Avatar src={chat.repo_owner_avatar || ""} size={iconSize} square alt={chat.repo_name} mr={2} />
+                  )}
+                  {chat.repo_owner_avatar == null && (
+                    <Box
+                      width={iconSize}
+                      height={iconSize}
+                      borderRadius={iconSize && iconSize <= 24 ? "4px" : "6px"}
+                      borderColor="border.default"
+                      borderWidth={2}
+                      borderStyle="solid"
+                      bg={"canvas.inset"}
+                      display="flex"
+                      alignItems="center"
+                      justifyContent="center"
+                      mr={2}
+                    >
+                      <Text fontWeight="bold">{chat.repo_name[0].toUpperCase()}</Text>
+                    </Box>
+                  )}
                   <Text>
                     {chat.repo_owner}/{chat.repo_name}
                   </Text>
