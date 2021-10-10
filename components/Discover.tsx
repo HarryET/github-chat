@@ -7,6 +7,7 @@ import { buttonGradient } from "styles/styles";
 import { DiscoverMessage } from "./DiscoverMessage";
 import { PersonalLinks } from "./PersonalLinks";
 import { SocialIcons } from "./SocialIcons";
+import { hideScrollbar } from "styles/styles";
 
 export default function Discover() {
   const router = useRouter();
@@ -117,7 +118,7 @@ export default function Discover() {
           <Text display="inline-block" color="fg.muted" mb={3}>
             Recent Messages
           </Text>
-          <Box display="flex" flexDirection="column" overflowY="auto">
+          <Box display="flex" flexDirection="column" overflowY="auto" sx={{ ...hideScrollbar }}>
             {latestMessages &&
               latestMessages.map((msg) => {
                 return (
