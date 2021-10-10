@@ -1,4 +1,5 @@
 import type { NextPage } from "next";
+import Head from 'next/head';
 import { useRouter } from "next/router";
 import { Box, Text, Spinner, Button } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
@@ -35,6 +36,9 @@ const ViewChat: NextPage = () => {
   const chatId = typeof router.query.chatId === "string" ? router.query.chatId : undefined;
 
   const [user, setUser] = useState<User | null>(null);
+
+  // TODO get chat name and owner and set title.
+  const [title, setTitle] = useState("GitHub Chat | A chat room for every GitHub repository")
 
   useEffect(() => {
     setUser(supabase.auth.user());
@@ -122,6 +126,9 @@ const ViewChat: NextPage = () => {
 
   return (
     <Root fixedScreenHeight={true}>
+      <Head>
+        <title>{title}</title>
+      </Head>
       <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" maxWidth="100%">
         <SideMenu selectedChatId={chatId} />
         <Box display="flex" flexDirection="column" flexGrow={1}>
