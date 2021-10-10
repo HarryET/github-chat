@@ -38,6 +38,9 @@ const ViewChat: NextPage = () => {
 
   useEffect(() => {
     setUser(supabase.auth.user());
+    if(chatId != undefined) {
+      localStorage.setItem("recent_chat", chatId);
+    }
   }, [])
 
   const [isLoginLoading, setLoginLoading] = useState(false);

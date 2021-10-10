@@ -1,5 +1,5 @@
 import type { NextPage } from "next";
-import { Box, Text, Spinner, Button } from "@primer/components";
+import { Box, Text, Spinner, Button, ButtonPrimary } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { SideMenu } from "../components/SideMenu";
 import { MentionMessageList } from "components/MentionMessageList";
@@ -29,18 +29,18 @@ const messageQuery = `
 
 const Home: NextPage = () => {
   const router = useRouter();
+
   const [session, setSession] = useState<Session | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [lastChatId, setLastChatId] = useState<string | null>(null)
 
   useEffect(() => {
     const tempSession = supabase.auth.session();
     setIsAuthenticated(tempSession !== null);
     setSession(tempSession);
     if (tempSession !== null) {
-      const lastChatId = localStorage.getItem("recent_chat");
-      if (lastChatId != null) {
-        router.push(`/chats/${lastChatId}`);
-      }
+      const tempLastChatId = localStorage.getItem("recent_chat");
+      setLastChatId(tempLastChatId);
     }
   }, [])
 
@@ -81,6 +81,26 @@ const Home: NextPage = () => {
       <Box bg="canvas.default" flexGrow={1} display="flex" flexDirection="row" height="100%">
         <SideMenu />
         <Box display="flex" flexDirection="column" flexGrow={1} height="100%" m={4}>
+          {lastChatId && <Box
+            display="flex"
+            flexDirection="row"
+            alignItems="center"
+            justifyContent="space-between"
+            padding={3}
+            bg="canvas.overlay"
+            borderWidth={1}
+            borderRadius={6}
+            borderColor="border.default"
+            borderStyle="solid"
+            mb={3}
+          >
+            <Text>
+              Return to previous chat.
+            </Text>
+            <ButtonPrimary onClick={() => {
+              router.push(`/chats/${lastChatId}`)
+            }}>Go</ButtonPrimary>
+          </Box>}
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box
               height="100%"
