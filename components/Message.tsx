@@ -1,7 +1,7 @@
 import { Avatar, Box, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
-import type { MessageType, User } from "types";
+import type { MessageType } from "types";
 import * as datefns from "date-fns";
 
 type MessageProps = {

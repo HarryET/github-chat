@@ -1,28 +1,12 @@
-import { Box, ButtonPrimary, Heading, Link, Text, TextInput } from "@primer/components";
+import { Box, ButtonPrimary, Heading, Text, TextInput } from "@primer/components";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, ComponentProps, FormEvent, FormEventHandler, useState } from "react";
+import React, { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
 import { useQuery } from "react-query";
 import { getActiveChats } from "service/supabase";
 import { buttonGradient } from "styles/styles";
 import { DiscoverMessage } from "./DiscoverMessage";
-
-const PersonalLinks = (props: ComponentProps<typeof Text>) => (
-  <Text fontSize={1} color="fg.subtle" mb={2} {...props}>
-    A project by{" "}
-    <Link href="https://twitter.com/TheHarryET" target="_blank">
-      Harry
-    </Link>
-    ,{" "}
-    <Link href="https://twitter.com/_hugocardenas" target="_blank">
-      Hugo
-    </Link>{" "}
-    &{" "}
-    <Link href="https://twitter.com/PeraltaDev" target="_blank">
-      Victor
-    </Link>
-    .
-  </Text>
-);
+import { PersonalLinks } from "./PersonalLinks";
+import { SocialIcons } from "./SocialIcons";
 
 export default function Discover() {
   const router = useRouter();
@@ -113,7 +97,10 @@ export default function Discover() {
               </Box>
             </form>
           </Box>
-          <PersonalLinks sx={{ display: ["none", "none", "block"] }} />
+          <Box display="flex" flexDirection="column">
+            <PersonalLinks sx={{ display: ["none", "none", "block"] }} />
+            <SocialIcons mt={2} />
+          </Box>
         </Box>
         <Box
           display="flex"

@@ -10,6 +10,10 @@
     "prettier": "prettier --write ."
   },
   "dependencies": {
+    "@fortawesome/fontawesome-svg-core": "^1.2.36",
+    "@fortawesome/free-brands-svg-icons": "^5.15.4",
+    "@fortawesome/free-solid-svg-icons": "^5.15.4",
+    "@fortawesome/react-fontawesome": "^0.1.15",
     "@octokit/auth-token": "^2.5.0",
     "@octokit/rest": "^18.11.4",
     "@primer/components": "^30.0.0",

@@ -35,6 +35,7 @@ export const MessageInput = ({ chatId, user }: Props) => {
     submitMessage();
     setValue("");
     setRows(1);
+    localStorage.setItem("recent_chat", chatId);
   };
 
   const handleKeyUp = (e: KeyboardEvent<HTMLInputElement>) => {
