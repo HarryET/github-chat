@@ -113,7 +113,7 @@ export const Discover = ({ repositories }: Props) => {
               Real-time.
             </Heading>
             <Text mt={4} fontSize={3} fontWeight={300} color="fg.muted" textAlign={["center", "left"]}>
-              Paste a GitHub url or type a repository owner/name.
+              Type a repository owner/name.
             </Text>
             <form onSubmit={handleFormSubmit}>
               <Box
