@@ -120,7 +120,7 @@ const ViewChat: NextPage = () => {
   return (
     <Root fixedScreenHeight={true}>
       <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" maxWidth="100%">
-        {/* <SideMenu selectedChatId={chatId} /> */}
+        <SideMenu selectedChatId={chatId} />
         <Box display="flex" flexDirection="column" flexGrow={1}>
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box
