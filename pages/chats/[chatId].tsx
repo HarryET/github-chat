@@ -14,7 +14,7 @@ import * as R from "ramda";
 import { supabase } from "service/supabase";
 
 import { LoginButton } from "components/LoginButton";
-import { User } from "@supabase/gotrue-js";
+import { AuthChangeEvent } from "@supabase/gotrue-js";
 import { saveRecentChat } from "service/localStorage";
 
 const messageQuery = `
@@ -36,14 +36,15 @@ const ViewChat: NextPage = () => {
   const router = useRouter();
   const chatId = typeof router.query.chatId === "string" ? router.query.chatId : undefined;
 
-  const [user, setUser] = useState<User | null>(null);
+  const [authState, setAuthState] = useState<AuthChangeEvent>();
 
   // TODO get chat name and owner and set title.
   const [title, setTitle] = useState("GitHub Chat | A chat room for every GitHub repository");
 
-  useEffect(() => {
-    setUser(supabase.auth.user());
-  }, []);
+  const user = supabase.auth.user();
+  supabase.auth.onAuthStateChange((event: AuthChangeEvent) => {
+    setAuthState(event);
+  });
 
   useQuery(
     ["chats", chatId],
@@ -142,7 +143,7 @@ const ViewChat: NextPage = () => {
         <title>{title}</title>
       </Head>
       <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" maxWidth="100%">
-        <SideMenu selectedChatId={chatId} />
+        {user && <SideMenu selectedChatId={chatId} />}
         <Box display="flex" flexDirection="column" flexGrow={1}>
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box

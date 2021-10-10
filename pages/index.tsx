@@ -42,6 +42,7 @@ export const getStaticProps = async () => {
       per_page: 100,
       q: "stars:>=500",
       page: i + 1,
+      sort: "stars",
     });
     repositories.push(
       ...data.items.map((item) => ({
