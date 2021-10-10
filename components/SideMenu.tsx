@@ -1,6 +1,4 @@
-import { Box, SideNav, Text, ButtonPrimary, Spinner, Avatar } from "@primer/components";
-import { PlusIcon } from "@primer/octicons-react";
-import { useRouter } from "next/dist/client/router";
+import { Box, SideNav, Text, Spinner, Avatar } from "@primer/components";
 import { useQuery } from "react-query";
 import { Chat } from "../types";
 import Link from "next/link";
@@ -12,9 +10,9 @@ type Props = {
   selectedChatId?: string;
 };
 
-export const SideMenu = ({ selectedChatId }: Props) => {
-  const router = useRouter();
+const iconSize = 38;
 
+export const SideMenu = ({ selectedChatId }: Props) => {
   const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -83,12 +81,12 @@ export const SideMenu = ({ selectedChatId }: Props) => {
                 <Box display="flex" flexDirection="row" width="100%" alignItems="center">
                   {chat.repo_owner_avatar != null && <Avatar
                     src={chat.repo_owner_avatar || ""}
-                    size={38}
+                    size={iconSize}
                     square
                     alt={chat.repo_name}
                     mr={2} />
                   }
-                  {chat.repo_owner_avatar == null && <Box width={38} height={38} borderColor="border.default" borderWidth={2} borderStyle="solid" bg={"canvas.inset"} display="flex" alignItems="center" justifyContent="center" mr={2}>
+                  {chat.repo_owner_avatar == null && <Box width={iconSize} height={iconSize} borderRadius={iconSize && iconSize <= 24 ? '4px' : '6px'} borderColor="border.default" borderWidth={2} borderStyle="solid" bg={"canvas.inset"} display="flex" alignItems="center" justifyContent="center" mr={2}>
                     <Text fontWeight="bold">
                       {chat.repo_name[0].toUpperCase()}
                     </Text>
