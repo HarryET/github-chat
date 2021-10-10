@@ -13,6 +13,7 @@ export type Chat = {
 export type RecentChat = {
   id: string;
   repoOwner: string;
+  repoOwnerAvatar?: string;
   repoName: string;
 };
 

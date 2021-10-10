@@ -1,4 +1,4 @@
-import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
+import type { InferGetStaticPropsType } from "next";
 import { Box, Text, Spinner, Button, ButtonPrimary } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { SideMenu } from "../components/SideMenu";
@@ -15,6 +15,9 @@ import { AuthChangeEvent } from "@supabase/supabase-js";
 import { getRecentChat } from "service/localStorage";
 import { buttonGradient } from "styles/styles";
 import { Octokit } from "@octokit/rest";
+import { PersonalLinks } from "components/PersonalLinks";
+import { SocialIcons } from "components/SocialIcons";
+import { ChatIcon } from "components/ChatIcon";
 
 const messageQuery = `
   id,
@@ -153,9 +156,12 @@ const Home = ({ repositories }: Props) => {
               borderColor="border.default"
               borderStyle="solid"
             >
-              <Box display="flex">
+              <Box display="flex" flexDirection="row" alignItems="center">
                 <Text color="fg.muted">Last chat:</Text>
-                <Text ml={2}>{`${recentChat.repoOwner}/${recentChat.repoName}`} </Text>
+                <Box ml={2}>
+                  <ChatIcon icon={recentChat.repoOwnerAvatar} name={recentChat.repoName} iconSize={38} />
+                </Box>
+                <Text>{`${recentChat.repoOwner}/${recentChat.repoName}`} </Text>
               </Box>
               <ButtonPrimary
                 sx={{
@@ -214,6 +220,10 @@ const Home = ({ repositories }: Props) => {
             </Box>
           )}
           {messages && <MentionMessageList messages={messages} />}
+          <Box display="flex" flexDirection="column">
+            <PersonalLinks />
+            <SocialIcons />
+          </Box>
         </Box>
       </Box>
     </Root>

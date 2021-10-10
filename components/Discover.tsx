@@ -13,7 +13,7 @@ import { Repository } from "types";
 import leven from "leven";
 import pDebounce from "p-debounce";
 import { Octokit } from "@octokit/rest";
-import { buttonGradient } from "styles/styles";
+import { buttonGradient, hideScrollBar } from "styles/styles";
 
 const { colors } = primitives;
 
@@ -179,7 +179,7 @@ export const Discover = ({ repositories }: Props) => {
           <Text display="inline-block" color="fg.muted" mb={3}>
             Recent Messages
           </Text>
-          <Box display="flex" flexDirection="column" overflowY="auto">
+          <Box display="flex" flexDirection="column" overflowY="auto" sx={hideScrollBar}>
             {latestMessages &&
               latestMessages.map((msg) => {
                 return (

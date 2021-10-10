@@ -1,6 +1,6 @@
 # Github Chat
 
-Realtime Chat for GitHub Repositories | Part of the Supabase Hacktoberfest Hackathon
+A chat room for every GitHub repository. Real-time. | Part of the Supabase Hacktoberfest Hackathon
 
 <hr/>
 
@@ -14,7 +14,11 @@ Realtime Chat for GitHub Repositories | Part of the Supabase Hacktoberfest Hacka
 
 ### Instructions
 
-To use Github Chat go to the [app](https://harryet.me) and then login. From there you can create a new chat for any repository you have admin permissions on. Or you can find an existing chat to join!
+#### How to enter a chat?
+- Use the input in github-chat.com landing page to enter a repository owner/name and navigate to the corresponding chat room.
+- Or if you are in github.com/owner/repo , just add -chat, like github-chat/owner/repo and navigate directly to the corresponding chat room.
+
+Signed-in users will see a menu listing all the chat rooms in which they have been participating, for easy access.
 
 ### How we used supabase?
 
