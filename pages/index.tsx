@@ -1,19 +1,20 @@
-import type { NextPage } from "next";
+import type { GetStaticProps, NextPage, InferGetStaticPropsType } from "next";
 import { Box, Text, Spinner, Button, ButtonPrimary } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { SideMenu } from "../components/SideMenu";
 import { MentionMessageList } from "components/MentionMessageList";
 import { Root } from "../components/Root";
 import { supabase } from "service/supabase";
-import Discover from "components/Discover";
+import { Discover } from "components/Discover";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Session } from "@supabase/gotrue-js";
 import { useQuery } from "react-query";
-import { MentionedMessageType, RecentChat } from "types";
+import { MentionedMessageType, RecentChat, Repository } from "types";
 import { AuthChangeEvent } from "@supabase/supabase-js";
 import { getRecentChat } from "service/localStorage";
 import { buttonGradient } from "styles/styles";
+import { Octokit } from "@octokit/rest";
 
 const messageQuery = `
   id,
@@ -30,7 +31,36 @@ const messageQuery = `
   )
 `;
 
-const Home: NextPage = () => {
+export const getStaticProps = async () => {
+  const octokit = new Octokit({});
+
+  const repositories: Repository[] = [];
+  const numPages = 5;
+
+  for (let i = 0; i < numPages; i++) {
+    const { data } = await octokit.rest.search.repos({
+      per_page: 100,
+      q: "stars:>=500",
+      page: i + 1,
+    });
+    repositories.push(
+      ...data.items.map((item) => ({
+        id: item.id.toString(),
+        fullName: item.full_name,
+        owner: item.owner?.login,
+        name: item.name,
+      }))
+    );
+  }
+
+  return {
+    props: { repositories },
+  };
+};
+
+type Props = InferGetStaticPropsType<typeof getStaticProps>;
+
+const Home = ({ repositories }: Props) => {
   const router = useRouter();
 
   const [session, setSession] = useState<Session | null>(null);
@@ -90,7 +120,7 @@ const Home: NextPage = () => {
   if (!isAuthenticated) {
     return (
       <Root fixedScreenHeight={false}>
-        <Discover />
+        <Discover repositories={repositories} />
       </Root>
     );
   }

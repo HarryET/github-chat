@@ -1,19 +1,48 @@
-import { Box, ButtonPrimary, Heading, Text, TextInput } from "@primer/components";
+import { Box, ButtonPrimary, Heading, Text } from "@primer/components";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, FormEvent, FormEventHandler, useState } from "react";
+import React, { FormEvent, FormEventHandler, useState } from "react";
 import { useQuery } from "react-query";
 import { getActiveChats } from "service/supabase";
-import { buttonGradient } from "styles/styles";
 import { DiscoverMessage } from "./DiscoverMessage";
 import { PersonalLinks } from "./PersonalLinks";
 import { SocialIcons } from "./SocialIcons";
+import { ThemeConfig } from "react-select";
+import AsyncSelect from "react-select/async";
+import primitives from "@primer/primitives";
+import { Repository } from "types";
+import leven from "leven";
+import pDebounce from "p-debounce";
+import { Octokit } from "@octokit/rest";
+import { buttonGradient } from "styles/styles";
 
-export default function Discover() {
+const { colors } = primitives;
+
+type Props = {
+  repositories: Repository[];
+};
+
+const theme: ThemeConfig = (theme) => ({
+  ...theme,
+  colors: {
+    ...theme.colors,
+    neutral0: colors.dark.bg.secondary,
+    neutral20: colors.dark.fg.subtle,
+    neutral30: colors.dark.fg.muted,
+    neutral50: colors.dark.fg.muted,
+    primary25: "#222933",
+    neutral80: colors.dark.fg.default,
+  },
+});
+
+const octokit = new Octokit();
+
+type Option = { value: string; label: string };
+
+export const Discover = ({ repositories }: Props) => {
   const router = useRouter();
-  const [tryNowRepoPath, setTryNowRepo] = useState<string>();
-  const handleTryNowRepoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setTryNowRepo(e.target.value);
-  };
+
+  const [repository, setRepository] = useState<string>();
+
   // TODO Handle loading & error
   const { data: latestMessages } = useQuery("active_chats", async () =>
     getActiveChats()
@@ -23,19 +52,39 @@ export default function Discover() {
 
   const handleFormSubmit: FormEventHandler = (e: FormEvent) => {
     e.preventDefault();
-
-    if (tryNowRepoPath?.includes("github.com/")) {
-      const [afterDomain] = tryNowRepoPath?.toLowerCase().split("github.com/").slice(-1);
-      const [owner, name] = afterDomain.split("/");
-      if (owner && name) {
-        router.push(`${owner}/${name}`);
-      }
-    } else {
-      const [owner, name] = tryNowRepoPath?.split("/") || [];
-      if (owner && name) {
-        router.push(`${owner}/${name}`);
-      }
+    if (!!repository) {
+      router.push(`/${repository}`);
     }
+  };
+
+  const loadOptions = async (inputValue: string, callback: (options: Option[]) => void) => {
+    const results = repositories
+      .filter((repository) => repository.fullName.includes(inputValue))
+      .sort((a, b) => leven(a.fullName, inputValue) - leven(b.fullName, inputValue));
+
+    // First we try searching among the statically pre-fetched 500 most popular repositories
+    if (results.length > 0) {
+      callback(results.map((r) => ({ label: r.fullName, value: r.fullName })));
+    }
+
+    const { data } = await octokit.rest.search.repos({
+      per_page: 20,
+      q: `${inputValue} in:name`,
+      sort: "stars",
+    });
+
+    // If not found, we use GitHub search API
+    const remoteResults = data.items
+      .map((item) => ({
+        id: item.id.toString(),
+        fullName: item.full_name,
+        owner: item.owner?.login,
+        name: item.name,
+      }))
+      .filter((repository) => repository.fullName.includes(inputValue))
+      .sort((a, b) => leven(a.fullName, inputValue) - leven(b.fullName, inputValue));
+
+    callback(remoteResults.map((r) => ({ label: r.fullName, value: r.fullName })));
   };
 
   return (
@@ -67,17 +116,30 @@ export default function Discover() {
               Paste a GitHub url or type a repository owner/name.
             </Text>
             <form onSubmit={handleFormSubmit}>
-              <Box display="flex" flexDirection={["column", "column", "row"]} mt={4}>
-                <Box display="flex" flexDirection={["column", "row"]} alignItems={["left", "center"]}>
-                  <Text fontSize={2} mr={2} mb={[2, 0]}>
-                    https://github.com/
-                  </Text>
-                  <TextInput
-                    placeholder="owner/name"
-                    onChange={handleTryNowRepoChange}
-                    sx={{ fontSize: 2, height: "48px", minWidth: ["250px"], flexGrow: 1 }}
-                  />
-                </Box>
+              <Box
+                display="flex"
+                flexDirection={["column", "column", "row"]}
+                mt={4}
+                maxWidth={["none", "none", "540px"]}
+              >
+                <AsyncSelect<Option>
+                  placeholder="Search GitHub repository"
+                  isSearchable={true}
+                  loadOptions={pDebounce(loadOptions, 500)}
+                  styles={{
+                    container: (css) => ({ ...css, flex: 1 }),
+                    control: (css) => ({
+                      ...css,
+                      height: "48px",
+                      flex: 1,
+                      flexGrow: 1,
+                      width: "100%",
+                    }),
+                    menu: (css) => ({ ...css, border: `1px solid ${colors.dark.border.default}` }),
+                  }}
+                  theme={theme}
+                  onChange={(option) => setRepository(option?.value)}
+                />
                 <ButtonPrimary
                   height="48px"
                   type="submit"
@@ -146,4 +208,4 @@ export default function Discover() {
       <SocialIcons mt={2} mb={4} sx={{ display: ["flex", "flex", "none"] }} />
     </Box>
   );
-}
+};
