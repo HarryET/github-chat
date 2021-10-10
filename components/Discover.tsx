@@ -99,7 +99,7 @@ export default function Discover() {
           </Box>
           <Box display="flex" flexDirection="column">
             <PersonalLinks sx={{ display: ["none", "none", "block"] }} />
-            <SocialIcons mt={2} sx={{ display: ["none", "none", "block"] }} />
+            <SocialIcons mt={2} sx={{ display: ["none", "none", "flex"] }} />
           </Box>
         </Box>
         <Box
@@ -143,7 +143,7 @@ export default function Discover() {
         </Box>
       </Box>
       <PersonalLinks mt={8} sx={{ display: ["block", "block", "none"] }} />
-      <SocialIcons mt={2} mb={4} sx={{ display: ["block", "block", "none"] }} />
+      <SocialIcons mt={2} mb={4} sx={{ display: ["flex", "flex", "none"] }} />
     </Box>
   );
 }
