@@ -18,17 +18,7 @@ const formatDate = (dateISOFormat: string) => {
 
 export const Message = ({ message }: MessageProps) => {
   return (
-    <Box
-      display="flex"
-      flexDirection="row"
-      paddingX={4}
-      paddingY={3}
-      sx={{
-        ":hover": {
-          backgroundColor: ["none", "none", "#131820"],
-        },
-      }}
-    >
+    <Box display="flex" flexDirection="row" paddingX={4} paddingY={3}>
       <Avatar
         src={message.user.avatar_url}
         size={36}
