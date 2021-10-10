@@ -4,6 +4,7 @@ export type Chat = {
   created_at: Date;
   owner_id?: string;
   repo_owner: string;
+  repo_owner_avatar?: string;
   repo_name: string;
   repo_description?: string | null;
   repo_data_last_update: Date;

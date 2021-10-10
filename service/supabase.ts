@@ -46,13 +46,15 @@ export const getActiveChats = () => supabase.from<ActiveChat>("active_chats");
 export const createChat = ({
   github_repo_id,
   repo_owner,
+  repo_owner_avatar,
   repo_name,
   repo_description,
-}: Pick<Chat, "github_repo_id" | "repo_owner" | "repo_name" | "repo_description">) =>
+}: Pick<Chat, "github_repo_id" | "repo_owner" | "repo_name" | "repo_description" | "repo_owner_avatar">) =>
   supabase.from<Chat>("chats").insert([
     {
       github_repo_id,
       repo_owner,
+      repo_owner_avatar,
       repo_name,
       repo_description,
     },

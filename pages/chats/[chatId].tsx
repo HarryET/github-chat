@@ -13,6 +13,7 @@ import * as R from "ramda";
 import { supabase } from "service/supabase";
 import NextLink from "next/link";
 import { LoginButton } from "components/LoginButton";
+import { User } from "@supabase/gotrue-js";
 
 const messageQuery = `
   id,
@@ -33,7 +34,11 @@ const ViewChat: NextPage = () => {
   const router = useRouter();
   const chatId = typeof router.query.chatId === "string" ? router.query.chatId : undefined;
 
-  const user = supabase.auth.user();
+  const [user, setUser] = useState<User | null>(null);
+
+  useEffect(() => {
+    setUser(supabase.auth.user());
+  })
 
   const [isLoginLoading, setLoginLoading] = useState(false);
 
