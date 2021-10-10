@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Box, Text, Spinner, Button, Link, ButtonPrimary } from "@primer/components";
+import { Box, Text, Spinner, Button } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
 import { MessageType } from "types";
@@ -11,7 +11,7 @@ import { MessageList } from "components/MessageList";
 import { useEffect, useState } from "react";
 import * as R from "ramda";
 import { supabase } from "service/supabase";
-import NextLink from "next/link";
+
 import { LoginButton } from "components/LoginButton";
 
 const messageQuery = `
@@ -114,9 +114,9 @@ const ViewChat: NextPage = () => {
 
   return (
     <Root>
-      <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" overflowY="hidden">
+      <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" maxWidth="100%">
         <SideMenu selectedChatId={chatId} />
-        <Box display="flex" flexDirection="column" flexGrow={1} height="100%">
+        <Box display="flex" flexDirection="column" flexGrow={1}>
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box
               height="100%"
@@ -163,7 +163,7 @@ const ViewChat: NextPage = () => {
           {messages && <MessageList messages={messages} />}
           {!!chatId && user && <MessageInput chatId={chatId} user={user} />}
           {!!chatId && !user && (
-            <Box px={3} py={3} width="100%">
+            <Box px={3} pb={3} width="100%">
               <Box
                 paddingX={3}
                 paddingY={3}

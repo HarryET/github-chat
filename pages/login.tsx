@@ -1,6 +1,6 @@
 import type { NextPage } from "next";
 import { useRouter } from "next/router";
-import { Box, ButtonPrimary, Flash, Spinner, StyledOcticon, Text } from "@primer/components";
+import { Box, Flash, StyledOcticon, Text } from "@primer/components";
 import { MarkGithubIcon, XIcon } from "@primer/octicons-react";
 import { useMutation } from "react-query";
 import { MainActionBox } from "components/MainActionBox";
@@ -8,6 +8,7 @@ import { Root } from "components/Root";
 import { supabase } from "service/supabase";
 import { useState } from "react";
 import { LoginButton } from "components/LoginButton";
+import Image from "next/image";
 
 const Login: NextPage = () => {
   const router = useRouter();
@@ -44,7 +45,6 @@ const Login: NextPage = () => {
 
   if (typeof window !== "undefined") {
     if (isAuthenticated) {
-      alert("FOOBAR");
       router.push("/");
       return null;
     }
@@ -54,7 +54,7 @@ const Login: NextPage = () => {
     <Root>
       <Box display="flex" flexGrow={1} flexDirection="column" justifyContent="center" alignItems="center" width="100%">
         <MainActionBox>
-          <StyledOcticon icon={MarkGithubIcon} size="large" />
+          <Image src="/icon.svg" height={64} width={64} alt="GithHub Chat logo" />
           <Text as="h1" mt={4} mb={0} lineHeight={1}>
             github·chat
           </Text>
