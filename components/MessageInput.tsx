@@ -1,12 +1,12 @@
-import React, { FormEvent, KeyboardEvent, useState } from "react";
-import { Box, ButtonPrimary, StyledOcticon, TextInput } from "@primer/components";
+import React, { FormEvent, KeyboardEvent, useRef, useState } from "react";
+import { Box, Button, ButtonPrimary, StyledOcticon, TextInput } from "@primer/components";
 import { useMutation } from "react-query";
 import { supabase } from "service/supabase";
 import type { Mention, User as DBUser } from "../types";
 import { User } from "@supabase/gotrue-js";
 import { buttonGradient } from "styles/styles";
-import { PaperAirplaneIcon } from "@primer/octicons-react";
-
+import { FileIcon, PaperAirplaneIcon } from "@primer/octicons-react";
+import { v4 as uuid } from "uuid";
 type Props = {
   chatId: string;
   user: User;
@@ -15,6 +15,7 @@ type Props = {
 export const MessageInput = ({ chatId, user }: Props) => {
   const [value, setValue] = useState("");
   const [rows, setRows] = useState(1);
+  const inputFileRef = useRef<HTMLInputElement>(null);
 
   const handleChange = (e: FormEvent<HTMLInputElement>) => {
     const newValue = e.currentTarget.value;
@@ -93,6 +94,36 @@ export const MessageInput = ({ chatId, user }: Props) => {
     }
   });
 
+  const handleUploadFileButtonClick = () => {
+    inputFileRef.current?.click();
+  };
+
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = e.target.files?.[0];
+    console.log("selected file?", selectedFile);
+
+    if (selectedFile) {
+      console.log("uploading");
+      const storageKey = `uploads/${uuid()}`;
+      const { data, error } = await supabase.storage.from("public").upload(storageKey, selectedFile, {
+        cacheControl: "3600",
+        upsert: false,
+      });
+
+      console.log(data, error);
+
+      const { error: uploadError } = await supabase.from("messages").insert([
+        {
+          chat_id: chatId,
+          user_id: user.id,
+          content: data?.Key,
+          file_name: selectedFile.name,
+          type: 2,
+        },
+      ]);
+    }
+  };
+
   return (
     <Box display="flex" flexDirection="row" paddingX={3} paddingBottom={3} flexShrink={0}>
       <TextInput
@@ -122,6 +153,18 @@ export const MessageInput = ({ chatId, user }: Props) => {
         onChange={handleChange}
         onKeyPress={handleKeyPress}
       />
+      <Button
+        ml={2}
+        sx={{
+          border: "none",
+          background: "fg.subtle",
+        }}
+        onClick={handleUploadFileButtonClick}
+      >
+        <StyledOcticon icon={FileIcon} />
+      </Button>
+      <input type="file" id="file" ref={inputFileRef} style={{ display: "none" }} onChange={handleFileUpload} />
+
       <ButtonPrimary
         ml={2}
         display={["block", "block", "none"]}

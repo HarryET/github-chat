@@ -38,6 +38,8 @@ export type MessageType = {
   edited_at?: string;
   created_at: string;
   user: User;
+  type: number;
+  file_name?: string;
 };
 
 export type MentionedMessageType = {

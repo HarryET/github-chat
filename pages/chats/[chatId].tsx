@@ -27,7 +27,9 @@ const messageQuery = `
     id,
     username,
     avatar_url    
-  )
+  ),
+  type,
+  file_name
 `;
 
 const ViewChat: NextPage = () => {
@@ -49,12 +51,17 @@ const ViewChat: NextPage = () => {
   useQuery(
     ["chats", chatId],
     async () => {
-      type Chat = { id: string; repo_owner: string; repo_name: string; repo_owner_avatar?: string; };
+      type Chat = { id: string; repo_owner: string; repo_name: string; repo_owner_avatar?: string };
       if (chatId) {
         const { data: chat } = await supabase.from<Chat>("chats").select().eq("id", chatId).single();
         if (chat) {
-          saveRecentChat({ id: chatId, repoOwner: chat.repo_owner, repoName: chat.repo_name, repoOwnerAvatar: chat.repo_owner_avatar });
-          setTitle(`GitHub Chat | ${chat.repo_owner}/${chat.repo_name}`)
+          saveRecentChat({
+            id: chatId,
+            repoOwner: chat.repo_owner,
+            repoName: chat.repo_name,
+            repoOwnerAvatar: chat.repo_owner_avatar,
+          });
+          setTitle(`GitHub Chat | ${chat.repo_owner}/${chat.repo_name}`);
         }
       }
     },
@@ -95,7 +102,11 @@ const ViewChat: NextPage = () => {
   } = useQuery(
     ["messages", chatId],
     async () => {
-      const { data, error } = await supabase.from<MessageType>("messages").select(messageQuery).eq("chat_id", chatId);
+      const { data, error } = await supabase
+        .from<MessageType>("messages")
+        .select(messageQuery)
+        .eq("chat_id", chatId)
+        .order("created_at");
 
       if (error) {
         throw error;
