@@ -44,7 +44,7 @@ export const Root: React.FC<Props> = ({ fixedScreenHeight, children }) => {
           <meta property="twitter:description" content="A chat room for every GitHub repository" />
           <meta property="twitter:image" content="https://github-chat.com/meta-image.png" />
         </Head>
-        <CustomHeader showAvatar={true} />
+        <CustomHeader />
         {children}
       </Box>
     </Wrapper>

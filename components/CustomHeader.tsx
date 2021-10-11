@@ -1,21 +1,21 @@
-import { Avatar, ButtonOutline, Header, Text, Box } from "@primer/components";
+import { Avatar, ButtonOutline, Header, Text, Box, StyledOcticon, ButtonInvisible } from "@primer/components";
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
 import { supabase } from "service/supabase";
 import Image from "next/image";
+import { ThreeBarsIcon, XIcon } from "@primer/octicons-react";
+import { SideMenu } from "./SideMenu";
 
-type HeaderProps = {
-  showAvatar: boolean;
-};
-
-export const CustomHeader = ({ showAvatar }: HeaderProps) => {
+export const CustomHeader = () => {
   const router = useRouter();
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png");
   const [username, setUsername] = useState("Octocat");
+
+  const [isMenuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const session = supabase.auth.session();
@@ -23,11 +23,11 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
     const userMeta = user?.user_metadata;
 
     setIsAuthenticated(!!session);
-    if(!!session) {
+    if (!!session) {
       setUsername(userMeta?.user_name ?? "Octocat");
       setAvatarUrl(userMeta?.avatar_url ?? "https://github.com/octocat.png");
     }
-  }, [])
+  }, []);
 
   supabase.auth.onAuthStateChange((event: AuthChangeEvent, session: Session | null) => {
     // Authenticated
@@ -38,7 +38,7 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
     }
 
     // Not authenticated
-    if(event == "SIGNED_OUT" || event == "USER_DELETED") {
+    if (event == "SIGNED_OUT" || event == "USER_DELETED") {
       setIsAuthenticated(false);
       setUsername("Octocat");
       setAvatarUrl("https://github.com/octocat.png");
@@ -48,44 +48,67 @@ export const CustomHeader = ({ showAvatar }: HeaderProps) => {
   // TODO Handle error
   const handleLogout = () => supabase.auth.signOut();
 
+  const handleMenuClick = () => {
+    setMenuOpen((previous) => !previous);
+  };
+
   return (
-    <Header>
+    <Header sx={{ height: "64px" }}>
       <Header.Item>
         <Link href="/" passHref>
           <Header.Link>
             <Image src="/icon.svg" height={24} width={24} alt="GithHub Chat logo" />
-            <Text ml={2} fontSize={3} fontWeight={600} letterSpacing={0.5}>
-              github·chat
-            </Text>
+            {router.pathname === "/" && (
+              <Text ml={2} fontSize={3} fontWeight={600} letterSpacing={0.5} display={["none", "none", "block"]}>
+                github·chat
+              </Text>
+            )}
           </Header.Link>
         </Link>
       </Header.Item>
       <Header.Item full></Header.Item>
+
       {isAuthenticated && (
-        <ButtonOutline marginRight={2} variant="small" onClick={handleLogout}>
-          Logout
-        </ButtonOutline>
+        <>
+          <ButtonOutline marginRight={2} variant="small" height="100%" onClick={handleLogout}>
+            Logout
+          </ButtonOutline>
+          <Header.Item mr={0} display={["none", "none", "block"]}>
+            <Box display="flex" flexDirection="row" alignItems="center">
+              <Avatar
+                //TODO: Fallback avatar src
+                src={avatarUrl || ""}
+                size={32}
+                square
+                alt={username}
+              />
+            </Box>
+          </Header.Item>
+          <ButtonInvisible display={["flex", "flex", "none"]} paddingX={2} ml={2} onClick={handleMenuClick}>
+            <StyledOcticon icon={isMenuOpen ? XIcon : ThreeBarsIcon} color="fg.default" />
+          </ButtonInvisible>
+        </>
       )}
-      {showAvatar && isAuthenticated && (
-        <Header.Item mr={0}>
-          <Box display="flex" flexDirection="row" alignItems="center">
-            <Avatar
-              //TODO: Fallback avatar src
-              src={avatarUrl || ""}
-              size={32}
-              square
-              alt={username}
-            />
-            <Text fontWeight="bold" paddingLeft={2}>
-              {username}
-            </Text>
-          </Box>
-        </Header.Item>
-      )}
-      {showAvatar && !isAuthenticated && (
+      {!isAuthenticated && (
         <ButtonOutline variant="small" onClick={() => router.push("/login")}>
           Login
         </ButtonOutline>
+      )}
+      {isMenuOpen && (
+        <Box
+          position="absolute"
+          top="64px"
+          left="0"
+          right="0"
+          bottom="0"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+          background="rgb(13, 17, 23, 0.95)"
+          overflowY="auto"
+        >
+          <SideMenu router={router} onSelect={() => setMenuOpen(false)} />
+        </Box>
       )}
     </Header>
   );
