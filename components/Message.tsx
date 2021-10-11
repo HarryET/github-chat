@@ -20,7 +20,7 @@ const formatDate = (dateISOFormat: string) => {
 
 export const Message = ({ message }: MessageProps) => {
   return (
-    <Box display="flex" flexDirection="row" paddingX={4} paddingY={3}>
+    <Box display="flex" flexDirection="row" paddingX={[2, 2, 3]} paddingY="12px">
       <Avatar
         src={message.user.avatar_url}
         size={36}
@@ -31,7 +31,7 @@ export const Message = ({ message }: MessageProps) => {
       />
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
         <Box display="flex" flexDirection="row" alignItems="flex-end">
-          <Text fontWeight="bold" fontSize={1} lineHeight={1}>
+          <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1}>
             {message.user.username}
           </Text>
           <Text fontSize={0} fontWeight={300} color="fg.muted" lineHeight={1} ml={2}>
@@ -39,6 +39,7 @@ export const Message = ({ message }: MessageProps) => {
           </Text>
         </Box>
         <Text
+          color="#bfc8d3"
           mt={2}
           fontSize={1}
           style={{
