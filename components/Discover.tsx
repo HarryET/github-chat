@@ -135,7 +135,7 @@ export const Discover = ({ repositories }: Props) => {
         </Box>
       </Box>
       <PersonalLinks mt={8} sx={{ display: ["block", "block", "none"] }} />
-      <SocialIcons mt={2} mb={4} sx={{ display: ["flex", "flex", "none"] }} />
+      {/* <SocialIcons mt={2} mb={4} sx={{ display: ["flex", "flex", "none"] }} /> */}
     </Box>
   );
 };
