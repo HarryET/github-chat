@@ -109,7 +109,7 @@ const Home = ({ repositories }: Props) => {
   return (
     <Root fixedScreenHeight={true}>
       <Box flexGrow={1} display="flex" flexDirection="row" overflow="hidden">
-        <SideMenu />
+        <SideMenu router={router} />
         <Box
           height="100%"
           maxHeight="100%"
