@@ -109,7 +109,7 @@ const Home = ({ repositories }: Props) => {
   return (
     <Root fixedScreenHeight={true}>
       <Box flexGrow={1} display="flex" flexDirection="row" overflow="hidden">
-        <SideMenu router={router} />
+        <SideMenu router={router} display={["none", "none", "flex"]} />
         <Box
           height="100%"
           maxHeight="100%"
@@ -122,7 +122,7 @@ const Home = ({ repositories }: Props) => {
         >
           {recentChat && (
             <Box
-              display="flex"
+              display={["none", "none", "flex"]}
               flexDirection="row"
               alignItems="center"
               justifyContent="space-between"

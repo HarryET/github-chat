@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { Chat } from "../types";
 import Link from "next/link";
 import { supabase } from "service/supabase";
-import { useEffect, useState } from "react";
+import { ComponentProps, useEffect, useState } from "react";
 import { Session } from "@supabase/gotrue-js";
 import { ChatIcon } from "./ChatIcon";
 import { Search } from "./Search";
@@ -12,9 +12,10 @@ import { NextRouter } from "next/router";
 type Props = {
   selectedChatId?: string;
   router: NextRouter;
-};
+  onSelect?: () => void;
+} & ComponentProps<typeof Box>;
 
-export const SideMenu = ({ selectedChatId, router }: Props) => {
+export const SideMenu = ({ selectedChatId, router, onSelect, ...boxProps }: Props) => {
   const user = supabase.auth.user();
   const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -73,6 +74,9 @@ export const SideMenu = ({ selectedChatId, router }: Props) => {
   }, []);
 
   const handleSelectRepository = (name: string) => {
+    if (onSelect) {
+      onSelect();
+    }
     router.push(`/${name}`);
   };
 
@@ -81,15 +85,7 @@ export const SideMenu = ({ selectedChatId, router }: Props) => {
   }
 
   return (
-    <Box
-      display={["none", "none", "flex"]}
-      flexDirection="column"
-      height="100%"
-      width={360}
-      flexShrink={0}
-      padding={4}
-      overflow="hidden"
-    >
+    <Box flexDirection="column" height="100%" width={360} flexShrink={0} padding={4} overflow="hidden" {...boxProps}>
       <Search repositories={[]} stretch={false} onSelect={handleSelectRepository} />
       {isChatsLoading && !chats && <Spinner mt={4} />}
       {chatsError && <Text mt={4}>Failed to load chats</Text>}
@@ -97,7 +93,7 @@ export const SideMenu = ({ selectedChatId, router }: Props) => {
         <SideNav bordered maxWidth={360} aria-label="Main" mt={4} flexBasis={0} overflowY="auto" flexGrow={1}>
           {chats.map((chat) => (
             <Link key={chat.id} href={`/chats/${chat.id}`} passHref>
-              <SideNav.Link selected={chat.id === selectedChatId}>
+              <SideNav.Link selected={chat.id === selectedChatId} onClick={onSelect}>
                 <Box display="flex" flexDirection="row" width="100%" alignItems="center">
                   <ChatIcon icon={chat.repo_owner_avatar} name={chat.repo_name} iconSize={38} />
                   <Text>
