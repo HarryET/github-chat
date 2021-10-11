@@ -15,6 +15,7 @@ type Props = {
 };
 
 export const SideMenu = ({ selectedChatId, router }: Props) => {
+  const user = supabase.auth.user();
   const [session, setSession] = useState<Session | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
@@ -28,6 +29,7 @@ export const SideMenu = ({ selectedChatId, router }: Props) => {
     data: chats,
     isLoading: isChatsLoading,
     isError: chatsError,
+    refetch,
   } = useQuery<Chat[]>(
     ["user-chats"],
     async () => {
@@ -57,6 +59,18 @@ export const SideMenu = ({ selectedChatId, router }: Props) => {
     },
     { enabled: isAuthenticated }
   );
+
+  useEffect(() => {
+    supabase
+      .from<{ user_id: string }>("members")
+      .on("*", async (payload) => {
+        const { new: row } = payload;
+        if (row.user_id === user?.id) {
+          refetch();
+        }
+      })
+      .subscribe();
+  }, []);
 
   const handleSelectRepository = (name: string) => {
     router.push(`/${name}`);
