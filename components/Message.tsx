@@ -69,17 +69,29 @@ const FileMessage = ({ message }: MessageProps) => {
   };
 
   return (
-    <Box height="100%">
+    <Box height="100%" sx={{ maxWidth: "300px" }}>
       <Button
         ml={2}
         sx={{
           border: "none",
           background: "fg.subtle",
           height: "40px",
+          maxWidth: "300px",
+          textOverflow: "ellipsis",
+          overflow: "hidden",
         }}
         onClick={handleDownloadClick}
       >
-        <StyledOcticon icon={DownloadIcon} /> <Text>{message.file_name}</Text>
+        <StyledOcticon icon={DownloadIcon} />{" "}
+        <Text
+        // sx={{
+        //   maxWidth: "50px",
+        //   textOverflow: "ellipsis",
+        //   display: "inline-block",
+        // }}
+        >
+          {message.file_name}
+        </Text>
       </Button>
     </Box>
   );
