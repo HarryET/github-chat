@@ -7,9 +7,12 @@ import { supabase } from "service/supabase";
 import Image from "next/image";
 import { ThreeBarsIcon, XIcon } from "@primer/octicons-react";
 import { SideMenu } from "./SideMenu";
+import { useQuery } from "react-query";
 
 export const CustomHeader = () => {
   const router = useRouter();
+
+  const chatId = typeof router.query?.chatId === "string" ? router.query?.chatId : undefined;
 
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png");
@@ -45,6 +48,21 @@ export const CustomHeader = () => {
     }
   });
 
+  const { data: chat } = useQuery(
+    ["chats", chatId],
+    async () => {
+      type Chat = { id: string; repo_owner: string; repo_name: string };
+      if (chatId) {
+        const { data: chat, error } = await supabase.from<Chat>("chats").select().eq("id", chatId).single();
+        if (error) {
+          throw error;
+        }
+        return chat;
+      }
+    },
+    { enabled: !!chatId }
+  );
+
   // TODO Handle error
   const handleLogout = () => supabase.auth.signOut();
 
@@ -53,7 +71,7 @@ export const CustomHeader = () => {
   };
 
   return (
-    <Header sx={{ height: "64px" }}>
+    <Header sx={{ height: "64px" }} display="flex">
       <Header.Item>
         <Link href="/" passHref>
           <Header.Link>
@@ -66,11 +84,19 @@ export const CustomHeader = () => {
           </Header.Link>
         </Link>
       </Header.Item>
-      <Header.Item full></Header.Item>
+      <Header.Item full display="flex" sx={{ justifyContent: "center" }}>
+        {chat && <Text>{`${chat.repo_owner}/${chat.repo_name}`}</Text>}
+      </Header.Item>
 
       {isAuthenticated && (
         <>
-          <ButtonOutline marginRight={2} variant="small" height="100%" onClick={handleLogout}>
+          <ButtonOutline
+            marginRight={2}
+            variant="small"
+            height="100%"
+            display={["none", "none", "block"]}
+            onClick={handleLogout}
+          >
             Logout
           </ButtonOutline>
           <Header.Item mr={0} display={["none", "none", "block"]}>

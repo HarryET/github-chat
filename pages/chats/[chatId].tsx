@@ -62,7 +62,7 @@ const ViewChat: NextPage = () => {
     }
   }, [chatId, user]);
 
-  useQuery(
+  const { data: chat } = useQuery(
     ["chats", chatId],
     async () => {
       type Chat = { id: string; repo_owner: string; repo_name: string; repo_owner_avatar?: string };
@@ -76,6 +76,7 @@ const ViewChat: NextPage = () => {
             repoOwnerAvatar: chat.repo_owner_avatar,
           });
           setTitle(`GitHub Chat | ${chat.repo_owner}/${chat.repo_name}`);
+          return chat;
         }
       }
     },
