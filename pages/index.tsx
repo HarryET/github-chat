@@ -10,14 +10,12 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { Session } from "@supabase/gotrue-js";
 import { useQuery } from "react-query";
-import { MentionedMessageType, RecentChat, Repository } from "types";
+import { MentionedMessageType, RecentChat } from "types";
 import { AuthChangeEvent } from "@supabase/supabase-js";
 import { getRecentChat } from "service/localStorage";
 import { buttonGradient } from "styles/styles";
-import { Octokit } from "@octokit/rest";
-import { PersonalLinks } from "components/PersonalLinks";
-import { SocialIcons } from "components/SocialIcons";
 import { ChatIcon } from "components/ChatIcon";
+import { fetchMostPopularRepositories } from "../service/github";
 
 const messageQuery = `
   id,
@@ -35,28 +33,7 @@ const messageQuery = `
 `;
 
 export const getStaticProps = async () => {
-  const octokit = new Octokit({});
-
-  const repositories: Repository[] = [];
-  const numPages = 5;
-
-  for (let i = 0; i < numPages; i++) {
-    const { data } = await octokit.rest.search.repos({
-      per_page: 100,
-      q: "stars:>=500",
-      page: i + 1,
-      sort: "stars",
-    });
-    repositories.push(
-      ...data.items.map((item) => ({
-        id: item.id.toString(),
-        fullName: item.full_name,
-        owner: item.owner?.login,
-        name: item.name,
-      }))
-    );
-  }
-
+  const repositories = await fetchMostPopularRepositories();
   return {
     props: { repositories },
   };

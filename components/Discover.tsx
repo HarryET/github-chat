@@ -60,7 +60,7 @@ export const Discover = ({ repositories }: Props) => {
               Real-time.
             </Heading>
             <Text mt={4} fontSize={3} fontWeight={300} color="fg.muted" textAlign={["center", "left"]}>
-              Type a repository owner/name.
+              Type a repository name.
             </Text>
             <form onSubmit={handleFormSubmit}>
               <Box
@@ -69,7 +69,7 @@ export const Discover = ({ repositories }: Props) => {
                 mt={4}
                 maxWidth={["none", "none", "540px"]}
               >
-                <Search repositories={repositories} onSelect={setRepository} />
+                <Search repositories={repositories} stretch={true} onSelect={setRepository} />
                 <ButtonPrimary
                   height="48px"
                   type="submit"

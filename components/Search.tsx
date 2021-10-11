@@ -8,6 +8,7 @@ import { Repository } from "types";
 
 type Props = {
   repositories: Repository[];
+  stretch: boolean;
   onSelect: (option: string) => void;
 };
 
@@ -29,7 +30,7 @@ const octokit = new Octokit();
 
 type Option = { value: string; label: string };
 
-export const Search = ({ repositories, onSelect }: Props) => {
+export const Search = ({ repositories, stretch, onSelect }: Props) => {
   const loadOptions = async (inputValue: string, callback: (options: Option[]) => void) => {
     const results = repositories
       .filter((repository) => repository.fullName.includes(inputValue))
@@ -65,7 +66,7 @@ export const Search = ({ repositories, onSelect }: Props) => {
       isSearchable={true}
       loadOptions={pDebounce(loadOptions, 500)}
       styles={{
-        container: (css) => ({ ...css, flex: 1 }),
+        container: (css) => ({ ...css, ...(stretch ? { flex: 1 } : {}) }),
         control: (css) => ({
           ...css,
           height: "48px",

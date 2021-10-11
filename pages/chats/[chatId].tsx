@@ -165,7 +165,7 @@ const ViewChat: NextPage = () => {
         <title>{title}</title>
       </Head>
       <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" maxWidth="100%">
-        {user && !!updatedMembersAt && <SideMenu selectedChatId={chatId} />}
+        {user && !!updatedMembersAt && <SideMenu router={router} selectedChatId={chatId} />}
         <Box display="flex" flexDirection="column" flexGrow={1}>
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box
