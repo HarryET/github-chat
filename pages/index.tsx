@@ -16,6 +16,8 @@ import { getRecentChat } from "service/localStorage";
 import { buttonGradient } from "styles/styles";
 import { ChatIcon } from "components/ChatIcon";
 import { fetchMostPopularRepositories } from "../service/github";
+import { PersonalLinks } from "components/PersonalLinks";
+import { SocialIcons } from "components/SocialIcons";
 
 const messageQuery = `
   id,
@@ -198,6 +200,10 @@ const Home = ({ repositories }: Props) => {
             </Box>
           )}
           {messages && <MentionMessageList messages={messages} />}
+          <Box display="flex" flexDirection="column">
+            <PersonalLinks />
+            <SocialIcons />
+          </Box>
         </Box>
       </Box>
     </Root>
