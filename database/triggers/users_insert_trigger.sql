@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION
     VALUES (
       NEW.id,
       NEW.raw_user_meta_data ->> 'user_name',
-      NEW.raw_app_meta_data ->> 'avatar_url' 
+      NEW.raw_user_meta_data ->> 'avatar_url'
     );
     RETURN NEW;
   END;
@@ -15,10 +15,9 @@ CREATE OR REPLACE FUNCTION
 
 DROP TRIGGER IF EXISTS users_insert_trigger on auth.users;
 
-
-CREATE TRIGGER 
+CREATE TRIGGER
   users_insert_trigger
   AFTER INSERT ON auth.users
   FOR EACH ROW
-  EXECUTE PROCEDURE 
+  EXECUTE PROCEDURE
     public.users_insert_trigger_fnc();
