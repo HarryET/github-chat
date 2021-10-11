@@ -1,8 +1,10 @@
-import { Avatar, Box, Text } from "@primer/components";
+import { Avatar, Box, Button, StyledOcticon, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
 import type { MessageType } from "types";
 import * as datefns from "date-fns";
+import { DownloadIcon, FileIcon } from "@primer/octicons-react";
+import { supabase } from "service/supabase";
 
 type MessageProps = {
   message: MessageType;
@@ -46,9 +48,39 @@ export const Message = ({ message }: MessageProps) => {
             maxHeight: "100%",
           }}
         >
-          <Markdown content={message.content} />
+          {message.type === 1 && <Markdown content={message.content} />}
+          {message.type === 2 && <FileMessage message={message} />}
         </Text>
       </Box>
+    </Box>
+  );
+};
+
+const FileMessage = ({ message }: MessageProps) => {
+  const handleDownloadClick = async () => {
+    const { data, error } = await supabase.storage.from("public").download(message.content);
+    console.log(data, error);
+
+    const csvURL = window.URL.createObjectURL(data);
+    const tempLink = document.createElement("a");
+    tempLink.href = csvURL;
+    tempLink.setAttribute("download", message.file_name || message.content);
+    tempLink.click();
+  };
+
+  return (
+    <Box height="100%">
+      <Button
+        ml={2}
+        sx={{
+          border: "none",
+          background: "fg.subtle",
+          height: "40px",
+        }}
+        onClick={handleDownloadClick}
+      >
+        <StyledOcticon icon={DownloadIcon} /> <Text>{message.file_name}</Text>
+      </Button>
     </Box>
   );
 };

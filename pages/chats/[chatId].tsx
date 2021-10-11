@@ -27,7 +27,9 @@ const messageQuery = `
     id,
     username,
     avatar_url    
-  )
+  ),
+  type,
+  file_name
 `;
 
 const ViewChat: NextPage = () => {
@@ -117,7 +119,11 @@ const ViewChat: NextPage = () => {
   } = useQuery(
     ["messages", chatId],
     async () => {
-      const { data, error } = await supabase.from<MessageType>("messages").select(messageQuery).eq("chat_id", chatId);
+      const { data, error } = await supabase
+        .from<MessageType>("messages")
+        .select(messageQuery)
+        .eq("chat_id", chatId)
+        .order("created_at");
 
       if (error) {
         throw error;
