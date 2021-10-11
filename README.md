@@ -15,6 +15,7 @@ A chat room for every GitHub repository. Real-time. | Part of the Supabase Hackt
 ### Instructions
 
 #### How to enter a chat?
+
 - Use the input in github-chat.com landing page to enter a repository owner/name and navigate to the corresponding chat room.
 - Or if you are in github.com/owner/repo , just add -chat, like github-chat/owner/repo and navigate directly to the corresponding chat room.
 
@@ -35,6 +36,10 @@ The primary function of the app is to have a realtime chat for github repos so w
 #### Database
 
 All of the data for the app has been store in the Supabase Postgresql database so it can be accessed through the SDKs with row level security enabled.
+
+### Storage
+
+Storage is used for file uploads. Users can share files in chats.
 
 ## Development
 
