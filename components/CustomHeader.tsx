@@ -50,9 +50,11 @@ export const CustomHeader = () => {
         <Link href="/" passHref>
           <Header.Link>
             <Image src="/icon.svg" height={24} width={24} alt="GithHub Chat logo" />
-            <Text ml={2} fontSize={3} fontWeight={600} letterSpacing={0.5} display={["none", "none", "block"]}>
-              github·chat
-            </Text>
+            {router.pathname === "/" && (
+              <Text ml={2} fontSize={3} fontWeight={600} letterSpacing={0.5} display={["none", "none", "block"]}>
+                github·chat
+              </Text>
+            )}
           </Header.Link>
         </Link>
       </Header.Item>

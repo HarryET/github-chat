@@ -46,6 +46,22 @@ const ViewChat: NextPage = () => {
     setAuthState(event);
   });
 
+  const [updatedMembersAt, setUpdatedMembersAt] = useState<string>();
+
+  useEffect(() => {
+    if (chatId && user) {
+      supabase
+        .from("members")
+        .upsert({
+          user_id: user.id,
+          chat_id: chatId,
+        })
+        .then(() => {
+          setUpdatedMembersAt(new Date().toISOString());
+        });
+    }
+  }, [chatId, user]);
+
   useQuery(
     ["chats", chatId],
     async () => {
@@ -149,7 +165,7 @@ const ViewChat: NextPage = () => {
         <title>{title}</title>
       </Head>
       <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" maxWidth="100%">
-        {user && <SideMenu selectedChatId={chatId} />}
+        {user && !!updatedMembersAt && <SideMenu selectedChatId={chatId} />}
         <Box display="flex" flexDirection="column" flexGrow={1}>
           {(isMessagesLoading || !!messagesError || (messages && messages.length === 0)) && (
             <Box

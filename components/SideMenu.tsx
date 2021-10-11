@@ -26,7 +26,7 @@ export const SideMenu = ({ selectedChatId }: Props) => {
     isLoading: isChatsLoading,
     isError: chatsError,
   } = useQuery<Chat[]>(
-    "user-chats",
+    ["user-chats"],
     async () => {
       const { data, error } = await supabase
         .from("members")
