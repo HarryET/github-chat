@@ -26,7 +26,8 @@ const messageQuery = `
   user: user_id(
     id,
     username,
-    avatar_url    
+    avatar_url,
+    flags 
   ),
   type,
   files

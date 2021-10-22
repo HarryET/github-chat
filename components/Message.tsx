@@ -1,7 +1,7 @@
-import { Avatar, Box, Button, StyledOcticon, Text } from "@primer/components";
+import { Avatar, Box, Button, Label, StyledOcticon, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
-import type { MessageFile, MessageType } from "types";
+import { MessageFile, MessageType, UserStaffFlag, UserSystemFlag } from "types";
 import * as datefns from "date-fns";
 import { DownloadIcon } from "@primer/octicons-react";
 import { supabase } from "service/supabase";
@@ -30,10 +30,14 @@ export const Message = ({ message }: MessageProps) => {
         bg="neutral.muted"
       />
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
-        <Box display="flex" flexDirection="row" alignItems="flex-end">
-          <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1}>
-            {message.user.username}
-          </Text>
+        <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
+          <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
+            <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1}>
+              {message.user.username}
+            </Text>
+            {(message.user.flags & UserStaffFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>👨🏻‍💻 team</Label>}
+            {(message.user.flags & UserSystemFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>🤖 system</Label>}
+          </Box>
           <Text fontSize={0} fontWeight={300} color="fg.muted" lineHeight={1} ml={2}>
             {formatDate(message.created_at)}
           </Text>
@@ -59,7 +63,7 @@ export const Message = ({ message }: MessageProps) => {
   );
 };
 
-const FileBox = ({ file }: {file: MessageFile}) => {
+const FileBox = ({ file }: { file: MessageFile }) => {
   const handleDownloadClick = async () => {
     const { data, error } = await supabase.storage.from("public").download(`uploads/${file.id}`);
     console.log(data, error);

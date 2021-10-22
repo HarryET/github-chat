@@ -17,10 +17,14 @@ export type RecentChat = {
   repoName: string;
 };
 
+export const UserSystemFlag = 1 << 1;
+export const UserStaffFlag = 1 << 2;
+
 export type User = {
   id: string;
   username: string;
   avatar_url: string;
+  flags: number;
 };
 
 export type Member = {
