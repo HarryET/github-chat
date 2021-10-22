@@ -70,7 +70,24 @@ export type ActiveChat = {
   avatar_url: string;
 };
 
-export type SupabaseTables = "chats" | "members" | "messages" | "users" | "active_chats";
+export type ActiveMessages = {
+  id: string;
+  type: number;
+  content: string;
+  created_at: string;
+  edited_at: string;
+  mentions: string;
+  files?: MessageFile[];
+  author_id: string;
+  author_username: string;
+  author_avatar_url: string;
+  author_flags: number;
+  chat_id: string;
+  chat_repo_name: string;
+  chat_repo_owner: string;
+};
+
+export type SupabaseTables = "chats" | "members" | "messages" | "users" | "active_chats" | "active_messages";
 
 export type Mention = { username: string; id: string };
 

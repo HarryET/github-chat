@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Box, Text, Spinner, Button } from "@primer/components";
 import { StopIcon, SyncIcon, CommentDiscussionIcon } from "@primer/octicons-react";
 import { useMutation, useQuery, useQueryClient } from "react-query";
-import { MessageType } from "types";
+import { RealtimeMessage, MessageType } from "types";
 import { SideMenu } from "components/SideMenu";
 import { Root } from "components/Root";
 import { MessageInput } from "components/MessageInput";
@@ -19,18 +19,18 @@ import { saveRecentChat } from "service/localStorage";
 
 const messageQuery = `
   id,
+  type,
   chat_id,
   content,
+  files,
   created_at,
   edited_at,
-  user: user_id(
+  user: users!user_id(
     id,
     username,
     avatar_url,
     flags 
-  ),
-  type,
-  files
+  )
 `;
 
 const ViewChat: NextPage = () => {
@@ -137,11 +137,13 @@ const ViewChat: NextPage = () => {
 
   useEffect(() => {
     supabase
+      // TODO change to realtime_messages
       .from<{ id: string; chat_id: string }>("messages")
       .on("*", async (payload) => {
         const { new: messageRow } = payload;
         if (messageRow.chat_id === chatId) {
           // Fetch full message and insert it to messages collection
+
           const { data: message, error } = await supabase
             .from<MessageType>("messages")
             .select(messageQuery)
@@ -152,6 +154,22 @@ const ViewChat: NextPage = () => {
             // TODO
             return;
           }
+          
+          // TODO Get RealTime Views Working!
+          // const message: MessageType = {
+          //   id: messageRow.id,
+          //   chat_id: messageRow.chat_id,
+          //   content: messageRow.content,
+          //   created_at: messageRow.created_at,
+          //   user: {
+          //     id: messageRow.author_id,
+          //     username: messageRow.author_username,
+          //     avatar_url: messageRow.author_avatar_url,
+          //     flags: messageRow.author_flags
+          //   },
+          //   type: messageRow.type,
+          //   files: messageRow.files ?? []
+          // };
 
           queryClient.setQueryData<MessageType[]>(
             ["messages", chatId],
