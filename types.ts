@@ -70,7 +70,7 @@ export type ActiveChat = {
   avatar_url: string;
 };
 
-export type ActiveMessages = {
+export type RealtimeMessage = {
   id: string;
   type: number;
   content: string;
@@ -87,7 +87,7 @@ export type ActiveMessages = {
   chat_repo_owner: string;
 };
 
-export type SupabaseTables = "chats" | "members" | "messages" | "users" | "active_chats" | "active_messages";
+export type SupabaseTables = "chats" | "members" | "messages" | "users" | "active_chats" | "realtime_messages";
 
 export type Mention = { username: string; id: string };
 
