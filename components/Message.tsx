@@ -1,10 +1,11 @@
 import { Avatar, Box, Button, Label, StyledOcticon, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
-import { MessageFile, MessageType, UserStaffFlag, UserSystemFlag } from "types";
+import { MessageFile, MessageType, UserStaffFlag, UserSupabaseTeamFlag, UserSystemFlag } from "types";
 import * as datefns from "date-fns";
 import { DownloadIcon } from "@primer/octicons-react";
 import { supabase } from "service/supabase";
+import Twemoji from "react-twemoji";
 
 type MessageProps = {
   message: MessageType;
@@ -35,8 +36,11 @@ export const Message = ({ message }: MessageProps) => {
             <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1}>
               {message.user.username}
             </Text>
-            {(message.user.flags & UserStaffFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>👨🏻‍💻 team</Label>}
-            {(message.user.flags & UserSystemFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>🤖 system</Label>}
+            <Twemoji options={{ className: "emoji" }}>
+              {(message.user.flags & UserStaffFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>👨🏻‍💻 team</Label>}
+              {(message.user.flags & UserSystemFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>🤖 system</Label>}
+              {(message.user.flags & UserSupabaseTeamFlag) != 0 && <Label variant="small" sx={{ bg: "#2c9c6a", m: 1 }}>⚡ supabase</Label>}
+            </Twemoji>
           </Box>
           <Text fontSize={0} fontWeight={300} color="fg.muted" lineHeight={1} ml={2}>
             {formatDate(message.created_at)}

@@ -19,6 +19,7 @@ export type RecentChat = {
 
 export const UserSystemFlag = 1 << 1;
 export const UserStaffFlag = 1 << 2;
+export const UserSupabaseTeamFlag = 1 << 3;
 
 export type User = {
   id: string;
