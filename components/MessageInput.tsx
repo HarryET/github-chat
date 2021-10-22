@@ -121,7 +121,7 @@ export const MessageInput = ({ chatId, user }: Props) => {
           user_id: user.id,
           content: null,
           files: [{id: id, name: selectedFile.name}],
-          type: 2,
+          type: 1,
         },
       ]);
     }
