@@ -73,6 +73,13 @@ export const Markdown = ({ content }: MarkdownProps) => {
         }}>{boldContent}</Text>)
     })
 
+    // Add inline code content
+    let inlineCodeCount = 0;
+    mdContent = reactStringReplace(mdContent, /`(.+)`/gmi, (match) => {
+        const codeContent = match.replace("`", "");
+        return (<BranchName key={`inline-code-${inlineCodeCount++}`}>{codeContent}</BranchName>)
+    })
+
     // Add links for urls
     let linkCount = 0;
     mdContent = reactStringReplace(mdContent, /(https?:\/\/\S+)/gmi, (match) => {
