@@ -52,7 +52,9 @@ export const Message = ({ message }: MessageProps) => {
             maxHeight: "100%",
           }}
         >
-          <Markdown content={message.content} />
+          <Box mb={(message.files ?? []).length > 0 ? 2 : 0}>
+            <Markdown content={message.content} />
+          </Box>
           {console.log(message)}
           {(message.files ?? []).length > 0 && <Box display="flex" flexDirection="row" alignItems="flex-start">
             {message.files.map((messageFile) => <FileBox key={messageFile.id} file={messageFile} />)}
