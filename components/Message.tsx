@@ -1,9 +1,9 @@
 import { Avatar, Box, Button, StyledOcticon, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
-import type { MessageType } from "types";
+import type { MessageFile, MessageType } from "types";
 import * as datefns from "date-fns";
-import { DownloadIcon, FileIcon } from "@primer/octicons-react";
+import { DownloadIcon } from "@primer/octicons-react";
 import { supabase } from "service/supabase";
 
 type MessageProps = {
@@ -48,23 +48,26 @@ export const Message = ({ message }: MessageProps) => {
             maxHeight: "100%",
           }}
         >
-          {message.type === 1 && <Markdown content={message.content} />}
-          {message.type === 2 && <FileMessage message={message} />}
+          <Markdown content={message.content} />
+          {console.log(message)}
+          {(message.files ?? []).length > 0 && <Box display="flex" flexDirection="row" alignItems="flex-start">
+            {message.files.map((messageFile) => <FileBox key={messageFile.id} file={messageFile} />)}
+          </Box>}
         </Text>
       </Box>
     </Box>
   );
 };
 
-const FileMessage = ({ message }: MessageProps) => {
+const FileBox = ({ file }: {file: MessageFile}) => {
   const handleDownloadClick = async () => {
-    const { data, error } = await supabase.storage.from("public").download(message.content);
+    const { data, error } = await supabase.storage.from("public").download(`uploads/${file.id}`);
     console.log(data, error);
 
     const csvURL = window.URL.createObjectURL(data);
     const tempLink = document.createElement("a");
     tempLink.href = csvURL;
-    tempLink.setAttribute("download", message.file_name || message.content);
+    tempLink.setAttribute("download", file.name);
     tempLink.click();
   };
 
@@ -90,7 +93,7 @@ const FileMessage = ({ message }: MessageProps) => {
         //   display: "inline-block",
         // }}
         >
-          {message.file_name}
+          {file.name}
         </Text>
       </Button>
     </Box>

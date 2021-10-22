@@ -39,7 +39,12 @@ export type MessageType = {
   created_at: string;
   user: User;
   type: number;
-  file_name?: string;
+  files: MessageFile[];
+};
+
+export type MessageFile = {
+  id: string;
+  name: string;
 };
 
 export type MentionedMessageType = {

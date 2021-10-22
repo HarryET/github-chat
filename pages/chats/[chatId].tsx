@@ -29,7 +29,7 @@ const messageQuery = `
     avatar_url    
   ),
   type,
-  file_name
+  files
 `;
 
 const ViewChat: NextPage = () => {

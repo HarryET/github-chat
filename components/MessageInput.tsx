@@ -7,6 +7,7 @@ import { User } from "@supabase/gotrue-js";
 import { buttonGradient } from "styles/styles";
 import { FileIcon, PaperAirplaneIcon } from "@primer/octicons-react";
 import { v4 as uuid } from "uuid";
+
 type Props = {
   chatId: string;
   user: User;
@@ -103,8 +104,10 @@ export const MessageInput = ({ chatId, user }: Props) => {
     console.log("selected file?", selectedFile);
 
     if (selectedFile) {
+      const id = uuid();
+
       console.log("uploading");
-      const storageKey = `uploads/${uuid()}`;
+      const storageKey = `uploads/${id}`;
       const { data, error } = await supabase.storage.from("public").upload(storageKey, selectedFile, {
         cacheControl: "3600",
         upsert: false,
@@ -116,8 +119,8 @@ export const MessageInput = ({ chatId, user }: Props) => {
         {
           chat_id: chatId,
           user_id: user.id,
-          content: data?.Key,
-          file_name: selectedFile.name,
+          content: null,
+          files: [{id: id, name: selectedFile.name}],
           type: 2,
         },
       ]);
