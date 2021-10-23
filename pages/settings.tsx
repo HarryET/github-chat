@@ -112,10 +112,10 @@ const Settings = ({ }: Props) => {
                     overflowY="auto"
                 >
                     <SettingsItem title={"Display Name"} description={"This is the name used when sending messages and on your profile page."}>
-                        <TextInput width="100%" aria-label="Display Name" name="display_name" value={displayName} onChange={(e) => setDisplayName(e.target.value)} placeholder="Display Name" autoComplete="display-name" />
+                        <TextInput width="100%" aria-label="Display Name" name="display_name" value={displayName} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setDisplayName(e.target.value)} placeholder="Display Name" autoComplete="display-name" />
                     </SettingsItem>
                     <SettingsItem title={"Bio"}>
-                        <TextInput as="textarea" width="100%" rows={6} style={{ resize: "none" }} aria-label="Bio" name="bio" value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Bio" autoComplete="bio" />
+                        <TextInput as="textarea" width="100%" rows={6} style={{ resize: "none" }} aria-label="Bio" name="bio" value={bio} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => setBio(e.target.value)} placeholder="Bio" autoComplete="bio" />
                     </SettingsItem>
                     <Box display="flex" flexDirection="row" alignItems="start" justifyContent="space-between" maxWidth="800px" mb={4}>
                         {/* Description / Title Area */}
