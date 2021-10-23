@@ -36,7 +36,7 @@ const UserProfile = ({ username }: InferGetServerSidePropsType<typeof getServerS
         isLoading: isUserLoading,
         refetch: refetchUser,
     } = useQuery(
-        ["user"],
+        [`user-${username}`],
         async () => {
             const { data, error } = await userByUsername(username!);
 
@@ -118,7 +118,7 @@ const UserProfile = ({ username }: InferGetServerSidePropsType<typeof getServerS
                             {user.flags != 0 && <Text as={"h4"} fontSize={"large"} margin={0} mt={2.5}>Badges</Text>}
                             {user.flags != 0 && <Box display="flex" flexDirection="row" justifyContent="start" alignItems="start">
                                 <Twemoji options={{ className: "emoji" }}>
-                                    {getUserFlags(user).map((flag) => getFlagComponent(flag, flag.valueOf()))}
+                                    {getUserFlags(user).map((flag) => getFlagComponent(flag, flag.valueOf(), "xl"))}
                                 </Twemoji>
                             </Box>}
                         </Box>
