@@ -59,7 +59,6 @@ export const Message = ({ message }: MessageProps) => {
         </Box>
         <Text
           color="#bfc8d3"
-          mt={2}
           fontSize={1}
           style={{
             overflowWrap: "break-word",
