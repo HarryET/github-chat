@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { Root } from "components/Root";
 import { SideMenu } from "components/SideMenu";
 import { useQuery } from "react-query";
-import { bannerUrl, userByUsername } from "service/supabase";
+import { bannerUrl, userById } from "service/supabase";
 import { Box, Text, Spinner, Button, Avatar } from "@primer/components";
 import { StopIcon, SyncIcon, PaperAirplaneIcon } from "@primer/octicons-react";
 import React, { useEffect } from "react";
@@ -12,24 +12,24 @@ import { getFlagComponent, getUserFlags } from "service/flags";
 import Twemoji from "react-twemoji";
 import { countryCodeEmoji } from "country-code-emoji";
 
-export const getServerSideProps = ({ params }: GetServerSidePropsContext<{ username: string }>): GetServerSidePropsResult<{ username: string | undefined }> => {
-    const username: string | undefined = (params || {}).username;
+export const getServerSideProps = ({ params }: GetServerSidePropsContext<{ id: string }>): GetServerSidePropsResult<{ id: string | undefined }> => {
+    const id: string | undefined = (params || {}).id;
 
     return {
         props: {
-            username: username
+            id: id
         },
     };
 }
 
-const UserProfile = ({ username }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
+const UserProfile = ({ id }: InferGetServerSidePropsType<typeof getServerSideProps>) => {
     const router = useRouter();
 
     useEffect(() => {
         (async () => {
             await refetchUser();
         })()
-    }, [username])
+    }, [id])
 
     const {
         data: user,
@@ -37,9 +37,9 @@ const UserProfile = ({ username }: InferGetServerSidePropsType<typeof getServerS
         isLoading: isUserLoading,
         refetch: refetchUser,
     } = useQuery(
-        [`user-${username}`],
+        [`user-${id}`],
         async () => {
-            const { data, error } = await userByUsername(username!);
+            const { data, error } = await userById(id!);
 
             if (error) {
                 throw error;
@@ -91,7 +91,7 @@ const UserProfile = ({ username }: InferGetServerSidePropsType<typeof getServerS
                                     <>
                                         <StopIcon size="medium" />
                                         <Text mt={2} textAlign="center">
-                                            Something went wrong trying to load {username}&#39;s profile.
+                                            Something went wrong trying to load this profile.
                                         </Text>
                                         <Button mt={3} onClick={() => refetchUser()}>
                                             <SyncIcon size="small" />

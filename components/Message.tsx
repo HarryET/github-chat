@@ -38,7 +38,7 @@ export const Message = ({ message }: MessageProps) => {
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
           <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
             <Twemoji options={{className: "emoji"}}>
-              <Link href={`/users/${message.user.username}`}>
+              <Link href={`/users/${message.user.id}`} passHref>
                 <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1} className={styles.username}>
                   {message.user.display_name ?? message.user.username}
                 </Text>

@@ -28,11 +28,11 @@ export const bannerUrl = (user: User) => {
   return url;
 }
 
-export const userByUsername = (username: string, options: SupabaseGenericParams<User> = {}) => {
+export const userById = (id: string, options: SupabaseGenericParams<User> = {}) => {
   const query = supabase
     .from<User>("users")
     .select("*")
-    .eq("username", username.toLowerCase())
+    .eq("id", id)
     .limit(1);
 
   return query;
