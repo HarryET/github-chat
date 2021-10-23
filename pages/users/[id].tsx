@@ -117,7 +117,8 @@ const UserProfile = ({ id }: InferGetServerSidePropsType<typeof getServerSidePro
                             <Avatar src={user.avatar_url} square size={84} mt={-21} />
                             <Box display="flex" marginLeft={4} flexDirection="column" justifyContent="start" alignItems="start">
                                 <Box display="flex" flexDirection="row" justifyContent="start" alignItems="baseline">
-                                    <Text as={"h2"} fontSize={"extra-large"} margin={0}>{user.display_name ?? user.username}</Text>
+                                    <Text as={"h2"} fontSize={"extra-large"} margin={0}>{!!user.display_name ? user.display_name : user.username}</Text>
+                                    {!!user.display_name && <Text as={"p"} fontSize={"small"} color="fg.muted" margin={0} ml={1}>@{user.username}</Text>}
                                     {user.country && <Text ml={2}>
                                         <Twemoji options={{ className: "emoji-medium" }}>
                                             {countryCodeEmoji(user.country)}

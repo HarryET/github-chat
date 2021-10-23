@@ -37,15 +37,15 @@ export const Message = ({ message }: MessageProps) => {
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
           <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
-            <Twemoji options={{className: "emoji"}}>
+            <Twemoji options={{ className: "emoji" }}>
               <Link href={`/users/${message.user.id}`} passHref>
                 <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1} className={styles.username}>
-                  {message.user.display_name ?? message.user.username}
+                  {!!message.user.display_name ? message.user.display_name : message.user.username}
                 </Text>
               </Link>
               {(() => {
                 const flags = getUserFlags(message.user);
-                if(flags.length >= 1) {
+                if (flags.length >= 1) {
                   return getFlagComponent(flags[0], flags[0].valueOf())
                 } else {
                   return null;
