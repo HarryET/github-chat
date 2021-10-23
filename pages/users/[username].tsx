@@ -28,7 +28,7 @@ const UserProfile = ({ username }: InferGetServerSidePropsType<typeof getServerS
         (async () => {
             await refetchUser();
         })()
-    }, username)
+    }, [username])
 
     const {
         data: user,
