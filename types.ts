@@ -21,6 +21,7 @@ export enum Flag {
   Staff,
   System,
   Supabase,
+  Bot
 }
 
 export type User = {
@@ -30,6 +31,7 @@ export type User = {
   bio?: string;
   display_name?: string;
   flags: number;
+  bot: boolean;
 };
 
 export type Member = {

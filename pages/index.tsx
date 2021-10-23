@@ -26,7 +26,7 @@ const messageQuery = `
   mentions,
   user: users!user_id(
     username,
-    avatar_url    
+    avatar_url,
   ),
   chat: chats!chat_id(
     repo_owner,

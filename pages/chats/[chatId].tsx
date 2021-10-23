@@ -30,7 +30,8 @@ const messageQuery = `
     username,
     avatar_url,
     display_name,
-    flags 
+    flags,
+    bot
   )
 `;
 
