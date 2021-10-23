@@ -1,8 +1,19 @@
 # Github Chat
 
-A chat room for every GitHub repository. Real-time. | Part of the Supabase Hacktoberfest Hackathon
+A chat room for every GitHub repository. Real-time.
 
 <hr/>
+
+## Sub-Projects
+- [Vanity URLS](https://github.com/HarryET/github-chat-vanities)
+
+## Development
+
+### Run
+
+```
+yarn dev
+```
 
 ## Supabase Submission
 
@@ -40,11 +51,3 @@ All of the data for the app has been store in the Supabase Postgresql database s
 ### Storage
 
 Storage is used for file uploads. Users can share files in chats.
-
-## Development
-
-### Run
-
-```
-yarn dev
-```
