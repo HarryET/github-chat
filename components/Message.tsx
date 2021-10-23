@@ -1,7 +1,7 @@
-import { Avatar, Box, Button, Label, StyledOcticon, Text } from "@primer/components";
+import { Avatar, Box, Button, StyledOcticon, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
-import { MessageFile, MessageType, UserFlags } from "types";
+import { MessageFile, MessageType } from "types";
 import * as datefns from "date-fns";
 import { DownloadIcon } from "@primer/octicons-react";
 import { supabase } from "service/supabase";

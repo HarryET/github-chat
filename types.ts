@@ -17,10 +17,10 @@ export type RecentChat = {
   repoName: string;
 };
 
-export enum UserFlags {
+export enum Flag {
   Staff,
   System,
-  Supabase
+  Supabase,
 }
 
 export type User = {
