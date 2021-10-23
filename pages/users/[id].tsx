@@ -104,7 +104,7 @@ const UserProfile = ({ id }: InferGetServerSidePropsType<typeof getServerSidePro
                                         <PaperAirplaneIcon size="medium" />
                                         <Text mt={2} textAlign="center">
                                             {"Sorry, that user hasn't joined us yet."} <br />
-                                            {"Why dont't you tell them about Github Chat?"}
+                                            {"Why don't you tell them about Github Chat?"}
                                         </Text>
                                     </>
                                 )}
