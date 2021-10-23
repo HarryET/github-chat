@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { Root } from "components/Root";
 import { SideMenu } from "components/SideMenu";
 import { useQuery } from "react-query";
-import { userByUsername } from "service/supabase";
+import { bannerUrl, userByUsername } from "service/supabase";
 import { Box, Text, Spinner, Button, Avatar } from "@primer/components";
 import { StopIcon, SyncIcon, PaperAirplaneIcon } from "@primer/octicons-react";
 import React, { useEffect } from "react";
@@ -10,6 +10,7 @@ import { GetServerSidePropsContext, GetServerSidePropsResult, InferGetServerSide
 import { Markdown } from "components/Markdown";
 import { getFlagComponent, getUserFlags } from "service/flags";
 import Twemoji from "react-twemoji";
+import { countryCodeEmoji } from "country-code-emoji";
 
 export const getServerSideProps = ({ params }: GetServerSidePropsContext<{ username: string }>): GetServerSidePropsResult<{ username: string | undefined }> => {
     const username: string | undefined = (params || {}).username;
@@ -110,17 +111,27 @@ const UserProfile = ({ username }: InferGetServerSidePropsType<typeof getServerS
                             </Box>
                         </Box>
                     )}
-                    {user != null && <Box display="flex" flexDirection="row" justifyContent="start" alignItems="start">
-                        <Avatar src={user.avatar_url} square size={84} />
-                        <Box display="flex" marginLeft={4} flexDirection="column" justifyContent="start" alignItems="start">
-                            <Text as={"h2"} fontSize={"extra-large"} margin={0}>{user.display_name ?? user.username}</Text>
-                            {user.bio && <Markdown content={user.bio} />}
-                            {user.flags != 0 && <Text as={"h4"} fontSize={"large"} margin={0} mt={2.5}>Badges</Text>}
-                            {user.flags != 0 && <Box display="flex" flexDirection="row" justifyContent="start" alignItems="start">
-                                <Twemoji options={{ className: "emoji" }}>
-                                    {getUserFlags(user).map((flag) => getFlagComponent(flag, flag.valueOf(), "xl"))}
-                                </Twemoji>
-                            </Box>}
+                    {user != null && <Box display="flex" flexDirection="column" justifyContent="start" alignItems="start">
+                        <Box backgroundColor={user.banner_colour} backgroundImage={`url("${bannerUrl(user)}")`} backgroundPosition={"center"} height={"250px"} width={"100%"} borderRadius={15} />
+                        <Box display="flex" flexDirection="row" justifyContent="start" alignItems="start" ml={5}>
+                            <Avatar src={user.avatar_url} square size={84} mt={-21} />
+                            <Box display="flex" marginLeft={4} flexDirection="column" justifyContent="start" alignItems="start">
+                                <Box display="flex" flexDirection="row" justifyContent="start" alignItems="baseline">
+                                    <Text as={"h2"} fontSize={"extra-large"} margin={0}>{user.display_name ?? user.username}</Text>
+                                    {user.country && <Text ml={2}>
+                                        <Twemoji options={{ className: "emoji-medium" }}>
+                                            {countryCodeEmoji(user.country)}
+                                        </Twemoji>
+                                    </Text>}
+                                </Box>
+                                {user.bio && <Box color={"fg.muted"}><Markdown content={user.bio} /></Box>}
+                                {user.flags != 0 && <Text as={"h4"} fontSize={"large"} margin={0} mt={3}>Badges</Text>}
+                                {user.flags != 0 && <Box display="flex" flexDirection="row" justifyContent="start" alignItems="start">
+                                    <Twemoji options={{ className: "emoji" }}>
+                                        {getUserFlags(user).map((flag) => getFlagComponent(flag, flag.valueOf(), "xl"))}
+                                    </Twemoji>
+                                </Box>}
+                            </Box>
                         </Box>
                     </Box>}
                 </Box>

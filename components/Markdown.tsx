@@ -59,14 +59,14 @@ export const Markdown = ({ content }: MarkdownProps) => {
 
     // Add bold content
     let boldCount = 0;
-    mdContent = reactStringReplace(mdContent, /\*\*(.+)\*\*/gmi, (match) => {
+    mdContent = reactStringReplace(mdContent, /\*\*([^\*]*)\*\*/gmi, (match) => {
         const boldContent = match.replace("**", "");
         return (<Text key={`bold-${boldCount++}`} fontWeight={"bold"}>{boldContent}</Text>)
     })
 
     // Add underlined content
     let underlinedCount = 0;
-    mdContent = reactStringReplace(mdContent, /\_\_(.+)\_\_/gmi, (match) => {
+    mdContent = reactStringReplace(mdContent, /\_\_([^\_]*)\_\_/gmi, (match) => {
         const boldContent = match.replace("**", "");
         return (<Text key={`ul-${underlinedCount++}`} style={{
             textDecoration: "underline"
@@ -75,7 +75,7 @@ export const Markdown = ({ content }: MarkdownProps) => {
 
     // Add inline code content
     let inlineCodeCount = 0;
-    mdContent = reactStringReplace(mdContent, /`(.+)`/gmi, (match) => {
+    mdContent = reactStringReplace(mdContent, /`([^`]*)`/gmi, (match) => {
         const codeContent = match.replace("`", "");
         return (<BranchName key={`inline-code-${inlineCodeCount++}`}>{codeContent}</BranchName>)
     })

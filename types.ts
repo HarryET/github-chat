@@ -28,7 +28,10 @@ export type User = {
   id: string;
   username: string;
   avatar_url: string;
+  banner?: string;
+  banner_colour: string;
   bio?: string;
+  country?: string;
   display_name?: string;
   flags: number;
   bot: boolean;

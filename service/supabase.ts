@@ -1,6 +1,6 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/main/lib/SupabaseQueryBuilder";
-import { IS_SERVER, NEXT_PUBLIC_SUPABASE_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_KEY } from "env";
+import { IS_SERVER, NEXT_PUBLIC_SUPABASE_KEY, NEXT_PUBLIC_SUPABASE_STORAGE_URL, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_KEY } from "env";
 import { ActiveChat, Chat, SupabaseTables, User } from "types";
 
 /**
@@ -21,6 +21,11 @@ interface SupabaseGenericParams<T> {
   selectFields?: (keyof T)[] | string;
   matchParams?: { [k in keyof Partial<T>]: string };
   count?: number;
+}
+
+export const bannerUrl = (user: User) => {
+  const url = user.banner != null ? NEXT_PUBLIC_SUPABASE_STORAGE_URL + `/object/public/banners/${user.banner}.webp` : null;
+  return url;
 }
 
 export const userByUsername = (username: string, options: SupabaseGenericParams<User> = {}) => {
