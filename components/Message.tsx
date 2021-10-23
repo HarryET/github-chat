@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, StyledOcticon, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
-import { MessageFile, MessageType } from "types";
+import { Chat, MessageFile, MessageType } from "types";
 import * as datefns from "date-fns";
 import { DownloadIcon } from "@primer/octicons-react";
 import { supabase } from "service/supabase";
@@ -9,6 +9,7 @@ import Link from "next/link";
 import { getFlagComponent, getUserFlags } from "service/flags";
 
 import styles from "./Message.module.css";
+import Twemoji from "react-twemoji";
 
 type MessageProps = {
   message: MessageType;
@@ -36,12 +37,21 @@ export const Message = ({ message }: MessageProps) => {
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
           <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
-            <Link href={`/users/${message.user.username}`}>
-              <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1} className={styles.username}>
-                {message.user.display_name ?? message.user.username}
-              </Text>
-            </Link>
-            {getUserFlags(message.user).map((flag) => getFlagComponent(flag, flag.valueOf()))}
+            <Twemoji options={{className: "emoji"}}>
+              <Link href={`/users/${message.user.username}`}>
+                <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1} className={styles.username}>
+                  {message.user.display_name ?? message.user.username}
+                </Text>
+              </Link>
+              {(() => {
+                const flags = getUserFlags(message.user);
+                if(flags.length >= 1) {
+                  return getFlagComponent(flags[0], flags[0].valueOf())
+                } else {
+                  return null;
+                }
+              })()}
+            </Twemoji>
           </Box>
           <Text fontSize={0} fontWeight={300} color="fg.muted" lineHeight={1} ml={2}>
             {formatDate(message.created_at)}
@@ -61,7 +71,7 @@ export const Message = ({ message }: MessageProps) => {
             <Markdown content={message.content} />
           </Box>
           {(message.files ?? []).length > 0 && <Box display="flex" flexDirection="row" alignItems="flex-start">
-            {message.files.map((messageFile) => <FileBox key={messageFile.id} file={messageFile} />)}
+            {message.files.map((messageFile) => <FileBox key={messageFile.id} file={messageFile} chat_id={message.chat_id} />)}
           </Box>}
         </Text>
       </Box>
@@ -69,9 +79,9 @@ export const Message = ({ message }: MessageProps) => {
   );
 };
 
-const FileBox = ({ file }: { file: MessageFile }) => {
+const FileBox = ({ file, chat_id }: { file: MessageFile, chat_id: string }) => {
   const handleDownloadClick = async () => {
-    const { data, error } = await supabase.storage.from("public").download(`uploads/${file.id}`);
+    const { data, error } = await supabase.storage.from("uploads").download(`${chat_id}/${file.id}`);
 
     const csvURL = window.URL.createObjectURL(data);
     const tempLink = document.createElement("a");

@@ -105,8 +105,8 @@ export const MessageInput = ({ chatId, user }: Props) => {
     if (selectedFile) {
       const id = uuid();
 
-      const storageKey = `uploads/${id}`;
-      const { data, error } = await supabase.storage.from("public").upload(storageKey, selectedFile, {
+      const storageKey = `${chatId}/${id}`;
+      const { data, error } = await supabase.storage.from("uploads").upload(storageKey, selectedFile, {
         cacheControl: "3600",
         upsert: false,
       });
