@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/main/lib/SupabaseQueryBuilder";
 import { IS_SERVER, NEXT_PUBLIC_SUPABASE_KEY, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_KEY } from "env";
-import { ActiveChat, Chat, SupabaseTables } from "types";
+import { ActiveChat, Chat, SupabaseTables, User } from "types";
 
 /**
  * If running client side, the supabase client will use the anon key, and RLS will be enforced.
@@ -21,6 +21,16 @@ interface SupabaseGenericParams<T> {
   selectFields?: (keyof T)[] | string;
   matchParams?: { [k in keyof Partial<T>]: string };
   count?: number;
+}
+
+export const userByUsername = (username: string, options: SupabaseGenericParams<User> = {}) => {
+  const query = supabase
+    .from<User>("users")
+    .select("*")
+    .eq("username", username.toLowerCase())
+    .limit(1);
+
+  return query;
 }
 
 export const getChats = (options: SupabaseGenericParams<Chat> = {}) => {

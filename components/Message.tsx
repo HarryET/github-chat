@@ -1,11 +1,14 @@
 import { Avatar, Box, Button, Label, StyledOcticon, Text } from "@primer/components";
 import React from "react";
 import { Markdown } from "./Markdown";
-import { MessageFile, MessageType, UserStaffFlag, UserSupabaseTeamFlag, UserSystemFlag } from "types";
+import { MessageFile, MessageType, UserFlags } from "types";
 import * as datefns from "date-fns";
 import { DownloadIcon } from "@primer/octicons-react";
 import { supabase } from "service/supabase";
-import Twemoji from "react-twemoji";
+import Link from "next/link";
+import { getFlagComponent, getUserFlags } from "service/flags";
+
+import styles from "./Message.module.css";
 
 type MessageProps = {
   message: MessageType;
@@ -33,14 +36,12 @@ export const Message = ({ message }: MessageProps) => {
       <Box display="flex" flexDirection="column" width="100%" marginLeft={3}>
         <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
           <Box display="flex" flexDirection="row" alignItems="center" justifyContent="start">
-            <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1}>
-              {message.user.username}
-            </Text>
-            <Twemoji options={{ className: "emoji" }}>
-              {(message.user.flags & UserStaffFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>👨🏻‍💻 team</Label>}
-              {(message.user.flags & UserSystemFlag) != 0 && <Label variant="small" sx={{ bg: "canvas.secondary", m: 1 }}>🤖 system</Label>}
-              {(message.user.flags & UserSupabaseTeamFlag) != 0 && <Label variant="small" sx={{ bg: "#2c9c6a", m: 1 }}>⚡ supabase</Label>}
-            </Twemoji>
+            <Link href={`/users/${message.user.username}`}>
+              <Text color="#dfe5ee" fontWeight="bold" fontSize={1} lineHeight={1} className={styles.username}>
+                {message.user.display_name ?? message.user.username}
+              </Text>
+            </Link>
+            {getUserFlags(message.user).map((flag) => getFlagComponent(flag, flag.valueOf()))}
           </Box>
           <Text fontSize={0} fontWeight={300} color="fg.muted" lineHeight={1} ml={2}>
             {formatDate(message.created_at)}
@@ -71,7 +72,6 @@ export const Message = ({ message }: MessageProps) => {
 const FileBox = ({ file }: { file: MessageFile }) => {
   const handleDownloadClick = async () => {
     const { data, error } = await supabase.storage.from("public").download(`uploads/${file.id}`);
-    console.log(data, error);
 
     const csvURL = window.URL.createObjectURL(data);
     const tempLink = document.createElement("a");

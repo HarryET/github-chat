@@ -29,6 +29,7 @@ const messageQuery = `
     id,
     username,
     avatar_url,
+    display_name,
     flags 
   )
 `;
@@ -154,7 +155,7 @@ const ViewChat: NextPage = () => {
             // TODO
             return;
           }
-          
+
           // TODO Get RealTime Views Working!
           // const message: MessageType = {
           //   id: messageRow.id,

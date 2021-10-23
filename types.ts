@@ -17,14 +17,18 @@ export type RecentChat = {
   repoName: string;
 };
 
-export const UserSystemFlag = 1 << 1;
-export const UserStaffFlag = 1 << 2;
-export const UserSupabaseTeamFlag = 1 << 3;
+export enum UserFlags {
+  Staff,
+  System,
+  Supabase
+}
 
 export type User = {
   id: string;
   username: string;
   avatar_url: string;
+  bio?: string;
+  display_name?: string;
   flags: number;
 };
 

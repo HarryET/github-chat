@@ -101,19 +101,15 @@ export const MessageInput = ({ chatId, user }: Props) => {
 
   const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = e.target.files?.[0];
-    console.log("selected file?", selectedFile);
 
     if (selectedFile) {
       const id = uuid();
 
-      console.log("uploading");
       const storageKey = `uploads/${id}`;
       const { data, error } = await supabase.storage.from("public").upload(storageKey, selectedFile, {
         cacheControl: "3600",
         upsert: false,
       });
-
-      console.log(data, error);
 
       const { error: uploadError } = await supabase.from("messages").insert([
         {

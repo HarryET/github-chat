@@ -6,7 +6,6 @@ import { getActiveChats } from "service/supabase";
 import { DiscoverMessage } from "./DiscoverMessage";
 import { PersonalLinks } from "./PersonalLinks";
 import { SocialIcons } from "./SocialIcons";
-import primitives from "@primer/primitives";
 import { Repository } from "types";
 import { buttonGradient, hideScrollBar } from "styles/styles";
 import { Search } from "./Search";
@@ -91,7 +90,7 @@ export const Discover = ({ repositories }: Props) => {
           </Box>
           <Box display="flex" flexDirection="column">
             <PersonalLinks sx={{ display: ["none", "none", "block"] }} />
-            {/* <SocialIcons mt={2} sx={{ display: ["none", "none", "flex"] }} /> */}
+            <SocialIcons mt={2} sx={{ display: ["none", "none", "flex"] }} />
           </Box>
         </Box>
         <Box
@@ -135,7 +134,7 @@ export const Discover = ({ repositories }: Props) => {
         </Box>
       </Box>
       <PersonalLinks mt={8} sx={{ display: ["block", "block", "none"] }} />
-      {/* <SocialIcons mt={2} mb={4} sx={{ display: ["flex", "flex", "none"] }} /> */}
+      <SocialIcons mt={2} mb={4} sx={{ display: ["flex", "flex", "none"] }} />
     </Box>
   );
 };

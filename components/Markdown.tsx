@@ -46,7 +46,7 @@ export const Markdown = ({ content }: MarkdownProps) => {
 
         const user = mentionsData[userId];
         if (user) {
-            return (<BranchName key={`mention-${mentionsCount++}`} href={`https://github.com/${user.username}`}>
+            return (<BranchName key={`mention-${mentionsCount++}`} href={`/users/${user.username}`}>
                 @{user.username}
             </BranchName>);
         } else {

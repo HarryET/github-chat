@@ -3,9 +3,10 @@ CREATE OR REPLACE FUNCTION
   RETURNS TRIGGER AS
   $$
   BEGIN
-    INSERT INTO public.users (id, username, avatar_url)
+    INSERT INTO public.users (id, username, display_name, avatar_url)
     VALUES (
       NEW.id,
+      LOWER(NEW.raw_user_meta_data ->> 'user_name'),
       NEW.raw_user_meta_data ->> 'user_name',
       NEW.raw_user_meta_data ->> 'avatar_url'
     );
