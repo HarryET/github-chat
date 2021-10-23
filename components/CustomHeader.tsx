@@ -2,12 +2,13 @@ import { Avatar, ButtonOutline, Header, Text, Box, StyledOcticon, ButtonInvisibl
 import { useRouter } from "next/router";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import type { AuthChangeEvent, Session } from "@supabase/supabase-js";
+import type { AuthChangeEvent, Session, User as SupabaseUser } from "@supabase/supabase-js";
 import { supabase } from "service/supabase";
 import Image from "next/image";
 import { ThreeBarsIcon, XIcon } from "@primer/octicons-react";
 import { SideMenu } from "./SideMenu";
 import { useQuery } from "react-query";
+import { User } from "types";
 
 export const CustomHeader = () => {
   const router = useRouter();
@@ -17,6 +18,7 @@ export const CustomHeader = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [avatarUrl, setAvatarUrl] = useState("https://github.com/octocat.png");
   const [username, setUsername] = useState("Octocat");
+  const [supabaseUser, setSupabaseUser] = useState<SupabaseUser | undefined | null>();
 
   const [isMenuOpen, setMenuOpen] = useState(false);
 
@@ -24,6 +26,8 @@ export const CustomHeader = () => {
     const session = supabase.auth.session();
     const user = session?.user;
     const userMeta = user?.user_metadata;
+
+    setSupabaseUser(user);
 
     setIsAuthenticated(!!session);
     if (!!session) {
@@ -36,8 +40,11 @@ export const CustomHeader = () => {
     // Authenticated
     if (event == "SIGNED_IN" || event == "USER_UPDATED") {
       setIsAuthenticated(true);
-      setAvatarUrl(session?.user?.user_metadata.avatar_url);
-      setUsername(session?.user?.user_metadata.user_name);
+
+      const user = session?.user;
+      setAvatarUrl(user?.user_metadata.avatar_url);
+      setUsername(user?.user_metadata.user_name);
+      setSupabaseUser(user);
     }
 
     // Not authenticated
@@ -45,6 +52,7 @@ export const CustomHeader = () => {
       setIsAuthenticated(false);
       setUsername("Octocat");
       setAvatarUrl("https://github.com/octocat.png");
+      setSupabaseUser(null);
     }
   });
 
@@ -61,6 +69,20 @@ export const CustomHeader = () => {
       }
     },
     { enabled: !!chatId }
+  );
+
+  const { data: user } = useQuery(
+    ["user-me"],
+    async () => {
+      if (!!supabaseUser) {
+        const { data: user, error } = await supabase.from<User>("users").select().eq("id", supabaseUser?.id).single();
+        if (error) {
+          throw error;
+        }
+        return user;
+      }
+    },
+    { enabled: isAuthenticated && !!supabaseUser }
   );
 
   // TODO Handle error
@@ -88,8 +110,19 @@ export const CustomHeader = () => {
         {chat && <Text>{`${chat.repo_owner}/${chat.repo_name}`}</Text>}
       </Header.Item>
 
-      {isAuthenticated && (
+      {isAuthenticated && !!user && (
         <>
+          <ButtonOutline
+            marginRight={2}
+            variant="small"
+            height="100%"
+            display={["none", "none", "block"]}
+            onClick={() => {
+              router.push("/settings")
+            }}
+          >
+            Settings
+          </ButtonOutline>
           <ButtonOutline
             marginRight={2}
             variant="small"

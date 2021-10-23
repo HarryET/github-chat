@@ -112,7 +112,7 @@ const UserProfile = ({ id }: InferGetServerSidePropsType<typeof getServerSidePro
                         </Box>
                     )}
                     {user != null && <Box display="flex" flexDirection="column" justifyContent="start" alignItems="start">
-                        <Box backgroundColor={user.banner_colour} backgroundImage={`url("${bannerUrl(user)}")`} backgroundPosition={"center"} height={"250px"} width={"100%"} borderRadius={15} />
+                        <Box backgroundColor={user.banner_colour} backgroundImage={`url("${bannerUrl(user)}")`} backgroundPosition={"center"} backgroundSize={"auto"} backgroundRepeat={"no-repeat"} height={"250px"} width={"100%"} borderRadius={15} />
                         <Box display="flex" flexDirection="row" justifyContent="start" alignItems="start" ml={5}>
                             <Avatar src={user.avatar_url} square size={84} mt={-21} />
                             <Box display="flex" marginLeft={4} flexDirection="column" justifyContent="start" alignItems="start">
