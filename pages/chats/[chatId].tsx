@@ -31,7 +31,7 @@ const messageQuery = `
     avatar_url,
     display_name,
     flags,
-    bot
+    bot_id
   )
 `;
 
@@ -50,23 +50,7 @@ const ViewChat: NextPage = () => {
   supabase.auth.onAuthStateChange((event: AuthChangeEvent) => {
     setAuthState(event);
   });
-
-  const [updatedMembersAt, setUpdatedMembersAt] = useState<string>();
-
-  useEffect(() => {
-    if (chatId && user) {
-      supabase
-        .from("members")
-        .upsert({
-          user_id: user.id,
-          chat_id: chatId,
-        })
-        .then(() => {
-          setUpdatedMembersAt(new Date().toISOString());
-        });
-    }
-  }, [chatId, user]);
-
+  
   const { data: chat } = useQuery(
     ["chats", chatId],
     async () => {
@@ -193,7 +177,7 @@ const ViewChat: NextPage = () => {
         <title>{title}</title>
       </Head>
       <Box bg="canvas.default" display="flex" flexDirection="row" flexGrow={1} width="100%" maxWidth="100%">
-        {user && !!updatedMembersAt && (
+        {user && (
           <SideMenu router={router} selectedChatId={chatId} display={["none", "none", "flex"]} />
         )}
         <Box display="flex" flexDirection="column" flexGrow={1}>
