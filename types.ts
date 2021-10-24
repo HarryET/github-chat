@@ -34,7 +34,7 @@ export type User = {
   country?: string;
   display_name?: string;
   flags: number;
-  bot: boolean;
+  bot_id?: string;
 };
 
 export type Member = {

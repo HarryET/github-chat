@@ -11,7 +11,7 @@ export const getUserFlags = (user: User): Flag[] => {
   if ((user.flags & SystemFlag) != 0) { flags.push(Flag.System) }
   if ((user.flags & StaffFlag) != 0) { flags.push(Flag.Staff) }
   if ((user.flags & SupabaseTeamFlag) != 0) { flags.push(Flag.Supabase) }
-  if (user.bot ?? false) { flags.push(Flag.Bot) }
+  if (!!user.bot_id) { flags.push(Flag.Bot) }
 
   return flags;
 }
@@ -25,7 +25,7 @@ export const hasFlag = (user: User, flag: Flag): boolean => {
     case Flag.Supabase:
       return (user.flags & SupabaseTeamFlag) != 0;
     case Flag.Bot:
-      return user.bot;
+      return !!user.bot_id;
     default:
       return false;
   }
