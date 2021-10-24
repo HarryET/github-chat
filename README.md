@@ -6,6 +6,8 @@ A chat room for every GitHub repository. Real-time.
 
 ## Sub-Projects
 - [Vanity URLS](https://github.com/HarryET/github-chat-vanities)
+- [SQL](https://github.com/github-chat/sql)
+- [github-chat.js](https://github.com/github-chat/github-chat.js)
 
 ## Development
 
@@ -15,39 +17,33 @@ A chat room for every GitHub repository. Real-time.
 yarn dev
 ```
 
-## Supabase Submission
+## Instructions
 
-### Team
-
-- HarryET - [GitHub](https://github.com/HarryET) [Twitter](https://twitter.com/TheHarryET)
-- Hugo Cárdenas - [GitHub](https://github.com/hugo-cardenas) [Twitter](https://twitter.com/_hugocardenas)
-- Victor Peralta - [GitHub](https://github.com/VictorPeralta) [Twitter](https://twitter.com/PeraltaDev)
-
-### Instructions
-
-#### How to enter a chat?
+### How to enter a chat?
 
 - Use the input in github-chat.com landing page to enter a repository owner/name and navigate to the corresponding chat room.
 - Or if you are in github.com/owner/repo , just add -chat, like github-chat/owner/repo and navigate directly to the corresponding chat room.
 
 Signed-in users will see a menu listing all the chat rooms in which they have been participating, for easy access.
 
-### How we used supabase?
+## Team
 
-We have used all the features of supabase! They are broken down below with a more in-depth explanation for each.
+- Harry Bairstow - [GitHub](https://github.com/HarryET) [Twitter](https://twitter.com/TheHarryET)
+- Hugo Cárdenas - [GitHub](https://github.com/hugo-cardenas) [Twitter](https://twitter.com/_hugocardenas)
+- Victor Peralta - [GitHub](https://github.com/VictorPeralta) [Twitter](https://twitter.com/PeraltaDev)
 
-#### Auth
+## Licence
+Copyright (C) 2021 Harry Bairstow, Hugo Cárdenas, Victor Peralta and Contributors
 
-- Github 0Auth
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
 
-#### Realtime
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
 
-The primary function of the app is to have a realtime chat for github repos so we have used realtime to listen for new messages and then update the messages being shown in the chat & feed.
-
-#### Database
-
-All of the data for the app has been store in the Supabase Postgresql database so it can be accessed through the SDKs with row level security enabled.
-
-### Storage
-
-Storage is used for file uploads. Users can share files in chats.
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
