@@ -27,7 +27,7 @@ const Login: NextPage = () => {
         { provider: "github" },
         {
           redirectTo: `${window.location.origin}${redirectPath}`,
-          scopes: "read:org,read:user,user:email",
+          scopes: "read:user,user:email",
         }
       );
 
