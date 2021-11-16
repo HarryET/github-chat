@@ -5,13 +5,13 @@ declare module 'react-twemoji' {
         tag?: string;
         noWrapper?: boolean;
         options?: {
-            callback?: Function,   // default the common replacer
-            attributes?: Function, // default returns {}
-            base?: string,         // default MaxCDN
-            ext?: string,          // default ".png"
-            className?: string,    // default "emoji"
-            size?: string|number,  // default "72x72"
-            folder?: string        // in case it's specified
+            callback?: () => void,   // default the common replacer
+            attributes?: () => void, // default returns {}
+            base?: string,           // default MaxCDN
+            ext?: string,            // default ".png"
+            className?: string,      // default "emoji"
+            size?: string|number,    // default "72x72"
+            folder?: string          // in case it's specified
         };
     }
     
