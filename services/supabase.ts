@@ -1,7 +1,7 @@
 import { createClient, SupabaseClient } from "@supabase/supabase-js";
 import { SupabaseQueryBuilder } from "@supabase/supabase-js/dist/main/lib/SupabaseQueryBuilder";
 import { IS_SERVER, NEXT_PUBLIC_SUPABASE_KEY, NEXT_PUBLIC_SUPABASE_STORAGE_URL, NEXT_PUBLIC_SUPABASE_URL, SUPABASE_SERVICE_KEY } from "env";
-import { ActiveChat, Chat, SupabaseTables, User } from "types";
+import { ActiveChat, Chat, SupabaseTables, User } from "@github-chat/types";
 
 /**
  * If running client side, the supabase client will use the anon key, and RLS will be enforced.

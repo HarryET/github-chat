@@ -1,5 +1,4 @@
-import { User, Flag } from "types";
-import { Box, Label } from "@primer/components";
+import { User, Flag } from "@github-chat/types";
 
 const SystemFlag = 1 << 1;
 const StaffFlag = 1 << 2;
@@ -31,33 +30,34 @@ export const hasFlag = (user: User, flag: Flag): boolean => {
   }
 }
 
-export const getFlagComponent = (flag: Flag, key = 0, variant: "small" | "large" | "medium" | "xl" | undefined = "small") => {
-  switch (flag) {
-    case Flag.Staff:
-      return (<Label variant={variant} sx={{ bg: "#7b78f2", m: 1 }} key={key}>
-        <Box display="flex" alignItems="center" justifyContent="center">
-          👨🏻‍💻 <Box ml={1.5}>team</Box>
-        </Box>
-      </Label>);
-    case Flag.System:
-      return (<Label variant={variant} sx={{ bg: "#9358f7", m: 1 }} key={key}>
-        <Box display="flex" alignItems="center" justifyContent="center">
-          🤖 <Box ml={1.5}>system</Box>
-        </Box>
-      </Label>);
-    case Flag.Supabase:
-      return (<Label variant={variant} sx={{ bg: "#2c9c6a", m: 1 }} key={key}>
-        <Box display="flex" alignItems="center" justifyContent="center">
-          ⚡ <Box ml={1.5}>supabase</Box>
-        </Box>
-      </Label>);
-    case Flag.Bot:
-      return (<Label variant={variant} sx={{ bg: "#6197ee", m: 1 }} key={key}>
-        <Box display="flex" alignItems="center" justifyContent="center">
-          🤖 <Box ml={1.5}>bot</Box>
-        </Box>
-      </Label>);
-    default:
-      break;
-  }
-}
+// TODO Rewrite with new UI
+// export const getFlagComponent = (flag: Flag, key = 0, variant: "small" | "large" | "medium" | "xl" | undefined = "small") => {
+//   switch (flag) {
+//     case Flag.Staff:
+//       return (<Label variant={variant} sx={{ bg: "#7b78f2", m: 1 }} key={key}>
+//         <Box display="flex" alignItems="center" justifyContent="center">
+//           👨🏻‍💻 <Box ml={1.5}>team</Box>
+//         </Box>
+//       </Label>);
+//     case Flag.System:
+//       return (<Label variant={variant} sx={{ bg: "#9358f7", m: 1 }} key={key}>
+//         <Box display="flex" alignItems="center" justifyContent="center">
+//           🤖 <Box ml={1.5}>system</Box>
+//         </Box>
+//       </Label>);
+//     case Flag.Supabase:
+//       return (<Label variant={variant} sx={{ bg: "#2c9c6a", m: 1 }} key={key}>
+//         <Box display="flex" alignItems="center" justifyContent="center">
+//           ⚡ <Box ml={1.5}>supabase</Box>
+//         </Box>
+//       </Label>);
+//     case Flag.Bot:
+//       return (<Label variant={variant} sx={{ bg: "#6197ee", m: 1 }} key={key}>
+//         <Box display="flex" alignItems="center" justifyContent="center">
+//           🤖 <Box ml={1.5}>bot</Box>
+//         </Box>
+//       </Label>);
+//     default:
+//       break;
+//   }
+// }

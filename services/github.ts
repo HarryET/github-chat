@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/rest";
-import { Repository } from "types";
+import { Repository } from "@github-chat/types";
 
 const octokit = new Octokit({});
 

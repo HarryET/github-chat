@@ -1,4 +1,4 @@
-import { RecentChat } from "types";
+import { RecentChat } from "@github-chat/types";
 
 export const saveRecentChat = (chat: RecentChat) => {
   localStorage.setItem("recent_chat", JSON.stringify(chat));
