@@ -1,33 +1,9 @@
 import type { AppProps } from "next/app";
-import { ThemeProvider, BaseStyles, theme } from "@primer/components";
-import "styles/reset.css";
-import { QueryClient, QueryClientProvider } from "react-query";
-import deepmerge from "deepmerge";
-import { supabase } from "service/supabase";
-import router from "next/router";
 
-const customTheme = deepmerge(theme, {
-  colorSchemes: {
-    // Customize an existing scheme
-    dark: {
-      colors: {
-        text: {
-          primary: "#f0f6fc",
-        },
-      },
-    },
-  },
-});
-
-const queryClient = new QueryClient();
+import "styles/reset.less";
+import "styles/emoji.less";
 
 function MyApp({ Component, pageProps }: AppProps) {
-  supabase.auth.onAuthStateChange((event) => {
-    if (event === "SIGNED_OUT") {
-      router.push("/");
-    }
-  });
-
   let theme: "day" | "night" | "auto" = "night";
 
   if (typeof window !== "undefined") {
@@ -41,13 +17,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ThemeProvider dayScheme="light" nightScheme="dark" colorMode={theme} theme={customTheme}>
-        <BaseStyles className={"root"}>
-          <Component {...pageProps} />
-        </BaseStyles>
-      </ThemeProvider>
-    </QueryClientProvider>
+    <Component {...pageProps} />
   );
 }
 export default MyApp;
