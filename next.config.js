@@ -1,4 +1,6 @@
-import withLess from "next-with-less";
+/* eslint-disable @typescript-eslint/no-var-requires */
+
+const withLess = require("next-with-less");
 
 /** @type {import('next').NextConfig} */
 const config = {
