@@ -43,6 +43,9 @@ export const Root: React.FC<Props> = ({ fixedScreenHeight, children }) => {
           <meta property="twitter:title" content="GitHub Chat | A chat room for every GitHub repository" />
           <meta property="twitter:description" content="A chat room for every GitHub repository" />
           <meta property="twitter:image" content="https://github-chat.com/meta-image.png" />
+          
+          {/* Analytics */}
+          <script async defer data-website-id="4ac7a4f4-4b44-4d06-b7f7-dd69714aad9d" src="https://analytics.harryet.xyz/umami.js" />
         </Head>
         <CustomHeader />
         {children}
