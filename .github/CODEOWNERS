@@ -1,0 +1,5 @@
+# Whole project managed by development team
+*                 @github-chat/developers
+
+# Elixir files managed by the elixir team
+*.ex *.exs *.heex @github-chat/elixir
