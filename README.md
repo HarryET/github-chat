@@ -1,28 +1,32 @@
-# Github Chat
-
-A chat room for every GitHub repository. Real-time.
+<img align="center" src="./priv/static/twitter-header.png"/>
 
 <hr/>
 
-## Sub-Projects
-- [Vanity URLS](https://github.com/HarryET/github-chat-vanities)
-- [SQL](https://github.com/github-chat/sql)
-- [github-chat.js](https://github.com/github-chat/github-chat.js)
-
 ## Development
+
+### Required .env
+```
+GITHUB_CLIENT_ID=
+GITHUB_CLIENT_SECRET=
+```
 
 ### Run
 
 ```
-yarn dev
+mix phx.server
+```
+
+### Migrate DB
+```
+mix ecto.migrate
 ```
 
 ## Instructions
 
 ### How to enter a chat?
 
-- Use the input in github-chat.com landing page to enter a repository owner/name and navigate to the corresponding chat room.
-- Or if you are in github.com/owner/repo , just add -chat, like github-chat/owner/repo and navigate directly to the corresponding chat room.
+- Use the input in [github-chat.com](https://github-chat.com) landing page to enter a repository owner/name and navigate to the corresponding chat room.
+- Or if you are in [github.com/owner/repo](https://github.com/owner/repo), just add -chat, like [github-chat.com/owner/repo](https://github-chat.com/owner/repo) and navigate directly to the corresponding chat room.
 
 Signed-in users will see a menu listing all the chat rooms in which they have been participating, for easy access.
 
