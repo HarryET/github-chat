@@ -5,26 +5,36 @@
       <div class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:px-8 lg:max-w-7xl lg:grid lg:grid-cols-2 lg:gap-24">
         <div>
           <div>
-            <svg class="h-11 w-auto fill-purple-500" width="48" height="52" viewBox="0 0 48 52" fill="inherit" xmlns="http://www.w3.org/2000/svg">
-              <path d="M0.960022 13.0002C0.960022 11.4726 1.56688 10.0075 2.64709 8.9273C3.7273 7.84709 5.19237 7.24023 6.72002 7.24023H26.88C28.4077 7.24023 29.8727 7.84709 30.953 8.9273C32.0332 10.0075 32.64 11.4726 32.64 13.0002V24.5202C32.64 26.0479 32.0332 27.513 30.953 28.5932C29.8727 29.6734 28.4077 30.2802 26.88 30.2802H21.12L12.48 38.9202V30.2802H6.72002C5.19237 30.2802 3.7273 29.6734 2.64709 28.5932C1.56688 27.513 0.960022 26.0479 0.960022 24.5202V13.0002Z" fill="inherit" />
-              <path d="M38.4 18.7598V24.5198C38.4 27.5751 37.1863 30.5052 35.0259 32.6656C32.8655 34.8261 29.9353 36.0398 26.88 36.0398H23.5047L18.4186 41.1287C19.225 41.5578 20.1437 41.7998 21.12 41.7998H26.88L35.52 50.4398V41.7998H41.28C42.8077 41.7998 44.2727 41.1929 45.353 40.1127C46.4332 39.0325 47.04 37.5674 47.04 36.0398V24.5198C47.04 22.9921 46.4332 21.527 45.353 20.4468C44.2727 19.3666 42.8077 18.7598 41.28 18.7598H38.4Z" fill="inherit" />
+            <svg class="h-11 w-auto fill-brand-500" width="48" height="52" viewBox="0 0 48 52" fill="inherit"
+              xmlns="http://www.w3.org/2000/svg">
+              <path
+                d="M0.960022 13.0002C0.960022 11.4726 1.56688 10.0075 2.64709 8.9273C3.7273 7.84709 5.19237 7.24023 6.72002 7.24023H26.88C28.4077 7.24023 29.8727 7.84709 30.953 8.9273C32.0332 10.0075 32.64 11.4726 32.64 13.0002V24.5202C32.64 26.0479 32.0332 27.513 30.953 28.5932C29.8727 29.6734 28.4077 30.2802 26.88 30.2802H21.12L12.48 38.9202V30.2802H6.72002C5.19237 30.2802 3.7273 29.6734 2.64709 28.5932C1.56688 27.513 0.960022 26.0479 0.960022 24.5202V13.0002Z"
+                fill="inherit" />
+              <path
+                d="M38.4 18.7598V24.5198C38.4 27.5751 37.1863 30.5052 35.0259 32.6656C32.8655 34.8261 29.9353 36.0398 26.88 36.0398H23.5047L18.4186 41.1287C19.225 41.5578 20.1437 41.7998 21.12 41.7998H26.88L35.52 50.4398V41.7998H41.28C42.8077 41.7998 44.2727 41.1929 45.353 40.1127C46.4332 39.0325 47.04 37.5674 47.04 36.0398V24.5198C47.04 22.9921 46.4332 21.527 45.353 20.4468C44.2727 19.3666 42.8077 18.7598 41.28 18.7598H38.4Z"
+                fill="inherit" />
             </svg>
           </div>
           <div class="mt-20">
             <div>
-              <a href="https://github.com/HarryET/github-chat/issues/64" class="inline-flex space-x-4">
-                <span class="rounded bg-purple-50 px-2.5 py-1 text-xs font-semibold text-purple-500 tracking-wide uppercase">What's new</span>
-                <span class="inline-flex items-center text-sm font-medium text-purple-500 space-x-1">
-                  <span>We have migrated to Elixir</span>
+              <a href={assigns[:whats_new][:url]} class="inline-flex space-x-4">
+                <span
+                  class="rounded bg-brand-100 px-2.5 py-1 text-xs font-semibold text-brand-500 tracking-wide uppercase"><%= assigns[:whats_new][:box_override] || "What's New"%></span>
+                <span class="inline-flex items-center text-sm font-medium text-brand-500 space-x-1">
+                  <span><%= assigns[:whats_new][:message]%></span>
                   <!-- Heroicon name: solid/chevron-right -->
-                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-                    <path fill-rule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clip-rule="evenodd" />
+                  <svg class="h-5 w-5" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor"
+                    aria-hidden="true">
+                    <path fill-rule="evenodd"
+                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
+                      clip-rule="evenodd" />
                   </svg>
                 </span>
               </a>
             </div>
             <div class="mt-6 sm:max-w-xl">
-              <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">A chat room for every GitHub repository.</h1>
+              <h1 class="text-4xl font-extrabold text-gray-900 tracking-tight sm:text-5xl">A chat room for every GitHub
+                repository.</h1>
               <p class="mt-6 text-xl text-gray-500">All of that in real-time.</p>
             </div>
           </div>
@@ -34,10 +44,13 @@
       <div class="sm:mx-auto sm:max-w-3xl sm:px-6">
         <div class="py-12 sm:relative sm:mt-12 sm:py-16 lg:absolute lg:inset-y-0 lg:right-0 lg:w-1/2">
           <div class="hidden sm:block">
-            <div class="absolute inset-y-0 left-1/2 w-screen bg-gray-50 rounded-l-3xl lg:left-80 lg:right-0 lg:w-full"></div>
-            <svg class="absolute top-8 right-1/2 -mr-3 lg:m-0 lg:left-0" width="404" height="392" fill="none" viewBox="0 0 404 392">
+            <div class="absolute inset-y-0 left-1/2 w-screen bg-gray-50 rounded-l-3xl lg:left-80 lg:right-0 lg:w-full">
+            </div>
+            <svg class="absolute top-8 right-1/2 -mr-3 lg:m-0 lg:left-0" width="404" height="392" fill="none"
+              viewBox="0 0 404 392">
               <defs>
-                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+                <pattern id="837c3e70-6c3a-44e6-8854-cc48c737b659" x="0" y="0" width="20" height="20"
+                  patternUnits="userSpaceOnUse">
                   <rect x="0" y="0" width="4" height="4" class="text-gray-200" fill="currentColor" />
                 </pattern>
               </defs>
@@ -46,8 +59,162 @@
           </div>
           <div class="relative pl-4 -mr-40 sm:mx-auto sm:max-w-3xl sm:px-0 lg:max-w-none lg:h-full lg:pl-12">
             <!-- TODO(HarryET): Fix Screenshot -->
-            <img class="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none" src="https://tailwindui.com/img/component-images/task-app-rose.jpg" alt="">
+            <img class="w-full rounded-md shadow-xl ring-1 ring-black ring-opacity-5 lg:h-full lg:w-auto lg:max-w-none"
+              src="https://tailwindui.com/img/component-images/task-app-rose.jpg" alt="">
           </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Companies Section -->
+    <div class="bg-gray-50 mt-16">
+      <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:py-16 lg:px-8">
+        <p class="text-center text-base font-semibold uppercase text-gray-600 tracking-wider">Trusted by over 5 very
+          average small businesses</p>
+        <div class="max-w-7xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+          <div class="grid grid-cols-2 gap-8 md:grid-cols-6 lg:grid-cols-5">
+            <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
+              <img class="h-12" src="https://tailwindui.com/img/logos/tuple-logo-gray-400.svg" alt="Tuple">
+            </div>
+            <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
+              <img class="h-12" src="https://tailwindui.com/img/logos/mirage-logo-gray-400.svg" alt="Mirage">
+            </div>
+            <div class="col-span-1 flex justify-center md:col-span-2 lg:col-span-1">
+              <img class="h-12" src="https://tailwindui.com/img/logos/statickit-logo-gray-400.svg" alt="StaticKit">
+            </div>
+            <div class="col-span-1 flex justify-center md:col-span-3 lg:col-span-1">
+              <img class="h-12" src="https://tailwindui.com/img/logos/transistor-logo-gray-400.svg" alt="Transistor">
+            </div>
+            <div class="col-span-2 flex justify-center md:col-span-3 lg:col-span-1">
+              <img class="h-12" src="https://tailwindui.com/img/logos/workcation-logo-gray-400.svg" alt="Workcation">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Features section -->
+    <div class="bg-white">
+      <div class="max-w-7xl mx-auto py-16 px-4 sm:px-6 lg:py-24 lg:px-8 lg:grid lg:grid-cols-3 lg:gap-x-8">
+        <div>
+          <p class="mt-2 text-3xl font-extrabold text-gray-900">Everything you need</p>
+          <p class="mt-4 text-lg text-gray-500">For your developers, designers and product managers the features that keep the entire team happy.</p>
+        </div>
+        <div class="mt-12 lg:mt-0 lg:col-span-2">
+          <dl
+            class="space-y-10 sm:space-y-0 sm:grid sm:grid-cols-2 sm:grid-rows-4 sm:grid-flow-col sm:gap-x-6 sm:gap-y-10 lg:gap-x-8">
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">Invite team members</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">You can manage phone, email and chat conversations all
+                from
+                a single mailbox.</dd>
+            </div>
+
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">List view</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">You can manage phone, email and chat conversations all
+                from
+                a single mailbox.</dd>
+            </div>
+
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">Keyboard shortcuts</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">You can manage phone, email and chat conversations all
+                from
+                a single mailbox.</dd>
+            </div>
+
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">Calendars</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">You can manage phone, email and chat conversations all
+                from
+                a single mailbox.</dd>
+            </div>
+
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">Notifications</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">Find what you need with advanced filters, bulk actions,
+                and
+                quick views.</dd>
+            </div>
+
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">Boards</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">Find what you need with advanced filters, bulk actions,
+                and
+                quick views.</dd>
+            </div>
+
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">Reporting</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">Find what you need with advanced filters, bulk actions,
+                and
+                quick views.</dd>
+            </div>
+
+            <div class="relative">
+              <dt>
+                <!-- Heroicon name: outline/check -->
+                <svg class="absolute h-6 w-6 text-green-500" xmlns="http://www.w3.org/2000/svg" fill="none"
+                  viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                </svg>
+                <p class="ml-9 text-lg leading-6 font-medium text-gray-900">Mobile app</p>
+              </dt>
+              <dd class="mt-2 ml-9 text-base text-gray-500">Find what you need with advanced filters, bulk actions,
+                and
+                quick views.</dd>
+            </div>
+          </dl>
         </div>
       </div>
     </div>
@@ -58,7 +225,8 @@
         <div class="absolute inset-y-0 left-0 w-1/2 bg-gray-50 rounded-r-3xl"></div>
         <svg class="absolute top-8 left-1/2 -ml-3" width="404" height="392" fill="none" viewBox="0 0 404 392">
           <defs>
-            <pattern id="8228f071-bcee-4ec8-905a-2a059a2cc4fb" x="0" y="0" width="20" height="20" patternUnits="userSpaceOnUse">
+            <pattern id="8228f071-bcee-4ec8-905a-2a059a2cc4fb" x="0" y="0" width="20" height="20"
+              patternUnits="userSpaceOnUse">
               <rect x="0" y="0" width="4" height="4" class="text-gray-200" fill="currentColor" />
             </pattern>
           </defs>
@@ -66,25 +234,32 @@
         </svg>
       </div>
       <div class="mx-auto max-w-md px-4 sm:max-w-3xl sm:px-6 lg:max-w-7xl lg:px-8">
-        <div class="relative rounded-2xl px-6 py-10 bg-purple-500 overflow-hidden shadow-xl sm:px-12 sm:py-20">
+        <div class="relative rounded-2xl px-6 py-10 bg-brand-500 overflow-hidden shadow-xl sm:px-12 sm:py-20">
           <div aria-hidden="true" class="absolute inset-0 -mt-72 sm:-mt-32 md:mt-0">
-            <svg class="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1463 360">
-              <path class="text-purple-400 text-opacity-40" fill="currentColor" d="M-82.673 72l1761.849 472.086-134.327 501.315-1761.85-472.086z" />
-              <path class="text-purple-600 text-opacity-40" fill="currentColor" d="M-217.088 544.086L1544.761 72l134.327 501.316-1761.849 472.086z" />
+            <svg class="absolute inset-0 h-full w-full" preserveAspectRatio="xMidYMid slice"
+              xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 1463 360">
+              <path class="text-brand-400 text-opacity-40" fill="currentColor"
+                d="M-82.673 72l1761.849 472.086-134.327 501.315-1761.85-472.086z" />
+              <path class="text-brand-600 text-opacity-40" fill="currentColor"
+                d="M-217.088 544.086L1544.761 72l134.327 501.316-1761.849 472.086z" />
             </svg>
           </div>
           <div class="relative">
             <div class="sm:text-center">
-              <h2 class="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">Get notified when we&rsquo;re launching.</h2>
+              <h2 class="text-3xl font-extrabold text-white tracking-tight sm:text-4xl">Get notified with the latest news.</h2>
             </div>
             <form action="#" class="mt-12 sm:mx-auto sm:max-w-lg sm:flex">
               <div class="min-w-0 flex-1">
                 <label for="cta-email" class="sr-only">Email address</label>
-                <input id="cta-email" type="email" class="block w-full border border-transparent rounded-md px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-purple-500" placeholder="Enter your email">
+                <input id="cta-email" type="email"
+                  class="block w-full border border-transparent rounded-md px-5 py-3 text-base text-gray-900 placeholder-gray-500 shadow-sm focus:outline-none focus:border-transparent focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-500"
+                  placeholder="Enter your email">
               </div>
               <div class="mt-4 sm:mt-0 sm:ml-3">
                 <!-- TODO(HarryET): Fix button -->
-                <button type="submit" class="block w-full rounded-md border border-transparent px-5 py-3 bg-gray-900 text-base font-medium text-white shadow hover:bg-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-purple-500 sm:px-10">Notify me</button>
+                <button type="submit"
+                  class="block w-full rounded-md border border-transparent px-5 py-3 bg-gray-900 text-base font-medium text-white shadow hover:bg-black focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-brand-500 sm:px-10">Notify
+                  me</button>
               </div>
             </form>
           </div>
@@ -100,14 +275,17 @@
         <a href="https://twitter.com/GithubChat" class="text-gray-400 hover:text-gray-300">
           <span class="sr-only">Twitter</span>
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+            <path
+              d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
           </svg>
         </a>
 
         <a href="https://github.com/github-chat" class="text-gray-400 hover:text-gray-300">
           <span class="sr-only">GitHub</span>
           <svg class="h-6 w-6" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
-            <path fill-rule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" clip-rule="evenodd" />
+            <path fill-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              clip-rule="evenodd" />
           </svg>
         </a>
       </div>

@@ -26,6 +26,17 @@ defmodule GithubChatWeb.Router do
     delete "/logout", AuthController, :delete
   end
 
+  scope "/", GithubChatWeb do
+    pipe_through :browser
+
+    live "/messages", MessageLive.Index, :index
+    live "/messages/new", MessageLive.Index, :new
+    live "/messages/:id/edit", MessageLive.Index, :edit
+
+    live "/messages/:id", MessageLive.Show, :show
+    live "/messages/:id/show/edit", MessageLive.Show, :edit
+  end
+
   if Mix.env() in [:dev, :test] do
     import Phoenix.LiveDashboard.Router
 

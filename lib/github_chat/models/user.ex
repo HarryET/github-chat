@@ -2,7 +2,7 @@ defmodule GithubChat.Models.User do
   use Ecto.Schema
   import Ecto.Changeset
 
-  @primary_key {:id, :string, autogenerate: {GithubChat.Utils.Generators, :gen_id, []}}
+  #@primary_key {:id, :string, autogenerate: {GithubChat.Utils.Generators, :gen_id, []}}
   schema "users" do
     field :github_id, :integer
     field :username, :string
@@ -10,6 +10,8 @@ defmodule GithubChat.Models.User do
     field :avatar, :string
 
     field :bio, :string
+
+    has_many :messages, GithubChat.Messages.Message
 
     timestamps()
   end

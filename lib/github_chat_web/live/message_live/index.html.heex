@@ -1,0 +1,34 @@
+<h1>Listing Messages</h1>
+
+<!--<%= if @live_action in [:new, :edit] do %>
+  <.modal return_to={Routes.message_index_path(@socket, :index)}>
+    <.live_component
+      module={GithubChatWeb.MessageLive.FormComponent}
+      id={@message.id || :new}
+      title={@page_title}
+      action={@live_action}
+      message={@message}
+      return_to={Routes.message_index_path(@socket, :index)}
+    />
+  </.modal>
+<% end %>-->
+
+<div class="w-full flex flex-col space-y-4">
+  <%= for message <- @messages do %>
+    <div id={"message-#{message.id}"} class="flex flex-row w-full content-between">
+      <div class="flex flex-row">
+        <%# Profile Pic %>
+        <div class="w-12 h-12 rounded-full">
+          <img src={message.user.avatar}/>
+        </div>
+        <%# Name + Message %>
+        <div class="ml-2">
+          <p><%= message.user.username %></p>
+          <p><%= message.content %></p>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+
+<span><%= live_patch "New Message", to: Routes.message_index_path(@socket, :new) %></span>
