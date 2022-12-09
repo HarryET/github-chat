@@ -1,30 +1,11 @@
 # Github Chat
 
+> **Note**
+> We're back! Bigger & better getting ready for [Supabase's Launch Week 6 Hackathon](https://supabase.com/blog/launch-week-6-hackathon)
+
 A chat room for every GitHub repository. Real-time.
 
 <hr/>
-
-## Sub-Projects
-- [Vanity URLS](https://github.com/HarryET/github-chat-vanities)
-- [SQL](https://github.com/github-chat/sql)
-- [github-chat.js](https://github.com/github-chat/github-chat.js)
-
-## Development
-
-### Run
-
-```
-yarn dev
-```
-
-## Instructions
-
-### How to enter a chat?
-
-- Use the input in github-chat.com landing page to enter a repository owner/name and navigate to the corresponding chat room.
-- Or if you are in github.com/owner/repo , just add -chat, like github-chat/owner/repo and navigate directly to the corresponding chat room.
-
-Signed-in users will see a menu listing all the chat rooms in which they have been participating, for easy access.
 
 ## Team
 
