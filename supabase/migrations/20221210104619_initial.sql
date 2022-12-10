@@ -5,6 +5,7 @@ CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
 CREATE TABLE IF NOT EXISTS public.profiles (
     id uuid primary key default uuid_generate_v4(),
     username text not null,
+    avatar_url text not null,
 
     nickname text null,
     bio text null,
