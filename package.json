@@ -11,6 +11,8 @@
 		"test:unit": "vitest"
 	},
 	"devDependencies": {
+		"@esbuild-plugins/node-globals-polyfill": "^0.1.1",
+		"@esbuild-plugins/node-modules-polyfill": "^0.1.4",
 		"@sveltejs/adapter-auto": "next",
 		"@sveltejs/kit": "next",
 		"autoprefixer": "^10.4.13",
@@ -26,7 +28,11 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@octokit/auth-token": "^2.5.0",
+		"@octokit/rest": "^18.11.4",
 		"@supabase/auth-helpers-sveltekit": "^0.8.6",
-		"@supabase/supabase-js": "^2.1.3"
-	}
+		"@supabase/supabase-js": "^2.1.3",
+		"svelte-infinite-loading": "^1.3.8"
+	},
+	"packageManager": "yarn@3.3.0"
 }

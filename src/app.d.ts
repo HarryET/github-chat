@@ -5,7 +5,7 @@
 // and what to do when importing types
 declare namespace App {
 	interface Supabase {
-	  Database: import('./DatabaseDefinitions').Database
+	  Database: import('./lib/database.types').Database
 	  SchemaName: 'public'
 	}
 
