@@ -8,7 +8,8 @@ module.exports = {
       fontFamily: {
         "sans": mona,
         "mona": mona,
-        "hubot": `"Hubot Sans",${mona}`
+        "hubot": `"Hubot Sans",${mona}`,
+        "mono": "'JetBrains Mono', monospace"
       },
       colors: {
         // 600
