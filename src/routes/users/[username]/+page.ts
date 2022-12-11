@@ -22,6 +22,7 @@ export const load = (async (event) => {
 
     return {
         hasAuth: session != null,
+        isMe: session?.user.id == row.data.id,
         user: row.data
     };
 }) satisfies PageLoad;

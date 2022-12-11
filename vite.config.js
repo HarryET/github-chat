@@ -52,6 +52,7 @@ const config = {
 		}
 	},
 	optimizeDeps: {
+		include: ["highlight.js", "highlight.js/lib/core"],
 		esbuildOptions: {
 			// Node.js global to browser globalThis
 			define: {

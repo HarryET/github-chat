@@ -2,6 +2,7 @@
   import { supabaseClient } from "$lib/db";
   import { invalidate } from "$app/navigation";
   import { onMount } from "svelte";
+  import "highlight.js/styles/github.css"
   import "../app.css";
 
   onMount(() => {

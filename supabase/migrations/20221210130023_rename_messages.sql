@@ -1,2 +1,1 @@
-ALTER TABLE repository_messages
-  RENAME TO messages;
+ALTER TABLE repository_messages RENAME TO messages;

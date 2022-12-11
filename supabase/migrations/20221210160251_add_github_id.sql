@@ -1,2 +1,2 @@
 ALTER TABLE repositories
-ADD COLUMN github_id text not null;
+    ADD COLUMN github_id text NOT NULL;

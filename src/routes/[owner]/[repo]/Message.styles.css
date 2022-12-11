@@ -1,0 +1,15 @@
+pre code.hljs {
+    padding: 0
+}
+
+.hljs {
+    background: transparent;
+}
+
+.content a {
+    @apply text-brand-600;
+}
+
+.content a:hover {
+    @apply text-brand-700 underline;
+}
