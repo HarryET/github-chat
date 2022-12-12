@@ -40,7 +40,7 @@
         {formatDate(message.created_at)}
       </p>
     </div>
-    <p class="content max-w-full max-h-full break-words text-gray-800">
+    <p class="content break-words text-gray-800">
       {@html renderedContent}
     </p>
   </div>

@@ -9,9 +9,6 @@ const config = {
 	test: {
 		include: ['src/**/*.{test,spec}.{js,ts}']
 	},
-	define: {
-		global: {}
-	},
 	resolve: {
 		alias: {
 			// This Rollup aliases are extracted from @esbuild-plugins/node-modules-polyfill,
@@ -33,6 +30,8 @@ const config = {
 			os: 'rollup-plugin-node-polyfills/polyfills/os',
 			assert: 'rollup-plugin-node-polyfills/polyfills/assert',
 			constants: 'rollup-plugin-node-polyfills/polyfills/constants',
+			buffer: 'rollup-plugin-node-polyfills/polyfills/buffer-es6',
+            process: 'rollup-plugin-node-polyfills/polyfills/process-es6',
 			_stream_duplex:
 				'rollup-plugin-node-polyfills/polyfills/readable-stream/duplex',
 			_stream_passthrough:

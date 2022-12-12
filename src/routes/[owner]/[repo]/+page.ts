@@ -14,6 +14,10 @@ export const load = (async (event) => {
         .eq("name", repo)
         .single()
 
+    if (repoRow.error) {
+        throw error(500, repoRow.error.message)
+    }
+
     if (!repoRow.data) {
         const octokit = new Octokit({});
 
@@ -23,9 +27,10 @@ export const load = (async (event) => {
             repo
           })
           .then(({ data }) => data)
-          .catch(() => undefined);
-
-        console.log(repoData)
+          .catch((e) => {
+            console.error(e);
+            return undefined;
+          });
 
         // Repository does not exist in Github
         if (repoData == undefined) {
@@ -39,7 +44,7 @@ export const load = (async (event) => {
             .single();
 
         if (repoRow.data) {
-
+            // TODO update row
         } else {
             repoRow = await supabaseClient.from("repositories").insert({
                 github_id: repoData.id.toString(),

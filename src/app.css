@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
+
 @font-face {
     font-family: 'Mona Sans';
     src:
@@ -15,8 +17,6 @@
     font-weight: 200 900;
     font-stretch: 75% 125%;
 }
-
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono&display=swap');
 
 html, body, #svelte_app {
     width: 100%;

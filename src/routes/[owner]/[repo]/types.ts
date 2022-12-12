@@ -1,3 +1,17 @@
+export const MessageQuery = `
+id,
+content,
+created_at,
+updated_at,
+user: profiles!profile_id(
+  id,
+  username,
+  avatar_url,
+  nickname,
+  flags
+),
+flags`;
+
 export type Message = {
     id: string;
     user: {

@@ -60,7 +60,7 @@ const rules: markdown.ParserRules = {
 
 			return htmlTag('pre', htmlTag(
 				'code', code ? code.value : markdown.sanitizeText(node.content), { class: `hljs${code ? ' ' + code.language : ''}` }, state
-			), { class: "bg-gray-100 w-full p-2 rounded-md border border-[1px] border-gray-200" }, state);
+			), { class: "bg-gray-100 p-2 rounded-md border border-[1px] border-gray-200" }, state);
 		}
 	}),
 	newline: markdown.defaultRules.newline,
