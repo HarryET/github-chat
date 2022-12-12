@@ -4,6 +4,7 @@
   import type { StateChanger } from "svelte-infinite-loading";
   import { MessageQuery, type Message } from "./types";
   import MessageComponent from "./Message.svelte";
+  import { onMount } from "svelte";
 
   export let repository_id: string;
 
@@ -11,6 +12,46 @@
   let perPage = 50;
   let page = -1;
   let messages: Message[] = [];
+  // Used to ensure realtime updates aren't put in while new loaded messages are put in array
+  let isBlockingMessages = false;
+
+  // Listen to messages in realtime
+  onMount(() => {
+    console.log("[messagesListener] attempting websocket connection")
+    let attempts = 0;
+    let channel = supabaseClient
+      .channel("public:messages")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages" },
+        (payload) => {
+          console.log("[messagesListener] new message", payload);
+          while (isBlockingMessages) {/* Wait for messages to be freed */}
+          // TODO insert into messages
+        }
+      )
+      .subscribe((status, _err) => {
+        attempts++;
+        if (status == "SUBSCRIBED") {
+          console.log(
+            `[messagesListener] listening for new messages, took ${attempts}/5 attempts`
+          );
+          return;
+        }
+
+        if (attempts >= 5) {
+          console.error(
+            "[messagesListener] failed to start listener after 5 attempts. Terminating subscription"
+          );
+          channel.socket.disconnect();
+          return;
+        }
+
+        console.error(
+          `[messagesListener] failed to start listener, attempt ${attempts}/5`
+        );
+      });
+  });
 
   const loadMoreMessages = async ({
     detail: { loaded, complete },
@@ -42,8 +83,10 @@
         (newMessages.data ?? []).length
       } more messages`
     );
+    isBlockingMessages = true;
     // @ts-ignore
     messages = [...(newMessages.data ?? []).reverse(), ...messages];
+    isBlockingMessages = false;
     loaded();
   };
 
