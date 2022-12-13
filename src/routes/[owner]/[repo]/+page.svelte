@@ -32,6 +32,10 @@
   };
 </script>
 
+<svelte:head>
+  <title>{data.repo.owner}/{data.repo.name} | GithubChat</title>
+</svelte:head>
+
 <div class="w-full h-full flex flex-col md:flex-row">
   <div class="h-full hidden md:flex">
     <Sidebar profile={$fetchMeResult.data?.data ?? undefined} />
