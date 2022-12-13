@@ -735,6 +735,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sveltestack/svelte-query@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "@sveltestack/svelte-query@npm:1.6.0"
+  peerDependencies:
+    broadcast-channel: ^4.5.0
+  peerDependenciesMeta:
+    broadcast-channel:
+      optional: true
+  checksum: b2f02a5f11768a19ac65c864eb66e71480fec62aba8e7be58c354ed97ffe91ad79c8c306fed73b5f8f6f496091e129de5afeab6be370db881b621aed19fc83b6
+  languageName: node
+  linkType: hard
+
 "@tootallnate/once@npm:2":
   version: 2.0.0
   resolution: "@tootallnate/once@npm:2.0.0"
@@ -2027,6 +2039,7 @@ __metadata:
     "@sveltejs/adapter-auto": next
     "@sveltejs/adapter-vercel": ^1.0.0-next.85
     "@sveltejs/kit": next
+    "@sveltestack/svelte-query": ^1.6.0
     autoprefixer: ^10.4.13
     date-fns: ^2.29.3
     esbuild: ^0.16.4

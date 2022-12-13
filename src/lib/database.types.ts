@@ -90,6 +90,8 @@ export interface Database {
           bio: string | null
           private_key: string | null
           flags: number
+          created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
@@ -99,6 +101,8 @@ export interface Database {
           bio?: string | null
           private_key?: string | null
           flags?: number
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
@@ -108,6 +112,8 @@ export interface Database {
           bio?: string | null
           private_key?: string | null
           flags?: number
+          created_at?: string
+          updated_at?: string
         }
       }
       repositories: {
@@ -118,6 +124,8 @@ export interface Database {
           url: string
           flags: number
           github_id: string
+          created_at: string
+          updated_at: string
         }
         Insert: {
           id?: string
@@ -125,7 +133,9 @@ export interface Database {
           name: string
           url: string
           flags?: number
-          github_id?: string
+          github_id: string
+          created_at?: string
+          updated_at?: string
         }
         Update: {
           id?: string
@@ -134,6 +144,28 @@ export interface Database {
           url?: string
           flags?: number
           github_id?: string
+          created_at?: string
+          updated_at?: string
+        }
+      }
+      repository_memberships: {
+        Row: {
+          profile_id: string
+          repository_id: string
+          created_at: string
+          updated_at: string
+        }
+        Insert: {
+          profile_id: string
+          repository_id: string
+          created_at?: string
+          updated_at?: string
+        }
+        Update: {
+          profile_id?: string
+          repository_id?: string
+          created_at?: string
+          updated_at?: string
         }
       }
     }
