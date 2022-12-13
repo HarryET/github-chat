@@ -46,7 +46,7 @@
   </div>
   <div class="w-full">
     <div class="pl-4">
-      <MessagesList repository_id={data.repo?.id ?? "-"} />
+      <MessagesList bind:messages={messages} repository_id={data.repo?.id ?? "-"} />
     </div>
     <!-- TODO input -->
   </div>
