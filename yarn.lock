@@ -593,6 +593,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@steeze-ui/heroicons@npm:^2.2.1":
+  version: 2.2.1
+  resolution: "@steeze-ui/heroicons@npm:2.2.1"
+  checksum: 8470183528610132dfd33b3332eb4ac9e3128ec2b5be5e307685f9f672e872c11cfa4c403da567d3f51a180b1e213da2b7c1b2f585d05eeb5a929a5189e2fbed
+  languageName: node
+  linkType: hard
+
+"@steeze-ui/svelte-icon@npm:^1.3.2":
+  version: 1.3.2
+  resolution: "@steeze-ui/svelte-icon@npm:1.3.2"
+  checksum: 958636b26c76f2233b72723ed1c38ea342059a1436fc58a25110951991936f6bee8dfe106ae0d8fda45c466af1883d2bddf1b1626bd356ad08bd08159d8ab4fe
+  languageName: node
+  linkType: hard
+
 "@supabase/auth-helpers-shared@npm:0.2.3":
   version: 0.2.3
   resolution: "@supabase/auth-helpers-shared@npm:0.2.3"
@@ -2034,6 +2048,8 @@ __metadata:
     "@esbuild-plugins/node-modules-polyfill": ^0.1.4
     "@octokit/auth-token": ^2.5.0
     "@octokit/rest": ^18.11.4
+    "@steeze-ui/heroicons": ^2.2.1
+    "@steeze-ui/svelte-icon": ^1.3.2
     "@supabase/auth-helpers-sveltekit": ^0.8.6
     "@supabase/supabase-js": ^2.1.3
     "@sveltejs/adapter-auto": next

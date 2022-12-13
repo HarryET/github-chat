@@ -31,6 +31,8 @@
 	"dependencies": {
 		"@octokit/auth-token": "^2.5.0",
 		"@octokit/rest": "^18.11.4",
+		"@steeze-ui/heroicons": "^2.2.1",
+		"@steeze-ui/svelte-icon": "^1.3.2",
 		"@supabase/auth-helpers-sveltekit": "^0.8.6",
 		"@supabase/supabase-js": "^2.1.3",
 		"@sveltestack/svelte-query": "^1.6.0",
