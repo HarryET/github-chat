@@ -3,20 +3,22 @@
   import Sidebar from "../../Sidebar.svelte";
   import type { PageData } from "./$types";
   import MessagesList from "./MessagesList.svelte";
-  import { MessageQuery } from "./types";
+  import { MessageQuery, type Message } from "./types";
   import { useQuery } from '@sveltestack/svelte-query'
   import { ProfileQuery, type UserProfile } from "../../types";
   import type { PostgrestSingleResponse } from "@supabase/supabase-js";
+  import MessageInput from "./MessageInput.svelte";
 
   export let data: PageData;
+  let messages: Message[] = [];
 
   const fetchMeResult = useQuery<PostgrestSingleResponse<UserProfile>>('fetchMe', async () => await supabaseClient.from("profiles").select(ProfileQuery).eq("id", data.session?.user.id ?? "-").single());
 
-  const sendMessage = async (content: string) => {
+  const sendMessage = async (e: CustomEvent<{ content: string }>) => {
     let res = await supabaseClient
       .from("messages")
       .insert({
-        content: content,
+        content: e.detail.content,
         repository_id: data.repo?.id ?? "-",
         profile_id: data.session?.user.id ?? "-",
       })
@@ -26,8 +28,7 @@
     console.log(res);
 
     if (res.data) {
-      // @ts-ignore
-      messages = [res.data, ...messages];
+      messages = [...[res.data as Message], ...messages];
     }
   };
 </script>

@@ -11,7 +11,7 @@
   let hasMore = true;
   let perPage = 50;
   let page = -1;
-  let messages: Message[] = [];
+  export let messages: Message[];
   // Used to ensure realtime updates aren't put in while new loaded messages are put in array
   let isBlockingMessages = false;
 
@@ -84,8 +84,7 @@
       } more messages`
     );
     isBlockingMessages = true;
-    // @ts-ignore
-    messages = [...(newMessages.data ?? []).reverse(), ...messages];
+    messages = [...((newMessages.data ?? []) as Message[]).reverse(), ...messages];
     isBlockingMessages = false;
     loaded();
   };
