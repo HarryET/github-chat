@@ -687,22 +687,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sveltejs/adapter-auto@next":
-  version: 1.0.0-next.90
-  resolution: "@sveltejs/adapter-auto@npm:1.0.0-next.90"
-  dependencies:
-    import-meta-resolve: ^2.2.0
-  checksum: 1ae874b6e67d883325f8bb121569f4b1399c905879430fb2de092ff350a6480c01535367cc083507984c9805548d24b03d1bcc2cc4b7032ba179bb47de7b88d8
-  languageName: node
-  linkType: hard
-
-"@sveltejs/adapter-vercel@npm:^1.0.0-next.85":
-  version: 1.0.0-next.85
-  resolution: "@sveltejs/adapter-vercel@npm:1.0.0-next.85"
+"@sveltejs/adapter-vercel@npm:next":
+  version: 1.0.0-next.87
+  resolution: "@sveltejs/adapter-vercel@npm:1.0.0-next.87"
   dependencies:
     "@vercel/nft": ^0.22.1
     esbuild: ^0.16.3
-  checksum: 8c2387354de5aa210b8f135c260d1e7d2fe04834d46c3d88baa70fb7bb99e87e5d85a831029146a5cb68ff119c003cc0e58adeb1d756323c60a246065ca93a87
+  checksum: e5432486e68ed35a148714308f10e2b754ca815d5b8e9a17a815411d157f8d0f285da16142fc179a77b53d2c573c534943340aa6530915d7b0f4647d3f11601d
   languageName: node
   linkType: hard
 
@@ -2052,8 +2043,7 @@ __metadata:
     "@steeze-ui/svelte-icon": ^1.3.2
     "@supabase/auth-helpers-sveltekit": ^0.8.6
     "@supabase/supabase-js": ^2.1.3
-    "@sveltejs/adapter-auto": next
-    "@sveltejs/adapter-vercel": ^1.0.0-next.85
+    "@sveltejs/adapter-vercel": next
     "@sveltejs/kit": next
     "@sveltestack/svelte-query": ^1.6.0
     autoprefixer: ^10.4.13
@@ -2216,13 +2206,6 @@ __metadata:
     parent-module: ^1.0.0
     resolve-from: ^4.0.0
   checksum: 2cacfad06e652b1edc50be650f7ec3be08c5e5a6f6d12d035c440a42a8cc028e60a5b99ca08a77ab4d6b1346da7d971915828f33cdab730d3d42f08242d09baa
-  languageName: node
-  linkType: hard
-
-"import-meta-resolve@npm:^2.2.0":
-  version: 2.2.0
-  resolution: "import-meta-resolve@npm:2.2.0"
-  checksum: 35a012c07bdaaed907ad150021b47a4bd8b2c77c88f02a2c5a15a5cb5c146072a94b6633cc528eaccf187bca12196c0fb2ff44a54b3b2a03bcf200511b3f1e50
   languageName: node
   linkType: hard
 
